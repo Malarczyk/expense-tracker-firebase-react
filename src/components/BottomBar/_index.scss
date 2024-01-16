@@ -1,0 +1,62 @@
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 70px;
+
+  background-color: var(--primary-color);
+  box-shadow: 0px -1px 21px 0px rgba(0, 0, 0, 0.09);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  &__btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: var(--text-color-30);
+    }
+
+    .icon{
+      background-color: var(--text-color-30);;
+    }
+
+    .iconWrap{
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 100%;
+      background-color: var(--secondary-color);
+      outline: 6px solid var(--bg-color);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .icon--add{
+        background-color: var(--pure-white-color);
+        width: 34px;
+        height: 34px;
+        mask-size: 34px;
+        -webkit-mask-size: 34px;
+      }
+    }
+
+    &.active{
+      span{
+        color: var(--secondary-color);
+      }
+      .icon{
+        background-color: var(--secondary-color);
+      }
+    }
+  }
+
+  .center{
+    transform: translateY(-1rem);
+  }
+}

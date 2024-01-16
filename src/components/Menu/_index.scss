@@ -1,0 +1,9 @@
+aside.app__menu {
+  width: 200px;
+  height: 100%;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+}

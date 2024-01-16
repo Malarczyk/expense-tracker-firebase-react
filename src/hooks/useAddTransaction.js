@@ -7,16 +7,26 @@ export const useAddTransactions = () => {
   const {userID} = useGetUserInfo()
 
   const addTransaction = async ({
+    name,
     description, 
     transactionAmount, 
     transactionType,
+    transactionDate,
+    wallet,
+    category,
+    photoUrl
   }) => {
     try {
       await addDoc(transactionCollectionRef, {
         userID,
+        name,
         description,
         transactionAmount,
         transactionType,
+        transactionDate: '',
+        wallet: '',
+        category,
+        photoUrl: '',
         createdAt: serverTimestamp(),
       })
       console.log('Transaction added successfully.')

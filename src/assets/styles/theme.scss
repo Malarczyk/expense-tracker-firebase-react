@@ -1,0 +1,87 @@
+
+body[theme="light"]{
+  --bg-color: #f6f6f7;
+  --primary-color: #ffffff;
+  --text-color-30: #bababa;
+  --text-color-35: #aeaeae;
+  --text-color-50: #8b8b8b;
+  --text-color-67: #545454;
+  --text-color: #181818;
+  --border-color: #d4d4d4;
+  --secondary-color: #1a375a;
+  --secondary-bg-color: #e8ebee;
+  --success-color: #54b471;
+  --success-bg-color: #EEF7F1;
+  --warning-color: #F2B347;
+  --warning-bg-color: #FEF7ED;
+  --error-color: #E62C59;
+  --error-bg-color: #FCEAEE;
+  --pure-white-color: #fff;
+
+  // For Categories
+  --pink-color: #cb3a8d;
+  --pink-bg-color: #FAEBF4;
+  --dark-green-color: #1A5A20;
+  --dark-green-bg-color: #E8EEE9;
+  --dark-blue-color: #4994EC;
+  --dark-blue-bg-color: #EDF4FD;
+  --dark-purple-color: #6563FF;
+  --dark-purple-bg-color: #F0EFFF;
+  --light-blue-color: #78B3F0;
+  --light-blue-bg-color: #F1F7FD;
+  --light-purple-color: #C85FE3;
+  --light-purple-bg-color: #FAEFFC;
+  --black-color: #1f2938;
+  --black-bg-color: #E9EAEB;
+}
+
+body[theme="dark"]{
+  --bg-color: #000;
+  --primary-color: rgb(69, 69, 69);
+  --text-color-30: #fff;
+  --text-color-35: #fff;
+  --text-color-50: #fff;
+  --text-color-67: #fff;
+  --text-color: #fff;
+  --border-color: #d4d4d4;
+  --secondary-color: #1a375a;
+  --secondary-bg-color: #e8ebee;
+  --success-color: #54b471;
+  --success-bg-color: #EEF7F1;
+  --warning-color: #F2B347;
+  --warning-bg-color: #FEF7ED;
+  --error-color: #E62C59;
+  --error-bg-color: #FCEAEE;
+  --pure-white-color: #fff;
+  
+  // For Categories
+  --pink-color: #cb3a8d;
+  --pink-bg-color: #FAEBF4;
+  --dark-green-color: #1A5A20;
+  --dark-green-bg-color: #E8EEE9;
+  --dark-blue-color: #4994EC;
+  --dark-blue-bg-color: #EDF4FD;
+  --dark-purple-color: #6563FF;
+  --dark-purple-bg-color: #F0EFFF;
+  --light-blue-color: #78B3F0;
+  --light-blue-bg-color: #F1F7FD;
+  --light-purple-color: #C85FE3;
+  --light-purple-bg-color: #FAEFFC;
+  --black-color: #1f2938;
+  --black-bg-color: #E9EAEB;
+}
+
+// $pink-color: var(--pink-color);
+// $pink-bg-color: var(--pink-bg-color);
+// $dark-green-color: var(--dark-green-color);
+// $dark-green-bg-color: var(--dark-green-bg-color);
+// $dark-blue-color: var(--dark-blue-color);
+// $dark-blue-bg-color: var(--dark-blue-bg-color);
+// $dark-purple-color: var(--dark-purple-color);
+// $dark-purple-bg-color: var(--dark-purple-bg-color);
+// $light-blue-color: var(--light-blue-color);
+// $light-blue-bg-color: var(--light-blue-bg-color);
+// $light-purple-color: var(--light-purple-color);
+// $light-purple-bg-color: var(--light-purple-bg-color);
+// $black-color: var('');
+// $black-bg-color: ;

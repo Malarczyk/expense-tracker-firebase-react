@@ -1,0 +1,136 @@
+@import url("../../assets/styles/_index.scss");
+@mixin hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.dashboard {
+  &__balance {
+    width: 100%;
+    overflow: scroll;
+
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    padding: 1em;
+    &__item {
+      .balance {
+        height: 160px;
+        width: 290px;
+        padding: 1em 1.5em;
+
+        display: flex;
+        flex-direction: column;
+
+        background-color: var(--secondary-color);
+        border-radius: 10px;
+
+        &__header{
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        &__footer {
+          flex-grow: 1;
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+        }
+
+        h1 {
+          color: var(--pure-white-color);
+        }
+        .icon {
+          background-color: var(--pure-white-color);
+        }
+      }
+    }
+
+    &__item:last-child {
+      height: 160px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      .incomeExpense {
+        flex-grow: 1;
+        width: 290px;
+        padding: 0 1.5em;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        background-color: var(--secondary-color);
+        border-radius: 10px;
+
+        h1 {
+          color: var(--pure-white-color);
+        }
+        .icon {
+          background-color: var(--pure-white-color);
+        }
+      }
+    }
+    @include hide-scrollbar;
+  }
+  &__history {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    &__item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #f6f6f7;
+      &__icon {
+        padding-right: 1em;
+        .iconWrap {
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+      &__content {
+        flex-grow: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        align-items: center;
+        .amount {
+          grid-area: 1 / 2 / 3 / 3;
+          justify-self: end;
+        }
+      }
+    }
+  }
+
+  &__section {
+    padding: 0 1em;
+  }
+}
+
+.section__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+@media (min-width: 1024px) {
+  .home {
+    display: flex;
+  }
+  .dashboard,
+  .stats {
+    flex-basis: 50%;
+  }
+}

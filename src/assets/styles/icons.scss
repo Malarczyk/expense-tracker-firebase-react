@@ -1,0 +1,95 @@
+.icon {
+  width: 24px;
+  height: 24px;
+  mask-size: 24px;
+  mask-repeat: no-repeat;
+  mask-position: center center;
+
+  -webkit-mask-size: 24px;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center center;
+
+  display: block;
+  position: relative;
+  background-color: var(--text-color);
+
+  &.s20{
+    width: 24px;
+    height: 24px;
+    mask-size: 24px;
+    -webkit-mask-size: 24px;
+  }
+  &.s40{
+    width: 40px;
+    height: 40px;
+    mask-size: 40px;
+    -webkit-mask-size: 40px;
+  }
+}
+
+.icon--add{
+  mask-image: url("../icons/add.svg");
+  -webkit-mask-image: url("../icons/add.svg");
+}
+
+.icon--arrow-down{
+  mask-image: url("../icons/arrow-down.svg");
+  -webkit-mask-image: url("../icons/arrow-down.svg");
+}
+
+.icon--arrow-right{
+  mask-image: url("../icons/arrow-right.svg");
+  -webkit-mask-image: url("../icons/arrow-right.svg");
+}
+
+.icon--check{
+  mask-image: url("../icons/check.svg");
+  -webkit-mask-image: url("../icons/check.svg");
+}
+
+.icon--dashboard{
+  mask-image: url("../icons/dashboard.svg");
+  -webkit-mask-image: url("../icons/dashboard.svg");
+}
+
+.icon--expenses{
+  mask-image: url("../icons/expenses.svg");
+  -webkit-mask-image: url("../icons/expenses.svg");
+}
+
+.icon--hamburger{
+  mask-image: url("../icons/hamburger.svg");
+  -webkit-mask-image: url("../icons/hamburger.svg");
+}
+
+.icon--incomes{
+  mask-image: url("../icons/incomes.svg");
+  -webkit-mask-image: url("../icons/incomes.svg");
+}
+
+.icon--stats{
+  mask-image: url("../icons/stats.svg");
+  -webkit-mask-image: url("../icons/stats.svg");
+}
+
+.icon--balance{
+  mask-image: url("../icons/balance.svg");
+  -webkit-mask-image: url("../icons/balance.svg");
+}
+
+.icon--visibility{
+  mask-image: url("../icons/visibility.svg");
+  -webkit-mask-image: url("../icons/visibility.svg");
+}
+
+.icon--visibility-off{
+  mask-image: url("../icons/visibility-off.svg");
+  -webkit-mask-image: url("../icons/visibility-off.svg");
+}
+
+.icon--close{
+  mask-image: url("../icons/close.svg");
+  -webkit-mask-image: url("../icons/close.svg");
+}
+
+
