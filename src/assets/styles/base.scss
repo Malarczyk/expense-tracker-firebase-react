@@ -1,47 +1,93 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Pridi:wght@200;300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Pridi:wght@200;300;400;500;600;700&display=swap");
 
 html {
   font-size: 16px;
   font-family: "Poppins", sans-serif;
 }
 
-h1{
+h1 {
   color: var(--text-color);
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 1.125rem;
   font-style: normal;
   font-weight: 600;
 }
 
-h2{
+h2 {
   color: #181818;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 0.875rem;
   font-style: normal;
   font-weight: 500;
 }
 
-h3{
+h3 {
   color: var(--text-color-67);
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 0.75rem;
   font-style: normal;
   font-weight: 500;
 }
 
-h4{
+h4 {
   color: var(--text-color-50);
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 0.75rem;
   font-style: normal;
   font-weight: 500;
 }
-
 
 @mixin hide-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
   &::-webkit-scrollbar {
     display: none;
+  }
+}
+.btnWrap{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top:10px;
+}
+.btn {
+  height: 40px;
+  width: 100%;
+  border-radius: 10px;
+
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 0;
+}
+
+.btn--blue{
+  background-color: var(--secondary-color);
+  color: var(--pure-white-color);
+}
+
+.btn--empty{
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.universal__item{
+  display: flex;
+  align-items: center;
+  height: 60px;
+  border-radius: 12px;
+  background-color: var(--primary-color);
+  padding: 0 16px 0 10px;
+  &__body{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    .top{
+
+    }
+    .bottom{
+      display: flex;
+      gap: 4px;
+    }
   }
 }

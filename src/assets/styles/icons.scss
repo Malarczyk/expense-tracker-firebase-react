@@ -1,11 +1,11 @@
 .icon {
-  width: 24px;
-  height: 24px;
-  mask-size: 24px;
+  width: 20px;
+  height: 20px;
+  mask-size: 20px;
   mask-repeat: no-repeat;
   mask-position: center center;
 
-  -webkit-mask-size: 24px;
+  -webkit-mask-size: 20px;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center center;
 
@@ -13,7 +13,7 @@
   position: relative;
   background-color: var(--text-color);
 
-  &.s20{
+  &.s24{
     width: 24px;
     height: 24px;
     mask-size: 24px;
@@ -40,6 +40,11 @@
 .icon--arrow-right{
   mask-image: url("../icons/arrow-right.svg");
   -webkit-mask-image: url("../icons/arrow-right.svg");
+}
+
+.icon--arrow-left{
+  mask-image: url("../icons/arrow-left.svg");
+  -webkit-mask-image: url("../icons/arrow-left.svg");
 }
 
 .icon--check{
@@ -92,4 +97,120 @@
   -webkit-mask-image: url("../icons/close.svg");
 }
 
+
+// Categories
+.icon--arrows{
+  mask-image: url("../icons/cat/arrows.svg");
+  -webkit-mask-image: url("../icons/cat/arrows.svg");
+}
+.icon--bitcoin{
+  mask-image: url("../icons/cat/bitcoin.svg");
+  -webkit-mask-image: url("../icons/cat/bitcoin.svg");
+}
+.icon--brain{
+  mask-image: url("../icons/cat/brain.svg");
+  -webkit-mask-image: url("../icons/cat/brain.svg");
+}
+.icon--calc{
+  mask-image: url("../icons/cat/calc.svg");
+  -webkit-mask-image: url("../icons/cat/calc.svg");
+}
+.icon--card{
+  mask-image: url("../icons/cat/card.svg");
+  -webkit-mask-image: url("../icons/cat/card.svg");
+}
+.icon--chemistry{
+  mask-image: url("../icons/cat/chemistry.svg");
+  -webkit-mask-image: url("../icons/cat/chemistry.svg");
+}
+.icon--coffee{
+  mask-image: url("../icons/cat/coffee.svg");
+  -webkit-mask-image: url("../icons/cat/coffee.svg");
+}
+.icon--dashboard2{
+  mask-image: url("../icons/cat/dashboard2.svg");
+  -webkit-mask-image: url("../icons/cat/dashboard2.svg");
+}
+.icon--energy{
+  mask-image: url("../icons/cat/energy.svg");
+  -webkit-mask-image: url("../icons/cat/energy.svg");
+}
+.icon--fuel{
+  mask-image: url("../icons/cat/fuel.svg");
+  -webkit-mask-image: url("../icons/cat/fuel.svg");
+}
+.icon--geek{
+  mask-image: url("../icons/cat/geek.svg");
+  -webkit-mask-image: url("../icons/cat/geek.svg");
+}.icon--health{
+  mask-image: url("../icons/cat/health.svg");
+  -webkit-mask-image: url("../icons/cat/health.svg");
+}
+.icon--kid{
+  mask-image: url("../icons/cat/kid.svg");
+  -webkit-mask-image: url("../icons/cat/kid.svg");
+}
+.icon--love{
+  mask-image: url("../icons/cat/love.svg");
+  -webkit-mask-image: url("../icons/cat/love.svg");
+}
+.icon--music{
+  mask-image: url("../icons/cat/music.svg");
+  -webkit-mask-image: url("../icons/cat/music.svg");
+}
+.icon--paint{
+  mask-image: url("../icons/cat/paint.svg");
+  -webkit-mask-image: url("../icons/cat/paint.svg");
+}
+.icon--personal{
+  mask-image: url("../icons/cat/personal.svg");
+  -webkit-mask-image: url("../icons/cat/personal.svg");
+}
+.icon--phone{
+  mask-image: url("../icons/cat/phone.svg");
+  -webkit-mask-image: url("../icons/cat/phone.svg");
+}
+.icon--question{
+  mask-image: url("../icons/cat/question.svg");
+  -webkit-mask-image: url("../icons/cat/question.svg");
+}
+.icon--screw{
+  mask-image: url("../icons/cat/screw.svg");
+  -webkit-mask-image: url("../icons/cat/screw.svg");
+}
+.icon--shop{
+  mask-image: url("../icons/cat/shop.svg");
+  -webkit-mask-image: url("../icons/cat/shop.svg");
+}
+.icon--subscription{
+  mask-image: url("../icons/cat/subscription.svg");
+  -webkit-mask-image: url("../icons/cat/subscription.svg");
+}
+
+// Navigations
+
+.icon--budgets{
+  mask-image: url("../icons/nav/budgets.svg");
+  -webkit-mask-image: url("../icons/nav/budgets.svg");
+}
+.icon--categories{
+  mask-image: url("../icons/nav/categories.svg");
+  -webkit-mask-image: url("../icons/nav/categories.svg");
+}
+.icon--logout{
+  mask-image: url("../icons/nav/logout.svg");
+  -webkit-mask-image: url("../icons/nav/logout.svg");
+}
+.icon--settings{
+  mask-image: url("../icons/nav/settings.svg");
+  -webkit-mask-image: url("../icons/nav/settings.svg");
+}
+.icon--transactions{
+  mask-image: url("../icons/nav/transaction.svg");
+  -webkit-mask-image: url("../icons/nav/transaction.svg");
+}
+.icon--wallets{
+  mask-image: url("../icons/nav/wallets.svg");
+  -webkit-mask-image: url("../icons/nav/wallets.svg");
+}
 

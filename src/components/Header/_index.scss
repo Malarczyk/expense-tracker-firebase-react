@@ -3,4 +3,31 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 48px;
+  z-index: 1;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: transform 150ms ease-in-out;
+
+  background-color: var(--primary-color);
+  box-shadow: 0px 5px 5.9px 0px rgba(0, 0, 0, 0.05);
+
+  span{
+    color: var(--text-color);
+  }
+
+  .icon{
+    background-color: var(--text-color);
+  }
+
+  &.visible {
+    transform: translateY(0);
+  }
+
+  &.hidden {
+    transform: translateY(-48px);
+  }
 }

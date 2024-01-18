@@ -6,6 +6,7 @@ import CatExpenses from './catExpenses'
 import CatIncome from './catIncome'
 import { useAddCategories } from '../../hooks/useAddCategories';
 import './_index.scss'
+import ButtonAdd from '../../components/ButtonAdd'
 
 const Categories = () => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth)
@@ -55,7 +56,7 @@ const Categories = () => {
           </>
         ) : (
           <>
-            <TopBar title={'Kategorie'} action={()=>setIsModalAddOpen(true)}/>
+            <TopBar title={'Kategorie'}/>
             <div className='categories__types'>
               <span
                 onClick={() => setSelectedComponent('expenses')}
@@ -68,6 +69,8 @@ const Categories = () => {
             {selectedComponent === 'income' && <CatIncome onCategoryClick={handleCategoryClick} />}
           </>
         )}
+
+        <ButtonAdd action={()=>setIsModalAddOpen(true)}/>
       </div>
     </>
   )

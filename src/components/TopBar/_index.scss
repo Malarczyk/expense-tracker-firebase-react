@@ -1,6 +1,25 @@
-.topBar{
-  padding: 12px;
+.topBar {
+  background-color: var(--primary-color);
+  height: 45px;
+  padding: 20px;
+  margin-bottom: 0.5em;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-shadow: 0px 5px 5.9px 0px rgba(0, 0, 0, 0.02);
+  span {
+    color: var(--text-color);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .title{
+    font-size: 1rem;
+  }
+
+}
+
+@media (min-width: 1024px) {
+  .topBar{
+      display: none;
+  }
 }

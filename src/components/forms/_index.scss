@@ -1,5 +1,127 @@
-.myInput{
+form {
   display: flex;
   flex-direction: column;
-  
+  gap: 10px;
+}
+.myInput {
+  display: flex;
+  flex-direction: column;
+  input {
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background-color: var(--bg-color);
+    height: 40px;
+    padding-left: 0.75em;
+    font-size: 0.875rem;
+    font-weight: 400;
+    &::placeholder {
+      font-family: "Poppins", sans-serif;
+    }
+    &:focus {
+      outline-style: none;
+      box-shadow: none;
+      border-color: transparent;
+      border: 1px solid var(--text-color);
+    }
+  }
+  label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+}
+
+.datePicker {
+  display: flex;
+  flex-direction: column;
+  input {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    padding-left: 0.75em;
+    border-radius: 10px;
+    background-color: var(--bg-color);
+    height: 40px;
+    font-size: 0.875rem;
+    &::placeholder {
+      font-family: "Poppins", sans-serif;
+    }
+    &:focus {
+      outline-style: none;
+      box-shadow: none;
+      border-color: transparent;
+      border: 1px solid var(--text-color);
+    }
+  }
+  label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+}
+
+.myRadioInput {
+  display: flex;
+  align-items: center;
+  padding-top: 5px;
+  label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-left: 6px;
+    margin-right: 12px;
+    transform: translateY(-2px);
+  }
+}
+
+input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: var(--border-color); /* Tło dla niezaznaczonego */
+  margin: 0;
+  font: inherit;
+  color: var(--secondary-color);
+  width: 16px; /* Nowy rozmiar */
+  height: 16px; /* Nowy rozmiar */
+  border-radius: 50%;
+  transform: translateY(-0.2em); /* Drobna korekta pozycji */
+  display: grid;
+  place-content: center;
+}
+
+input[type="radio"]::before {
+  content: "";
+  width: 6px; /* Średnica kółka */
+  height: 6px; /* Średnica kółka */
+  border-radius: 50%;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  background-color: var(
+    --pure-white-color
+  ); /* Kolor kółka dla niezaznaczonego */
+}
+
+input[type="radio"]:checked {
+  background-color: var(--secondary-color); /* Tło dla zaznaczonego */
+}
+
+input[type="radio"]:checked::before {
+  transform: scale(1);
+  background-color: var(--pure-white-color); /* Kolor kółka dla zaznaczonego */
+}
+
+.myInputColor {
+  .grid {
+    display: grid;
+    grid-template-columns: repeat( auto-fit, minmax(30px, 1fr) );
+    grid-template-rows: 40px; 
+    gap: 3px;
+    .rec {
+      background-color: red;
+      width: auto;
+      display: block;
+      height: 40px;
+      border-radius: 10px;
+    }
+  }
+
 }

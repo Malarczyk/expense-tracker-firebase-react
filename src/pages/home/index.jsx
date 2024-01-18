@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import BottomBar from '../../components/BottomBar'
-import Header from '../../components/Header'
 import ModalAdd from '../../components/Modal/ModalAddTransaction'
 import Dashboard from './Dashboard'
 import Stats from './Stats'
@@ -36,14 +35,13 @@ const Home = () => {
     <div className='home'>
       {screenWidth > 1024 ? (
         <>
-          <Dashboard />
-           <Stats />
+          <Dashboard isProfileVisible={false}/>
+           <Stats isProfileVisible={false}/>
         </>
       ) : (
         <>
-          <Header title={'Pulpit'}/>
-          {selectedComponent === 'dashboard' && <Dashboard />}
-          {selectedComponent === 'stats' && <Stats />}
+          {selectedComponent === 'dashboard' && <Dashboard isProfileVisible={true}/>}
+          {selectedComponent === 'stats' && <Stats isProfileVisible={true}/>}
           <BottomBar onButtonClick={handleButtonClick} onOpenModal={() => setIsModalOpen(true)} activeBtn={selectedComponent}/>
         </>
       )}

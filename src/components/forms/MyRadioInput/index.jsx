@@ -1,7 +1,7 @@
 import React from 'react';
 
 const MyRadioInput = ({ name, value1, label1, checked1, onChange1, value2, label2, checked2, onChange2 }) => (
-  <div>
+  <div className='myRadioInput'>
     <input
       type="radio"
       id={value1}

@@ -1,17 +1,17 @@
-import React, { useRef, useEffect } from 'react'
-import '../_index.scss'
+import React, { useRef, useEffect } from 'react';
+import '../_index.scss';
 
-const MyInput = ({ label, value, type, onChange, error, required, focus, placeholder }) => {
-  const inputRef = useRef(null)
+const MyInput = ({ label, value, type, onChange, error, required, focus, placeholder, click }) => {
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (focus) {
-      inputRef.current.focus()
+      inputRef.current.focus();
     }
-  }, [focus])
+  }, [focus]);
 
   return (
-    <div className='myInput'>
+    <div className='myInput' onClick={click}>
       <label>{label}</label>
       <input
         type={type}
@@ -24,7 +24,7 @@ const MyInput = ({ label, value, type, onChange, error, required, focus, placeho
       />
       {error && <div className="error-message">{error}</div>}
     </div>
-  )
-}
+  );
+};
 
-export default MyInput
+export default MyInput;

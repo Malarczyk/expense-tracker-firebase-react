@@ -5,23 +5,28 @@ const CatExpenses = () => {
 
   return (
     <div className="categories__type">
+      <div className="categories__type__title">
+        <h1>Kategorie wydatków</h1>
+      </div>
 
       {categories ? (
         categories.map((category) => {
-          const { id, name, categoryType, icon } = category
+          const { id, name, categoryType, icon, color, bgColor } = category
           return (
             categoryType === "expense" && (
-            <div key={id} className="categories__item">
-              <div className="categories__item__icon">
-                <i className={icon}>IC</i>
-              </div>
-              <div className="categories__item__name">
-                <span>{name}</span>
-              </div>
-              <div className="categories__item__action">
-                <span>arr</span>
-              </div>
-            </div>)
+              <div key={id} className="categories__item">
+                <div className="categories__item__icon">
+                  <div className="iconWrap" style={{ backgroundColor: `var(${bgColor})` }}>
+                    <i className={`icon icon--${icon}`} style={{ backgroundColor: `var(${color})` }}></i>
+                  </div>
+                </div>
+                <div className="categories__item__name">
+                  <span>{name}</span>
+                </div>
+                <div className="categories__item__action">
+                  <i className="icon icon--arrow-right"></i>
+                </div>
+              </div>)
           )
         })
       ) : (
