@@ -1,37 +1,41 @@
-import { auth, provider } from '../../config/firebase-config'
-import { signInWithPopup } from 'firebase/auth'
-import { useNavigate, Navigate } from 'react-router-dom'
-import { useGetUserInfo } from '../../hooks/useGetUserInfo';
+import { useState } from 'react';
+import Illustration from '../../assets/images/illustration.svg'
 import './_index.scss'
-export const Auth = () => {
+import Signin from './Signin';
+import Login from './Login';
+export const Auth = ({ installEvent, setInstallEvent }) => {
+  const [signinVisible, setSigninVisible] = useState(false)
 
-  const navigate = useNavigate()
-  const { isAuth } = useGetUserInfo()
-  const signInWithGoogle = async () => {
-    const results = await signInWithPopup(auth, provider)
-    const authInfo = {
-      userID: results.user.uid,
-      name: results.user.displayName,
-      profilePhoto: results.user.photoURL,
-      isAuth: true,
-    };
-    localStorage.setItem("auth", JSON.stringify(authInfo));
-    navigate("/home")
+  const handleInstallClick = () => {
+    if (installEvent) {
+      installEvent.prompt(); // Wywołanie okna instalacji
+      installEvent.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('Aplikacja została zainstalowana');
+        } else {
+          console.log('Instalacja aplikacji została odrzucona');
+        }
+        setInstallEvent(null); // Resetuj zdarzenie instalacji
+      });
+    }
   };
-  if (isAuth) {
-    return <Navigate to="/home" />
-  }
   return (
     <div className="login">
-      <div className="login__logo">
-        <h1>Wismmo</h1>
-        <p>What I spend my money on?</p>
+      {installEvent && (
+        <button className="install-button" onClick={handleInstallClick}>
+          Instaluj PWA
+        </button>
+      )}
+      <div className="login__left">
+        <h1 className='titleLogo'>Wismmo</h1>
+        <p className='subTitleLogo'>What I spend my money on?</p>
+        <div className="imgWrap">
+          <img src={Illustration} alt="" />
+        </div>
       </div>
-      <div className="login__content">
-        <p>Sign in with google to cointue</p>
-        <button onClick={signInWithGoogle}>{" "}Sign In</button>
+      <div className="login__right">
+        {signinVisible ? <Signin setSigninVisible={() => setSigninVisible(false)} /> : <Login setSigninVisible={() => setSigninVisible(true)} />}
       </div>
-
     </div>
   );
 };

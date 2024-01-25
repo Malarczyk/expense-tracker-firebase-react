@@ -1,6 +1,6 @@
-import { useGetTransactions } from "../../hooks/useGetTransactions"
-import { useGetCategories } from "../../hooks/useGetCategories"
-import { useGetBudgets } from "../../hooks/useGetBudgets"
+import { useTransactions } from "../../hooks/useTransactions"
+import { useCategories } from "../../hooks/useCategories"
+import { useBudgets } from "../../hooks/useBudgets"
 import React, { useState, useEffect } from 'react';
 import './_index.scss'
 import Header from "../../components/Header"
@@ -8,12 +8,12 @@ import HistorySection from "./HistorySection";
 import { useMenu } from "../../context/Menu/MenuContext"
 
 const Dashboard = ({ isProfileVisible }) => {
-  const { transactions, transactionTotal } = useGetTransactions()
+  const { transactions, transactionTotal } = useTransactions()
   const { income, expenses, balance } = transactionTotal
 
   const { toggleMenu } = useMenu()
-  const { categories } = useGetCategories();
-  const { budgets } = useGetBudgets();
+  const { categories } = useCategories();
+  const { budgets } = useBudgets();
 
   const [isHeaderVisible, setHeaderVisible] = useState(true);
 

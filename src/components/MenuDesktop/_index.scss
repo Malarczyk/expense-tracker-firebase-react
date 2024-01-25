@@ -42,9 +42,14 @@
       align-items: center;
       gap: 10px;
       span {
+        font-size: 14px;
         color: rgba($color: #ffffff, $alpha: 0.5);
       }
       .icon {
+        width: 18px;
+        height: 18px;
+        mask-size: 18px;
+        -webkit-mask-size: 18px;
         background-color: rgba($color: #ffffff, $alpha: 0.5);
       }
       &.active {
@@ -75,6 +80,10 @@
       color: rgba($color: #ffffff, $alpha: 0.67);
     }
     h2{
+      max-width: 116px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       color: var(--pure-white-color);
     }
   }

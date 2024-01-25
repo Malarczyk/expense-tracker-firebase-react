@@ -1,7 +1,7 @@
-import { useGetCategories } from "../../hooks/useGetCategories"
+import { useCategories } from "../../hooks/useCategories"
 
-const CatExpenses = () => {
-  const { categories } = useGetCategories()
+const CatExpenses = ({onCategoryClick}) => {
+  const { categories } = useCategories()
 
   return (
     <div className="categories__type">
@@ -14,7 +14,8 @@ const CatExpenses = () => {
           const { id, name, categoryType, icon, color, bgColor } = category
           return (
             categoryType === "expense" && (
-              <div key={id} className="categories__item">
+              <div key={id} className="categories__item"
+              onClick={() => onCategoryClick(category)}>
                 <div className="categories__item__icon">
                   <div className="iconWrap" style={{ backgroundColor: `var(${bgColor})` }}>
                     <i className={`icon icon--${icon}`} style={{ backgroundColor: `var(${color})` }}></i>

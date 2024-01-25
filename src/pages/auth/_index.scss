@@ -1,19 +1,122 @@
 .login {
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   width: 100vw;
   display: flex;
-  flex-direction: column;
-  &__logo {
-    width: 100%;
+  &__left {
+    flex-basis: 70%;
     padding: 2em 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
-  &__content {
-    width: 100%;
+  &__right {
+    flex-basis: 30%;
+    height: 100%;
+    &__mobile {
+      display: none;
+    }
+  }
+  .loginForm {
+    padding: 80px 20px 16px 20px;
     flex-grow: 1;
-    background-color: #bebebe;
+    background-color: var(--secondary-color);
+    display: flex;
+    flex-direction: column;
+    color: var(--pure-white-color);
+    &__content {
+      button{
+        margin-top: 12px;
+      }
+      .myInput input{
+        background-color: rgba($color: #fff, $alpha: .1);
+        border: 1px solid rgba($color: #fff, $alpha: .2);
+        color: white;
+      }
+    }
+    &__or {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    &__forget {
+      flex-grow: 1;
+      align-self: flex-end;
+      padding-top: 16px;
+      span {
+        font-size: 12px;
+        font-weight: 600;
+        &:hover{
+          cursor: pointer;
+        }
+      }
+    }
+    &__footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      span {
+        font-size: 12px;
+        font-weight: 600;
+        &:first-child {
+          color: rgba($color: #fff, $alpha: 0.5);
+        }
+        &:last-child{
+          &:hover{
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+  .myInput label {
+    color: white;
+  }
+}
+
+.btnGoogle {
+  display: flex;
+  background-color: #e63a3a;
+  border-radius: 10px;
+  color: white;
+  .iconWrap {
+    width: 60px;
+    height: 40px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  span {
+    width: calc(100% - 60px);
+    align-self: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 767px) {
+  .login {
+    &__left {
+      display: none;
+    }
+    &__right {
+      flex-basis: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    &__right__mobile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 15%;
+    }
+    .loginForm {
+      border-top-left-radius: 60px;
+    }
   }
 }

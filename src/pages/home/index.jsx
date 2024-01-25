@@ -4,7 +4,7 @@ import ModalAdd from '../../components/Modal/ModalAddTransaction'
 import Dashboard from './Dashboard'
 import Stats from './Stats'
 import './_index.scss'
-
+import ButtonAdd from '../../components/ButtonAdd'
 const Home = () => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth)
   const [selectedComponent, setSelectedComponent] = useState('dashboard')
@@ -33,10 +33,11 @@ const Home = () => {
     <>
     <ModalAdd isOpen={isModalOpen} onClose={handleCloseModal}/>
     <div className='home'>
-      {screenWidth > 1024 ? (
+      {screenWidth > 1099 ? (
         <>
           <Dashboard isProfileVisible={false}/>
            <Stats isProfileVisible={false}/>
+           <ButtonAdd action={()=>setIsModalOpen(true)}/>
         </>
       ) : (
         <>

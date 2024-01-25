@@ -71,6 +71,11 @@ h4 {
   color: var(--text-color);
 }
 
+.btn--red{
+  background-color: var(--error-color);
+  color: var(--pure-white-color);
+}
+
 .universal__item{
   display: flex;
   align-items: center;

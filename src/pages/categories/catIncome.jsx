@@ -1,7 +1,7 @@
-import { useGetCategories } from "../../hooks/useGetCategories"
+import { useCategories } from "../../hooks/useCategories"
 
 const CatIncome = ({ onCategoryClick }) => {
-  const { categories } = useGetCategories()
+  const { categories } = useCategories()
 
   return (
     <div className="categories__type">

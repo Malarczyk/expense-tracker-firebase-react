@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './_index.scss'
 import Header from "../../components/Header"
 import { useMenu } from "../../context/Menu/MenuContext"
-
+import PieChart from './charts/PieChart'
+import { BarSummary } from './charts/BarSummary'
 
 const Stats = ({ isProfileVisible }) => {
   const { toggleMenu } = useMenu()
@@ -24,6 +25,7 @@ const Stats = ({ isProfileVisible }) => {
   return (
     <>
       <Header title={'Statystyki'} isVisible={isHeaderVisible} />
+      
       <div className="stats">
         {isProfileVisible &&
           <div className="dashboard__profile">
@@ -42,64 +44,17 @@ const Stats = ({ isProfileVisible }) => {
           </div>}
 
         <div className="stats__section">
-
-          <div className="section__title">
-            <h1>Podsumowanie</h1>
-            <div>
-              <div className="imgWrap">
-                <i className="icon icon--arrow-left"></i>
-              </div>
-              <div className="imgWrap">
-                <i className="icon icon--arrow-right"></i>
-              </div>
-            </div>
-          </div>
-
-          <div className="stats__chart">
-            <div></div>
-          </div>
+          <BarSummary />
         </div>
 
         <div className="stats__section">
-
-          <div className="section__title">
-            <h1>Wydatki</h1>
-            <div>
-              <div className="imgWrap">
-                <i className="icon icon--arrow-left"></i>
-              </div>
-              <div className="imgWrap">
-                <i className="icon icon--arrow-right"></i>
-              </div>
-            </div>
-          </div>
-
-          <div className="stats__chart">
-            <div></div>
-          </div>
+          <PieChart chartType={'expense'}/>
         </div>
 
 
         <div className="stats__section">
-
-          <div className="section__title">
-            <h1>Przychody</h1>
-            <div>
-              <div className="imgWrap">
-                <i className="icon icon--arrow-left"></i>
-              </div>
-              <div className="imgWrap">
-                <i className="icon icon--arrow-right"></i>
-              </div>
-            </div>
-          </div>
-
-          <div className="stats__chart">
-            <div></div>
-          </div>
+          <PieChart chartType={'income'}/>
         </div>
-
-
 
       </div>
     </>

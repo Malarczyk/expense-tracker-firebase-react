@@ -1,32 +1,32 @@
-import { useAddTransactions } from "../../hooks/useAddTransaction";
-import { useGetCategories } from "../../hooks/useGetCategories";
-import { useGetWallets } from "../../hooks/useGetWallets";
-import { useState } from 'react';
-import Modal from './index.jsx';
-import './_index.scss';
-import MyInput from "../forms/MyInput";
-import DateInput from "../forms/DateInput";
-import MyCashInput from "../forms/MyCashInput";
-import MyRadioInput from "../forms/MyRadioInput";
+import { useTransactions } from "../../hooks/useTransactions.js"
+import { useCategories } from "../../hooks/useCategories"
+import { useWallets } from "../../hooks/useWallets"
+import MyRadioInput from "../forms/MyRadioInput"
+import MyCashInput from "../forms/MyCashInput"
+import DateInput from "../forms/DateInput"
+import MyInput from "../forms/MyInput"
+import { useState } from 'react'
+import Modal from './index.jsx'
+import './_index.scss'
 
 const ModalAddTransaction = ({ isOpen, onClose }) => {
-  const { addTransaction } = useAddTransactions();
-  const { categories } = useGetCategories();
-  const { wallets } = useGetWallets();
+  const { addTransaction } = useTransactions()
+  const { categories } = useCategories()
+  const { wallets } = useWallets()
 
-  const [name, setName] = useState("");
-  const [wallet, setWallet] = useState("");
-  const [category, setCategory] = useState("");
-  const [description, setDescription] = useState("");
-  const [transactionDate, setTransactionDate] = useState("");
-  const [transactionAmount, setTransactionAmount] = useState("");
-  const [transactionType, setTransactionType] = useState("expense");
+  const [name, setName] = useState("")
+  const [wallet, setWallet] = useState("")
+  const [category, setCategory] = useState("")
+  const [description, setDescription] = useState("")
+  const [transactionDate, setTransactionDate] = useState(new Date())
+  const [transactionAmount, setTransactionAmount] = useState("")
+  const [transactionType, setTransactionType] = useState("expense")
 
-  const [isCategoryListVisible, setCategoryListVisible] = useState(false);
-  const [isWalletListVisible, setWalletListVisible] = useState(false);
+  const [isCategoryListVisible, setCategoryListVisible] = useState(false)
+  const [isWalletListVisible, setWalletListVisible] = useState(false)
 
   const onSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     addTransaction({
       name,
       wallet,
@@ -35,34 +35,42 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
       transactionAmount,
       transactionType,
       transactionDate: new Date(transactionDate),
-    });
-  };
+    })
+    setName('')
+    setWallet('')
+    setCategory('')
+    setDescription('')
+    setTransactionAmount('')
+    setTransactionDate('')
+    setTransactionType('')
+    onClose()
+  }
 
   const handleWalletInputClick = () => {
-    setWalletListVisible(true);
-    setCategoryListVisible(false); // Ukryj listę kategorii
-  };
+    setWalletListVisible(true)
+    setCategoryListVisible(false) // Ukryj listę kategorii
+  }
 
   const handleWalletSelection = (selectedWallet) => {
-    setWallet(selectedWallet);
-    setWalletListVisible(false);
-  };
+    setWallet(selectedWallet)
+    setWalletListVisible(false)
+  }
 
   const handleCategoryInputClick = () => {
-    setCategoryListVisible(true);
-    setWalletListVisible(false); // Ukryj listę portfeli
-  };
+    setCategoryListVisible(true)
+    setWalletListVisible(false) // Ukryj listę portfeli
+  }
 
   const handleCategorySelection = (selectedCategory) => {
-    setCategory(selectedCategory);
-    setCategoryListVisible(false);
-  };
+    setCategory(selectedCategory)
+    setCategoryListVisible(false)
+  }
 
   const modalTitle = isCategoryListVisible
     ? "Wybierz kategorię"
     : isWalletListVisible
       ? "Wybierz portfel"
-      : "Dodaj Transakcję";
+      : "Dodaj Transakcję"
 
   return (
     <Modal isOpen={isOpen} onClose={() => onClose(false)} title={modalTitle}>
@@ -100,7 +108,7 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
 
 
             <MyInput
-              label="Wallet"
+              label="Portfel"
               placeholder={"Wybierz portfel"}
               type="text"
               value={wallet}
@@ -146,14 +154,16 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
 
       {isCategoryListVisible && (
         <div className="modalAddTransaction--category">
-          <div className="back" onClick={() => setCategoryListVisible(false)}>wstecz</div>
+          <div className="back" onClick={() => setCategoryListVisible(false)}><i className="icon icon--arrow-left s24"></i></div>
           {categories.map((category) => {
             const { id, name, categoryType, icon, color, bgColor } = category
             return (
               categoryType === transactionType && (
                 <div key={id} className="categories__item" onClick={() => handleCategorySelection(name)}>
-                  <div className="iconWrap" style={{ backgroundColor: `var(${bgColor})` }}>
-                    <i className={`icon icon--${icon}`} style={{ backgroundColor: `var(${color})` }}></i>
+                  <div className="categories__item__icon">
+                    <div className="iconWrap" style={{ backgroundColor: `var(${bgColor})` }}>
+                      <i className={`icon icon--${icon}`} style={{ backgroundColor: `var(${color})` }}></i>
+                    </div>
                   </div>
                   <div className="categories__item__name">
                     <span>{name}</span>
@@ -169,28 +179,31 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
 
       {isWalletListVisible && (
         <div className="modalAddTransaction--wallets">
-          <div className="back" onClick={() => setWalletListVisible(false)}>wstecz</div>
+          <div className="back" onClick={() => setWalletListVisible(false)}><i className="icon icon--arrow-left s24"></i></div>
           {wallets.map((wallet) => {
             const { id, name, walletAmount } = wallet
             return (
-              <div
-                key={id}
-                className="wallets__item"
-                onClick={() => handleWalletSelection(name)}>
-                <div className="wallets__item__body">
-                  <h3>{name}</h3>
-                  <span>{walletAmount}</span>
+              <>
+              <div className="universal__item" key={id} onClick={() => handleWalletSelection(name)}>
+                <div className="universal__item__body">
+                  <div className="top">
+                    <h2>{name}</h2>
+                  </div>
+                  <div className="bottom">
+                    <h4>{Number(walletAmount).toFixed(2) + ' zł'}</h4>
+                  </div>
                 </div>
-                <div className="wallets__item__action">
-                  <span>arr</span>
+                <div className="universal__item__arr">
+                  <i className="icon icon--arrow-right"></i>
                 </div>
               </div>
+              </>
             )
           })}
         </div>
       )}
     </Modal>
-  );
-};
+  )
+}
 
-export default ModalAddTransaction;
+export default ModalAddTransaction

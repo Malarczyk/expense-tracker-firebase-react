@@ -1,23 +1,45 @@
 import TopBar from "../../components/TopBar"
 import { useState } from "react"
-import { useGetBudgets } from "../../hooks/useGetBudgets"
+import { useBudgets } from "../../hooks/useBudgets"
 import ModalAddBudget from './modals/modalAddBudget'
+import ModalEditBudget from './modals/modalEditBudget'
 import './_index.scss'
 import ButtonAdd from "../../components/ButtonAdd"
+
+
 
 const Budgets = () => {
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
   const [isModalEditOpen, setIsModalEditOpen] = useState(false)
   const [selectedBudget, setSelectedBudget] = useState(null)
-  const { budgets } = useGetBudgets()
+  const { budgets, updateBudget, deleteBudget } = useBudgets()
 
-  const handleBudgetClick = (wallet) => {
-    setSelectedBudget(wallet);
+
+  const handleBudgetClick = (budget) => {
+    setSelectedBudget(budget);
     setIsModalEditOpen(true);
+  }
+
+  const handleUpdateBudget = (updatedBudget) => {
+    try {
+      updateBudget(updatedBudget.id, updatedBudget)
+      setIsModalEditOpen(false)
+      setSelectedBudget(null)
+    } catch (error) {
+      console.error('Error updating budget:', error)
+    }
   }
 
   return (<>
     <ModalAddBudget isOpen={isModalAddOpen} onClose={() => setIsModalAddOpen(false)} />
+    <ModalEditBudget
+        isOpen={isModalEditOpen}
+        onClose={() => setIsModalEditOpen(false)}
+        selectedBudget={selectedBudget}
+        onUpdateBudget={handleUpdateBudget}
+        onDeleteBudget={(budgetId) => {
+          deleteBudget(budgetId)
+        }} />
     <div className="budgets">
       <TopBar title={'Budżety'} />
 
@@ -27,7 +49,7 @@ const Budgets = () => {
           budgets.map((budget) => {
             const { id, name, maxAmount, actualAmount} = budget
             return (
-              <div className="universal__item" key={id} onClick={() => handleBudgetClick()}>
+              <div className="universal__item" key={id} onClick={() => handleBudgetClick(budget)}>
                 <div className="universal__item__body">
                   <div className="top">
                     <h2>{name}</h2>
