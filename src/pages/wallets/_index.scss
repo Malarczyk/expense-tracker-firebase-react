@@ -1,4 +1,6 @@
 .wallets{
+  height: 100%;
+  overflow: scroll;
   &__content{
     padding: 1em;
     display: flex;
