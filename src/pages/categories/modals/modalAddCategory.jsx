@@ -39,7 +39,6 @@ const ModalAddCategory = ({ isOpen, onClose }) => {
     setIcon('')
     setColor('')
     setBgColor('')
-    setCategoryType('')
     onClose()
   }
 

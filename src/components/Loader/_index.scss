@@ -1,0 +1,100 @@
+$loader-size: 200px;
+$animation-length: 5s;
+
+.loader{
+  width: 100%;
+  height: calc(100 * var(--vh, 1vh));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loading__aninmation {
+  position: relative;
+  width: $loader-size;
+  height: $loader-size;
+  margin: auto;
+
+  perspective: 800px;
+  transform-style: preserve-3d;
+  transform: translateZ(-100px) rotateY(-90deg) rotateX(90deg) rotateZ(90deg)
+    scale(0.5);
+  opacity: 0;
+
+  transition: all 0.2s ease-out;
+
+  span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-flex;
+    font-family: 'Pridi';
+    font-size: 21px;;
+  }
+
+  .border {
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid var(--secondary-color);
+  }
+
+  $out: 70%;
+  .out {
+    top: (100% - $out) / 2;
+    left: (100% - $out) / 2;
+    width: $out;
+    height: $out;
+
+    border-left-color: transparent;
+    border-right-color: transparent;
+
+    animation: spin 2s linear reverse infinite;
+  }
+
+  $in: 64%;
+  .in {
+    top: (100% - $in) / 2;
+    left: (100% - $in) / 2;
+    width: $in;
+    height: $in;
+
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+
+    animation: spin 2s linear infinite;
+  }
+}
+
+.loading__aninmation {
+  transform: translateZ(0) rotateY(0deg) rotateX(0deg) rotateZ(0deg) scale(1);
+  opacity: 1;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 0.8;
+  }
+
+  25% {
+    opacity: 0.2;
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.8;
+  }
+}
+

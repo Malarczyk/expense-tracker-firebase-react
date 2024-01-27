@@ -1,8 +1,9 @@
-import './_index.scss'
-import { signOut } from "firebase/auth"
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom'
 import { auth } from "../../config/firebase-config"
-import { useNavigate } from "react-router-dom"
+import { signOut } from "firebase/auth"
+import Profile from '../Profile'
+import './_index.scss'
+
 
 const MenuDesktop = ({ changeTheme }) => {
   const navigate = useNavigate()
@@ -20,9 +21,9 @@ const MenuDesktop = ({ changeTheme }) => {
     }
   }
 
-  const handleNavigation = (path) => {
+  const nav = (path) => {
     navigate(path);
-  };
+  }
 
   return (
     <>
@@ -30,7 +31,7 @@ const MenuDesktop = ({ changeTheme }) => {
 
         <div className="menuDesktop__logo">
           <div className="logo">
-            Wismmo
+            Logo
           </div>
           <div className="back">
             <div className="iconWrap">
@@ -40,36 +41,27 @@ const MenuDesktop = ({ changeTheme }) => {
         </div>
 
         <div className="menuDesktop__profile">
-          <div className="dashboard__profile">
-
-            <div className="dashboard__profile__img">
-              <span></span>
-            </div>
-            <div className="dashboard__profile__body">
-              <span>Witaj z powrotem,</span>
-              <h2>Piotr Kowalski!</h2>
-            </div>
-          </div>
+          <Profile isHamburger={false} />
         </div>
 
         <div className="menuDesktop__nav">
-          <div className={`menuDesktop__nav__btn ${isActive('/home') && 'active'}`} onClick={() => handleNavigation('/home')}>
+          <div className={`menuDesktop__nav__btn ${isActive('/home') && 'active'}`} onClick={() => nav('/home')}>
             <i className="icon icon--dashboard"></i>
             <span>Pulpit</span>
           </div>
-          <div className={`menuDesktop__nav__btn ${isActive('/transactions') && 'active'}`} onClick={() => handleNavigation('/transactions')}>
+          <div className={`menuDesktop__nav__btn ${isActive('/transactions') && 'active'}`} onClick={() => nav('/transactions')}>
             <i className="icon icon--transactions"></i>
             <span>Transakcje</span>
           </div>
-          <div className={`menuDesktop__nav__btn ${isActive('/categories') && 'active'}`} onClick={() => handleNavigation('/categories')}>
+          <div className={`menuDesktop__nav__btn ${isActive('/categories') && 'active'}`} onClick={() => nav('/categories')}>
             <i className="icon icon--categories"></i>
             <span>Kategorie</span>
           </div>
-          <div className={`menuDesktop__nav__btn ${isActive('/wallets') && 'active'}`} onClick={() => handleNavigation('/wallets')}>
+          <div className={`menuDesktop__nav__btn ${isActive('/wallets') && 'active'}`} onClick={() => nav('/wallets')}>
             <i className="icon icon--wallets"></i>
             <span>Portfele</span>
           </div>
-          <div className={`menuDesktop__nav__btn ${isActive('/budgets') && 'active'}`} onClick={() => handleNavigation('/budgets')}>
+          <div className={`menuDesktop__nav__btn ${isActive('/budgets') && 'active'}`} onClick={() => nav('/budgets')}>
             <i className="icon icon--budgets"></i>
             <span>Budżety</span>
           </div>

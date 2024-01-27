@@ -1,7 +1,9 @@
 import MyRadioInput from '../../../components/forms/MyRadioInput'
 import MyInputColor from '../../../components/forms/MyInputColor'
+import { useTransactions } from "../../../hooks/useTransactions"
 import DeletePopup from '../../../components/DeletePopup'
 import MyInput from '../../../components/forms/MyInput'
+import { useBudgets } from "../../../hooks/useBudgets"
 import Modal from '../../../components/Modal'
 import { useState, useEffect } from 'react'
 import icons from './icons.json'
@@ -16,6 +18,9 @@ const ModalEditCategory = ({ isOpen, onClose, selectedCategory, onUpdateCategory
 
   const [isIconListVisible, setIconListVisible] = useState(false)
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false)
+
+  const { transactions, updateTransaction } = useTransactions()
+  const { budgets, deleteBudget } = useBudgets()
 
   const handleIconInputClick = () => {
     setIconListVisible(true)
@@ -49,8 +54,33 @@ const ModalEditCategory = ({ isOpen, onClose, selectedCategory, onUpdateCategory
       categoryType,
     }
 
+    // Aktualizuj nazwę kategorii w transakcjach
+    transactions.forEach((transaction) => {
+      if (transaction.category === selectedCategory.name) {
+        updateTransaction(transaction.id, { ...transaction, category: name })
+      }
+    })
+
     onUpdateCategory(updatedCategory)
     onClose()
+  }
+  const handleDeleteCategory = () => {
+    // Zaktualizuj transakcje, ustawiając kategorię na "Brak kategorii"
+    transactions.forEach((transaction) => {
+      if (transaction.category === selectedCategory.name) {
+        updateTransaction(transaction.id, { ...transaction, category: "Brak kategorii" })
+      }
+    })
+
+    // Usuń budżety, które zawierają tę kategorię
+    budgets.forEach((budget) => {
+      if (budget.categories.includes(selectedCategory.name)) {
+        deleteBudget(budget.id)
+      }
+    })
+
+    onDeleteCategory(selectedCategory.id)
+    setIsDeletePopupOpen(false)
   }
 
   const handleDeleteClick = () => {
@@ -122,12 +152,12 @@ const ModalEditCategory = ({ isOpen, onClose, selectedCategory, onUpdateCategory
 
       <DeletePopup
         isOpen={isDeletePopupOpen}
-        onDeleteConfirm={() => {
-          onDeleteCategory(selectedCategory.id)
-          setIsDeletePopupOpen(false) // Zamknij popup po usunięciu
-        }}
+        onDeleteConfirm={handleDeleteCategory}
         onClose={() => setIsDeletePopupOpen(false)}
+        message="Czy na pewno chcesz usunąć kategorię? Spowoduje to również usunięcie budżetu, który miał ją przypisaną. Możesz wejść w budżety i edytować je, a następnie usunąć tę kategorię."
       />
+
+
     </>
   )
 }

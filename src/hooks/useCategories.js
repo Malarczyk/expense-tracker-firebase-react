@@ -2,23 +2,25 @@ import { AlertContext } from '../context/Alert/AlertContext'
 import { useEffect, useState, useContext } from "react"
 import { useGetUserInfo } from "./useGetUserInfo"
 import { db } from "../config/firebase-config"
-import { 
-  addDoc, 
-  doc, 
-  collection, 
-  serverTimestamp, 
-  updateDoc, 
-  deleteDoc, 
-  query, 
-  where, 
-  orderBy, 
-  onSnapshot 
+import {
+  addDoc,
+  doc,
+  collection,
+  serverTimestamp,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  orderBy,
+  onSnapshot
 } from "firebase/firestore"
 
 
 export const useCategories = () => {
   const [categories, setCategories] = useState([])
   const categoriesCollectionRef = collection(db, 'categories')
+  const [isCategoriesLoading, setCategoriesLoading] = useState(true)
+
   const { userID } = useGetUserInfo()
   const { showAlert } = useContext(AlertContext)
 
@@ -70,7 +72,7 @@ export const useCategories = () => {
   // Pobieranie kategorii
   useEffect(() => {
     let unsubscribe
-
+    setCategoriesLoading(true)
     try {
       const queryCategories = query(
         categoriesCollectionRef,
@@ -88,11 +90,13 @@ export const useCategories = () => {
 
         setCategories(docs)
       })
+      setCategoriesLoading(false)
     } catch (err) {
       console.error(err)
+      setCategoriesLoading(false)
     }
-
+    
     return () => unsubscribe && unsubscribe()
   }, [userID])
-  return { categories, addCategory, updateCategory, deleteCategory }
+  return { isCategoriesLoading, categories, addCategory, updateCategory, deleteCategory }
 }

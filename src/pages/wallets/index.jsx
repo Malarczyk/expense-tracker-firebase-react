@@ -39,7 +39,9 @@ const Wallets = () => {
         }} />
     <div className="wallets">
       <TopBar title={'Portfele'}/>
-
+      <div className="wallets__title">
+        <h1>Twoje portfele</h1>
+      </div>
       <div className="wallets__content">
 
         {wallets ? (

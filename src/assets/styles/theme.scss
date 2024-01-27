@@ -2,6 +2,7 @@
 body[theme="light"]{
   --bg-color: #f6f6f7;
   --primary-color: #ffffff;
+  --hover-color: rgba(0,0,0, 0.05);
   --text-color-30: #bababa;
   --text-color-35: #aeaeae;
   --text-color-50: #8b8b8b;
@@ -38,6 +39,7 @@ body[theme="light"]{
 body[theme="dark"]{
   --bg-color: #000;
   --primary-color: rgb(69, 69, 69);
+  --hover-color: rgba(0,0,0, 0.05);
   --text-color-30: #fff;
   --text-color-35: #fff;
   --text-color-50: #fff;

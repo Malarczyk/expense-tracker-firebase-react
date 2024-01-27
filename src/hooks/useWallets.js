@@ -18,6 +18,8 @@ import {
 export const useWallets = () => {
   const [wallets, setWallets] = useState([])
   const walletsCollectionRef = collection(db, 'wallets')
+  const [isWalletsLoading, setWalletsLoading] = useState(true)
+
   const { userID } = useGetUserInfo()
   const { showAlert } = useContext(AlertContext)
 
@@ -69,7 +71,7 @@ export const useWallets = () => {
   // Pobieranie portfeli
   useEffect(() => {
     let unsubscribe
-
+    setWalletsLoading(true)
     try {
       const queryWallets = query(
         walletsCollectionRef,
@@ -87,12 +89,14 @@ export const useWallets = () => {
 
         setWallets(docs)
       })
+      setWalletsLoading(false)
     } catch (err) {
       console.error(err)
+      setWalletsLoading(false)
     }
 
     return () => unsubscribe && unsubscribe()
   }, [userID])
 
-  return { wallets, addWallet, updateWallet, deleteWallet }
+  return { isWalletsLoading, wallets, addWallet, updateWallet, deleteWallet }
 }

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import '../_index.scss';
 
-const MyInput = ({ label, value, type, onChange, error, required, focus, placeholder, click }) => {
+const MyInput = ({name, label, value, type, onChange, error, required, focus, placeholder, click }) => {
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -14,6 +14,7 @@ const MyInput = ({ label, value, type, onChange, error, required, focus, placeho
     <div className='myInput' onClick={click}>
       <label>{label}</label>
       <input
+      name={name}
         type={type}
         value={value}
         onChange={onChange}

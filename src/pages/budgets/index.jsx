@@ -11,6 +11,7 @@ import ButtonAdd from "../../components/ButtonAdd"
 const Budgets = () => {
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
   const [isModalEditOpen, setIsModalEditOpen] = useState(false)
+  
   const [selectedBudget, setSelectedBudget] = useState(null)
   const { budgets, updateBudget, deleteBudget } = useBudgets()
 
@@ -42,8 +43,11 @@ const Budgets = () => {
         }} />
     <div className="budgets">
       <TopBar title={'Budżety'} />
-
+      <div className="budgets__title">
+        <h1>Twoje budżety</h1>
+      </div>
       <div className="budgets__content">
+        
 
         {budgets ? (
           budgets.map((budget) => {

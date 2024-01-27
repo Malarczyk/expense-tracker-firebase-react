@@ -1,40 +1,87 @@
-import './_index.scss'
-import { auth, provider } from '../../config/firebase-config'
+import initializeDefaultUserData from '../../utils/initializeDefaultUserData'
 import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth'
+import { auth, provider, db } from '../../config/firebase-config'
+import { collection, query, where, getDocs } from "firebase/firestore"
+import { useGetUserInfo } from '../../hooks/useGetUserInfo'
 import { useNavigate, Navigate } from 'react-router-dom'
-import { useGetUserInfo } from '../../hooks/useGetUserInfo';
 import LogoGoogle from '../../assets/images/google.svg'
-import { useState } from 'react';
+import { useState } from 'react'
+import './_index.scss'
 
 const Login = ({ setSigninVisible }) => {
-  const [loginInput, setLoginInput] = useState("");
-  const [passInput, setPassInput] = useState("");
+  const [loginInput, setLoginInput] = useState("")
+  const [passInput, setPassInput] = useState("")
 
   const navigate = useNavigate()
   const { isAuth } = useGetUserInfo()
 
   const signInWithGoogle = async () => {
     const results = await signInWithPopup(auth, provider)
+    console.log(results.user);
+    // Tuż po zalogowaniu sprawdzamy, czy użytkownik ma już zainicjalizowane dane
+    const user = results.user;
+
+    // Zdefiniuj referencję do kolekcji, gdzie przechowujesz dane użytkownika (na przykład kategorie)
+    const userCategoriesRef = collection(db, 'categories');
+
+    // Stwórz zapytanie, które sprawdza, czy istnieją jakieś kategorie dla danego uid użytkownika
+    const querySnapshot = await getDocs(query(userCategoriesRef, where('userId', '==', user.uid)));
+
+    if (querySnapshot.empty) {
+      // Brak kategorii dla tego użytkownika, zainicjuj domyślne dane
+      initializeDefaultUserData(user.uid);
+    } else {
+      // Dane dla tego użytkownika już istnieją, nie inicjuj ponownie
+      console.log('Użytkownik posiada już dane, pomijam inicjalizację.');
+    }
+
     const authInfo = {
       userID: results.user.uid,
       name: results.user.displayName,
       profilePhoto: results.user.photoURL,
       isAuth: true,
-    };
-    localStorage.setItem("auth", JSON.stringify(authInfo));
+    }
+    localStorage.setItem("auth", JSON.stringify(authInfo))
     navigate("/home")
-  };
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault(); // Zatrzymuje domyślne zachowanie formularza
     try {
       const userCredential = await signInWithEmailAndPassword(auth, loginInput, passInput);
-      console.log(userCredential.user); // Możesz tu dodać więcej logiki, np. przekierowanie lub wyświetlenie komunikatu
-      // Przekierowanie po pomyślnym logowaniu
+      const user = userCredential.user;
+  
+      // Zdefiniuj referencję do kolekcji, gdzie przechowujesz dane użytkownika (na przykład kategorie)
+      const userCategoriesRef = collection(db, 'categories');
+  
+      // Stwórz zapytanie, które sprawdza, czy istnieją jakieś kategorie dla danego uid użytkownika
+      const querySnapshot = await getDocs(query(userCategoriesRef, where('userId', '==', user.uid)));
+  
+      if (querySnapshot.empty) {
+        // Brak kategorii dla tego użytkownika, zainicjuj domyślne dane
+        initializeDefaultUserData(user.uid);
+      } else {
+        // Dane dla tego użytkownika już istnieją, nie inicjuj ponownie
+        console.log('Użytkownik posiada już dane, pomijam inicjalizację.');
+      }
+  
+      // Przygotuj dane użytkownika do zapisania
+      const authInfo = {
+        userID: user.uid,
+        name: user.displayName || "", // Użyj displayName lub pustego stringa, jeśli nie jest dostępny
+        email: user.email, // Adres e-mail użytkownika
+        profilePhoto: user.photoURL || "", // Użyj photoURL lub pustego stringa, jeśli nie jest dostępny
+        isAuth: true,
+      };
+  
+      // Zapisz dane w localStorage
+      localStorage.setItem("auth", JSON.stringify(authInfo));
+  
+      // Przekieruj użytkownika
       navigate("/home");
     } catch (error) {
       console.error("Błąd podczas logowania: ", error.message);
-      // Możesz tu dodać obsługę błędów, np. wyświetlenie komunikatu użytkownikowi
+      // Twoja obsługa błędów...
     }
   };
 

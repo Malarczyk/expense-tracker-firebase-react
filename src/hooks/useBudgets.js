@@ -18,6 +18,8 @@ import {
 export const useBudgets = () => {
   const [budgets, setBudgets] = useState([])
   const budgetsCollectionRef = collection(db, 'budgets')
+  const [isBudgetsLoading, setBudgetsLoading] = useState(true)
+
   const { userID } = useGetUserInfo()
   const { showAlert } = useContext(AlertContext)
 
@@ -73,7 +75,11 @@ export const useBudgets = () => {
   // Pobieranie budżetów
   useEffect(() => {
     let unsubscribe
+    setBudgetsLoading(true)
 
+    if (!userID) {
+      return;
+    }
     try {
       const queryBudgets = query(
         budgetsCollectionRef,
@@ -91,12 +97,14 @@ export const useBudgets = () => {
 
         setBudgets(docs)
       })
+      setBudgetsLoading(false)
     } catch (err) {
       console.error(err)
+      setBudgetsLoading(false)
     }
 
     return () => unsubscribe && unsubscribe()
   }, [userID])
 
-  return { budgets, addBudget, updateBudget, deleteBudget }
+  return { isBudgetsLoading, budgets, addBudget, updateBudget, deleteBudget }
 }

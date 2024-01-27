@@ -1,15 +1,22 @@
+import ModalEdit from '../../components/Modal/ModalEditTransaction'
+import ModalAdd from '../../components/Modal/ModalAddTransaction'
+import { useTransactions } from '../../hooks/useTransactions'
+import ButtonAdd from '../../components/ButtonAdd'
 import React, { useState, useEffect } from 'react'
 import BottomBar from '../../components/BottomBar'
-import ModalAdd from '../../components/Modal/ModalAddTransaction'
+import Loader from '../../components/Loader'
 import Dashboard from './Dashboard'
 import Stats from './Stats'
 import './_index.scss'
-import ButtonAdd from '../../components/ButtonAdd'
+
 const Home = () => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth)
   const [selectedComponent, setSelectedComponent] = useState('dashboard')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalEditOpen, setIsModalEditOpen] = useState(false)
+  const [selectedTransaction, setSelectedTransaction] = useState(null)
 
+  const { updateTransaction, deleteTransaction, isTransactionLoading } = useTransactions()
   const handleCloseModal = () => {
     setIsModalOpen(false)
   }
@@ -22,6 +29,11 @@ const Home = () => {
     setSelectedComponent(component)
   }
 
+  const handleTransactionClick = (transaction) => {
+    setSelectedTransaction(transaction)
+    setIsModalEditOpen(true)
+  }
+
   useEffect(() => {
     window.addEventListener('resize', handleResize)
     return () => {
@@ -29,24 +41,49 @@ const Home = () => {
     }
   }, [])
 
+  const handleUpdateTransaction = (updatedTransaction) => {
+    try {
+      updateTransaction(updatedTransaction.id, updatedTransaction)
+      setIsModalEditOpen(false)
+      setSelectedTransaction(null)
+    } catch (error) {
+      console.error('Error updating transaction:', error)
+    }
+  }
+
   return (
     <>
-    <ModalAdd isOpen={isModalOpen} onClose={handleCloseModal}/>
-    <div className='home'>
-      {screenWidth > 1099 ? (
-        <>
-          <Dashboard isProfileVisible={false}/>
-           <Stats isProfileVisible={false}/>
-           <ButtonAdd action={()=>setIsModalOpen(true)}/>
-        </>
-      ) : (
-        <>
-          {selectedComponent === 'dashboard' && <Dashboard isProfileVisible={true}/>}
-          {selectedComponent === 'stats' && <Stats isProfileVisible={true}/>}
-          <BottomBar onButtonClick={handleButtonClick} onOpenModal={() => setIsModalOpen(true)} activeBtn={selectedComponent}/>
-        </>
-      )}
-    </div>
+      <ModalAdd isOpen={isModalOpen} onClose={handleCloseModal} />
+      <ModalEdit
+        isOpen={isModalEditOpen}
+        onClose={() => setIsModalEditOpen(false)}
+        selectedTransaction={selectedTransaction}
+        onUpdateTransaction={handleUpdateTransaction}
+        onDeleteTransaction={(transactionId) => {
+          deleteTransaction(transactionId)
+        }} />
+
+      <div className='home'>
+        {screenWidth > 1099 ? (
+          <>
+            {false
+              ? <Loader />
+              : (
+                <>
+                  <Dashboard isProfileVisible={false} onItemClick={handleTransactionClick} />
+                  <Stats isProfileVisible={false} />
+                  <ButtonAdd action={() => setIsModalOpen(true)} />
+                </>
+              )}
+          </>
+        ) : (
+          <>
+            {selectedComponent === 'dashboard' && <Dashboard isProfileVisible={true} onItemClick={handleTransactionClick} />}
+            {selectedComponent === 'stats' && <Stats isProfileVisible={true} />}
+            <BottomBar onButtonClick={handleButtonClick} onOpenModal={() => setIsModalOpen(true)} activeBtn={selectedComponent} />
+          </>
+        )}
+      </div>
     </>
   )
 }

@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import '../_index.scss';
 
-const MyCashInput = ({ label, value, onChange, error, required, placeholder }) => {
+const MyCashInput = ({ name, label, value, onChange, error, required, placeholder }) => {
   const inputRef = useRef(null);
 
 
@@ -19,6 +19,7 @@ const MyCashInput = ({ label, value, onChange, error, required, placeholder }) =
     <div className='myInput'>
       <label>{label}</label>
       <input
+        name={name}
         type="text"
         value={value}
         placeholder={placeholder}

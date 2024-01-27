@@ -1,5 +1,6 @@
 import { useTransactions } from "../../hooks/useTransactions.js"
 import { useCategories } from "../../hooks/useCategories"
+import { useBudgets } from "../../hooks/useBudgets"
 import { useWallets } from "../../hooks/useWallets"
 import MyRadioInput from "../forms/MyRadioInput"
 import MyCashInput from "../forms/MyCashInput"
@@ -22,27 +23,55 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
   const [transactionAmount, setTransactionAmount] = useState("")
   const [transactionType, setTransactionType] = useState("expense")
 
+  const { updateWallet } = useWallets()
+  const { budgets, updateBudget } = useBudgets()
+
   const [isCategoryListVisible, setCategoryListVisible] = useState(false)
   const [isWalletListVisible, setWalletListVisible] = useState(false)
 
   const onSubmit = (e) => {
     e.preventDefault()
+    const transactionAmountNum = parseFloat(transactionAmount || '0')
     addTransaction({
       name,
       wallet,
-      category,
+      category: category || "Brak kategorii",
       description,
-      transactionAmount,
+      transactionAmount: transactionAmountNum.toString(),
       transactionType,
       transactionDate: new Date(transactionDate),
     })
+    // Aktualizacja budżetów
+    budgets.forEach((budget) => {
+      if (budget.categories.includes(category)) {
+        const currentAmount = parseFloat(budget.actualAmount || '0')
+        const updatedAmount = transactionType === 'expense'
+          ? currentAmount + transactionAmountNum
+          : currentAmount - transactionAmountNum
+
+        updateBudget(budget.id, { actualAmount: updatedAmount.toString() })
+      }
+    })
+
+
+    // Aktualizacja portfela
+    const selectedWallet = wallets.find(w => w.name === wallet)
+    if (selectedWallet) {
+      const currentWalletAmount = parseFloat(selectedWallet.walletAmount || '0')
+      const updatedWalletAmount = transactionType === 'expense'
+        ? currentWalletAmount - transactionAmountNum
+        : currentWalletAmount + transactionAmountNum
+
+      updateWallet(selectedWallet.id, { walletAmount: updatedWalletAmount.toString() })
+    }
+
+
     setName('')
     setWallet('')
     setCategory('')
     setDescription('')
     setTransactionAmount('')
     setTransactionDate('')
-    setTransactionType('')
     onClose()
   }
 
@@ -65,6 +94,7 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
     setCategory(selectedCategory)
     setCategoryListVisible(false)
   }
+
 
   const modalTitle = isCategoryListVisible
     ? "Wybierz kategorię"
@@ -124,7 +154,6 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               click={handleCategoryInputClick}
-              required
             />
 
             <MyCashInput
@@ -184,19 +213,19 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
             const { id, name, walletAmount } = wallet
             return (
               <>
-              <div className="universal__item" key={id} onClick={() => handleWalletSelection(name)}>
-                <div className="universal__item__body">
-                  <div className="top">
-                    <h2>{name}</h2>
+                <div className="universal__item" key={id} onClick={() => handleWalletSelection(name)}>
+                  <div className="universal__item__body">
+                    <div className="top">
+                      <h2>{name}</h2>
+                    </div>
+                    <div className="bottom">
+                      <h4>{Number(walletAmount).toFixed(2) + ' zł'}</h4>
+                    </div>
                   </div>
-                  <div className="bottom">
-                    <h4>{Number(walletAmount).toFixed(2) + ' zł'}</h4>
+                  <div className="universal__item__arr">
+                    <i className="icon icon--arrow-right"></i>
                   </div>
                 </div>
-                <div className="universal__item__arr">
-                  <i className="icon icon--arrow-right"></i>
-                </div>
-              </div>
               </>
             )
           })}

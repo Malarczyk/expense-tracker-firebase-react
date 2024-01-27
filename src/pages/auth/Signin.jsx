@@ -1,36 +1,39 @@
-import './_index.scss'
-import { useState } from 'react';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
+import initializeDefaultUserData from '../../utils/initializeDefaultUserData'
 import { auth } from '../../config/firebase-config'
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import './_index.scss'
 
 const Signin = ({ setSigninVisible }) => {
-  const [loginInput, setLoginInput] = useState("");
-  const [passInput, setPassInput] = useState("");
-  const [error, setError] = useState(""); // Dodano stan błędu
+  const [loginInput, setLoginInput] = useState("")
+  const [passInput, setPassInput] = useState("")
+  const [error, setError] = useState("") // Dodano stan błędu
 
   const navigate = useNavigate()
 
   const handleSignup = async (event) => {
-    event.preventDefault(); // Zatrzymuje domyślne zachowanie formularza
+    event.preventDefault() // Zatrzymuje domyślne zachowanie formularza
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, loginInput, passInput);
+      const userCredential = await createUserWithEmailAndPassword(auth, loginInput, passInput)
       // Wysyłanie e-maila weryfikacyjnego
       sendEmailVerification(userCredential.user)
         .then(() => {
           // E-mail weryfikacyjny został wysłany
-          console.log("E-mail weryfikacyjny został wysłany");
-          //navigate("/verify-email"); Możesz przekierować użytkownika do strony z informacją, żeby sprawdził skrzynkę e-mail
+          console.log("E-mail weryfikacyjny został wysłany")
+          //navigate("/verify-email") Możesz przekierować użytkownika do strony z informacją, żeby sprawdził skrzynkę e-mail
         })
         .catch((error) => {
           // Błąd podczas wysyłania e-maila weryfikacyjnego
-          setError(error.message);
-        });
+          setError(error.message)
+        })
+      // Inicjalizuj domyślne dane użytkownika
+      initializeDefaultUserData(userCredential.user.uid)
     } catch (error) {
-      console.error("Błąd podczas rejestracji: ", error.message);
-      setError(error.message); // Ustawienie komunikatu błędu
+      console.error("Błąd podczas rejestracji: ", error.message)
+      setError(error.message) // Ustawienie komunikatu błędu
     }
-  };
+  }
 
   return (
     <>

@@ -18,6 +18,8 @@ import {
 export const useTransactions = () => {
   const [transactions, setTransactions] = useState([])
   const [transactionTotal, setTransactionTotal] = useState({})
+  const [isTransactionLoading, setTransactionLoading] = useState(true)
+
   const transactionsCollectionRef = collection(db, 'transactions')
   const { userID } = useGetUserInfo()
   const { showAlert } = useContext(AlertContext)
@@ -83,6 +85,7 @@ export const useTransactions = () => {
   // Pobieranie transakcji
   useEffect(() => {
     let unsubscribe
+    setTransactionLoading(true)
 
     try {
       const queryTransactions = query(
@@ -117,13 +120,15 @@ export const useTransactions = () => {
           expenses: totalExpenses,
           income: totalIncome,
         })
+        setTransactionLoading(false)
       })
     } catch (err) {
       console.error(err)
+      setTransactionLoading(false)
     }
 
     return () => unsubscribe && unsubscribe()
   }, [userID])
 
-  return { transactions, transactionTotal, addTransaction, updateTransaction, deleteTransaction }
+  return { isTransactionLoading, transactions, transactionTotal, addTransaction, updateTransaction, deleteTransaction }
 }

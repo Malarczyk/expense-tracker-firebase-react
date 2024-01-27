@@ -202,34 +202,6 @@
   }
 }
 
-.dashboard__profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  justify-content: space-between;
-  padding: 1em 1em 0 1em;
-  &__img {
-    display: block;
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    background-color: var(--dark-purple-color);
-  }
-  &__body {
-    flex-grow: 1;
-    h2 {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--text-color);
-    }
-    span {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-color-67);
-    }
-  }
-}
-
 .stats {
   display: flex;
   flex-direction: column;

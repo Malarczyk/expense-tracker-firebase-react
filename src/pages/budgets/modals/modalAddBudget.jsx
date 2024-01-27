@@ -2,30 +2,31 @@ import MyCashInput from "../../../components/forms/MyCashInput"
 import { useCategories } from "../../../hooks/useCategories"
 import MyInput from "../../../components/forms/MyInput"
 import { useBudgets } from "../../../hooks/useBudgets"
+import { useTransactions } from "../../../hooks/useTransactions" // Załóżmy, że mamy hook do pobierania transakcji
 import Modal from '../../../components/Modal'
 import { useState, useEffect } from 'react'
 
-
 const ModalAddBudget = ({ isOpen, onClose }) => {
-  const { addBudget } = useBudgets()
+  const { addBudget, updateBudget } = useBudgets()
+  const { transactions } = useTransactions() // Pobierz transakcje
   const { categories } = useCategories()
+  
   const [name, setName] = useState("")
   const [maxAmount, setMaxAmount] = useState("")
-  const [category, setCategory] = useState([])
+  const [category, setCategory] = useState("")
   const [selectedCategories, setSelectedCategories] = useState([])
   const [isCategoryListVisible, setCategoryListVisible] = useState(false)
-
 
   const handleCategoryInputClick = () => {
     setCategoryListVisible(true)
   }
 
   const handleCategorySelection = (selectedCategory) => {
-    if (selectedCategories.includes(selectedCategory)) {
-      setSelectedCategories(selectedCategories.filter(category => category !== selectedCategory))
-    } else {
-      setSelectedCategories([...selectedCategories, selectedCategory])
-    }
+    const updatedCategories = selectedCategories.includes(selectedCategory)
+      ? selectedCategories.filter(category => category !== selectedCategory)
+      : [...selectedCategories, selectedCategory]
+    setSelectedCategories(updatedCategories)
+    setCategory(updatedCategories.join(', '))
   }
 
   const handleCategoriesConfirm = () => {
@@ -34,15 +35,40 @@ const ModalAddBudget = ({ isOpen, onClose }) => {
     }
   }
 
-  const onSubmit = (e) => {
+  const calculateActualAmount = () => {
+    const currentDate = new Date();
+    const currentMonthTransactions = transactions.filter(transaction => {
+      const transactionDate = transaction.transactionDate.toDate();
+      return transactionDate.getMonth() === currentDate.getMonth() && transactionDate.getFullYear() === currentDate.getFullYear();
+    });
+  
+    const relevantTransactions = currentMonthTransactions.filter(transaction =>
+      selectedCategories.includes(transaction.category)
+    );
+  
+    const totalSpent = relevantTransactions.reduce((total, transaction) => {
+      return total + parseFloat(transaction.transactionAmount || '0');
+    }, 0);
+
+    return totalSpent.toString();
+  };
+
+  const onSubmit = async (e) => {
     e.preventDefault()
-    console.log(selectedCategories)
-    addBudget({
+    
+    // Oblicz actualAmount na podstawie istniejących transakcji
+    const actualAmount = calculateActualAmount()
+
+    // Dodaj budżet
+    const newBudget = {
       name,
       categories: selectedCategories,
       maxAmount,
-      actualAmount: '0',
-    })
+      actualAmount,
+    }
+    
+    await addBudget(newBudget)
+
     // Reset stanu po dodaniu budżetu
     setName('')
     setMaxAmount('')
@@ -59,7 +85,6 @@ const ModalAddBudget = ({ isOpen, onClose }) => {
   
   return (
     <Modal isOpen={isOpen} onClose={() => onClose(false)} title={modalTitle}>
-
       {!isCategoryListVisible &&
         <div className="modalAddBudget">
           <form onSubmit={onSubmit}>
