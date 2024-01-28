@@ -5,11 +5,6 @@
   padding: 0;
 }
 
-body{
-  overflow: hidden;
-  touch-action: none; 
-}
-
 .app__container {
   position: relative;
   height: calc(var(--vh, 1vh) * 100);

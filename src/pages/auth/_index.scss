@@ -1,6 +1,8 @@
 .login {
   height: calc(var(--vh, 1vh) * 100);
   width: 100vw;
+  max-width: 1400px;
+  margin:0 auto;
   display: flex;
   &__left {
     flex-basis: 70%;
@@ -9,22 +11,50 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    .titleLogo{
+        font-size: 48px;
+    }
+    .subTitleLogo{
+      font-size: 24px;
+      padding-bottom: 3em;
+  }
   }
   &__right {
-    flex-basis: 30%;
+    flex-basis: 600px;
+    align-items: center;
+    justify-content: center;
     height: 100%;
+    display: flex;
     &__mobile {
       display: none;
     }
   }
   .loginForm {
-    padding: 80px 20px 16px 20px;
-    flex-grow: 1;
+    width: 500px;
+    min-height: 80%;
+    max-height: 700px;
+    padding: 80px 0 32px 0;
     background-color: var(--secondary-color);
+    background-image: url("../../assets/images/balance-bg.svg");
+    background-size: cover;
+    background-position: -20px 380px;
+    background-repeat: no-repeat;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
     color: var(--pure-white-color);
+    transition: height 300ms;
+    &__start{
+      display: block;
+      padding-bottom: 4em;
+      h1{
+        text-align: center;
+        color: white;
+        font-size: 21px;
+      }
+    }
     &__content {
+      padding: 0 2em;
       button{
         margin-top: 12px;
       }
@@ -39,8 +69,28 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      span{
+        position: relative;
+        display: block;
+        width: 100%;
+        border-top: 6px dashed white;
+        &::before{
+          content: 'Lub';
+          display: block;
+          position: absolute;
+          top:50%;
+          left: 50%;
+          color: white;
+          font-size: 16px;
+          font-weight: 600;
+          background-color: var(--secondary-color);
+          padding: 24px;
+          transform: translate(-50%, calc(-50% - 4px));
+        }
+      }
     }
     &__forget {
+      padding: 0 2em;
       flex-grow: 1;
       align-self: flex-end;
       padding-top: 16px;
@@ -70,13 +120,30 @@
         }
       }
     }
+    &.--success{
+      min-height: 400px;
+      padding: 0;
+    }
+    &.--register{
+      min-height: 500px;
+      justify-content: space-between;
+      .loginForm__start{
+        padding-bottom: 0em;
+      }
+    }
   }
   .myInput label {
     color: white;
   }
+  .myInput{
+    input:focus{
+      border-color: white ;
+    }
+  }
 }
 
 .btnGoogle {
+  margin: 0 2em;
   display: flex;
   background-color: #e63a3a;
   border-radius: 10px;
@@ -94,6 +161,57 @@
     width: calc(100% - 60px);
     align-self: center;
     text-align: center;
+  }
+}
+.loginForm__success{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  padding: 0 1em;
+  h2{
+    color: white;
+    font-size: 18px;
+    text-align: center;
+  }
+  p{
+    padding-top: 1.5em;
+    color: rgba($color: #fff, $alpha: .70);
+    text-align: center;
+  }
+  .icon{
+    background-color: white;
+  }
+}
+.install-button{
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  padding: 1em;
+  border-radius: 10px;
+  background-color: var(--secondary-bg-color);
+  color: var(--secondary-color);
+  transition: 300ms;
+  span:last-child{
+    font-weight: 600;
+  }
+  &:hover{
+    cursor: pointer;
+    filter: brightness(0.95);
+  }
+  @media (max-width: 767px) {
+    gap: 12px;
+    top: 0;
+    right: 0;
+    margin: 1em;
+    span{
+      font-size: 13px;
+    }
   }
 }
 
@@ -116,7 +234,33 @@
       height: 15%;
     }
     .loginForm {
+      width: 100%;
+      max-height: unset;
+      flex-grow: 1;
+      border-radius: 0;
       border-top-left-radius: 60px;
+      &__start{
+        display: none; 
+      }
+      &__forget{
+        padding: 0 1em;
+        padding-top: 24px;
+      }
+      &__content{
+        padding: 0 1em;
+      }
+    }
+    .btnGoogle{
+      margin: 0 1em;
     }
   }
+}
+
+.verification{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
 }

@@ -27,6 +27,7 @@ const MenuDesktop = ({ changeTheme }) => {
 
   return (
     <>
+      {location.pathname !== '/' && location.pathname !== '/verification' && 
       <aside className='menuDesktop'>
 
         <div className="menuDesktop__logo">
@@ -76,7 +77,7 @@ const MenuDesktop = ({ changeTheme }) => {
           </div>
         </div>
 
-      </aside>
+      </aside>}
     </>
   )
 }

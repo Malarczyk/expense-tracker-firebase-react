@@ -22,9 +22,13 @@ export const Auth = ({ installEvent, setInstallEvent }) => {
   return (
     <div className="login">
       {installEvent && (
-        <button className="install-button" onClick={handleInstallClick}>
-          Instaluj PWA
-        </button>
+        <div className="install-button" onClick={handleInstallClick}>
+          <div className="iconWrap">
+            <i className='icon icon--do-install s24'></i>
+          </div>
+          <span>Psst... Chcesz zainstalować aplikację?</span>
+          <span>Kliknij tutaj!</span>
+        </div>
       )}
       <div className="login__left">
         <h1 className='titleLogo'>Wismmo</h1>

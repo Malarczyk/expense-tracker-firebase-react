@@ -30,47 +30,48 @@ const Menu = ({ changeTheme }) => {
 
   return (
     <>
-      <aside className='app__menu'>
+      {location.pathname !== '/' && location.pathname !== '/verification' &&
+        <aside className='app__menu'>
 
-        <div className="app__menu__logo">
-          Logo Wismmo
-        </div>
+          <div className="app__menu__logo">
+            Logo Wismmo
+          </div>
 
-        <div className="app__menu__nav">
-          <div className={`app__menu__nav__btn ${isActive('/home') && 'active'}`} onClick={() => handleNavigation('/home')}>
-            <i className="icon icon--dashboard"></i>
-            <span>Pulpit</span>
+          <div className="app__menu__nav">
+            <div className={`app__menu__nav__btn ${isActive('/home') && 'active'}`} onClick={() => handleNavigation('/home')}>
+              <i className="icon icon--dashboard"></i>
+              <span>Pulpit</span>
+            </div>
+            <div className="divider"><span></span></div>
+            <div className={`app__menu__nav__btn ${isActive('/transactions') && 'active'}`} onClick={() => handleNavigation('/transactions')}>
+              <i className="icon icon--transactions"></i>
+              <span>Transakcje</span>
+            </div>
+            <div className={`app__menu__nav__btn ${isActive('/categories') && 'active'}`} onClick={() => handleNavigation('/categories')}>
+              <i className="icon icon--categories"></i>
+              <span>Kategorie</span>
+            </div>
+            <div className={`app__menu__nav__btn ${isActive('/wallets') && 'active'}`} onClick={() => handleNavigation('/wallets')}>
+              <i className="icon icon--wallets"></i>
+              <span>Portfele</span>
+            </div>
+            <div className={`app__menu__nav__btn ${isActive('/budgets') && 'active'}`} onClick={() => handleNavigation('/budgets')}>
+              <i className="icon icon--budgets"></i>
+              <span>Budżety</span>
+            </div>
+            <div className="divider"><span></span></div>
+            <div className="app__menu__nav__btn" onClick={changeTheme}>
+              <i className="icon icon--settings"></i>
+              <span>Ustawienia</span>
+            </div>
+            <div className="divider"><span></span></div>
+            <div className="app__menu__nav__btn" onClick={() => signUserOut()}>
+              <i className="icon icon--logout"></i>
+              <span>Wyloguj się</span>
+            </div>
           </div>
-          <div className="divider"><span></span></div>
-          <div className={`app__menu__nav__btn ${isActive('/transactions') && 'active'}`} onClick={() => handleNavigation('/transactions')}>
-            <i className="icon icon--transactions"></i>
-            <span>Transakcje</span>
-          </div>
-          <div className={`app__menu__nav__btn ${isActive('/categories') && 'active'}`} onClick={() => handleNavigation('/categories')}>
-            <i className="icon icon--categories"></i>
-            <span>Kategorie</span>
-          </div>
-          <div className={`app__menu__nav__btn ${isActive('/wallets') && 'active'}`} onClick={() => handleNavigation('/wallets')}>
-            <i className="icon icon--wallets"></i>
-            <span>Portfele</span>
-          </div>
-          <div className={`app__menu__nav__btn ${isActive('/budgets') && 'active'}`} onClick={() => handleNavigation('/budgets')}>
-            <i className="icon icon--budgets"></i>
-            <span>Budżety</span>
-          </div>
-          <div className="divider"><span></span></div>
-          <div className="app__menu__nav__btn" onClick={changeTheme}>
-            <i className="icon icon--settings"></i>
-            <span>Ustawienia</span>
-          </div>
-          <div className="divider"><span></span></div>
-          <div className="app__menu__nav__btn" onClick={() => signUserOut()}>
-            <i className="icon icon--logout"></i>
-            <span>Wyloguj się</span>
-          </div>
-        </div>
 
-      </aside>
+        </aside>}
     </>
   )
 }

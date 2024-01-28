@@ -96,12 +96,15 @@ const Login = ({ setSigninVisible }) => {
         <p className='subTitleLogo'>What I spend my money on?</p>
       </div>
       <div className='loginForm'>
+        <div className="loginForm__start">
+          <h1>Zaczynamy!</h1>
+        </div>
         <div className="btnGoogle" onClick={signInWithGoogle}>
           <div className="iconWrap"><img src={LogoGoogle} alt="" /></div>
           <span>Kontynuuj z Google</span>
         </div>
         <div className="loginForm__or">
-          <span>Lub</span>
+          <span></span>
         </div>
         <div className="loginForm__content">
           <form onSubmit={handleLogin}>
@@ -121,7 +124,7 @@ const Login = ({ setSigninVisible }) => {
             <div className='myInput'>
               <label>Hasło</label>
               <input
-                type='text'
+                type='password'
                 value={passInput}
                 onChange={(e) => setPassInput(e.target.value)}
                 // className={error ? 'error' : ''}

@@ -25,11 +25,27 @@
     mask-size: 40px;
     -webkit-mask-size: 40px;
   }
+  &.s64{
+    width: 64px;
+    height: 64px;
+    mask-size: 64px;
+    -webkit-mask-size: 64px;
+  }
 }
 
 .icon--add{
   mask-image: url("../icons/add.svg");
   -webkit-mask-image: url("../icons/add.svg");
+}
+
+.icon--send-mail{
+  mask-image: url("../icons/send-mail.svg");
+  -webkit-mask-image: url("../icons/send-mail.svg");
+}
+
+.icon--do-install{
+  mask-image: url("../icons/do-install.svg");
+  -webkit-mask-image: url("../icons/do-install.svg");
 }
 
 .icon--edit{
