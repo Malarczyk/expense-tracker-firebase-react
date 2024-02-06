@@ -1,11 +1,12 @@
 import initializeDefaultUserData from '../../utils/initializeDefaultUserData'
 import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth'
-import { auth, provider, db } from '../../config/firebase-config'
 import { collection, query, where, getDocs } from "firebase/firestore"
+import { auth, provider, db } from '../../config/firebase-config'
+import { AlertContext } from '../../context/Alert/AlertContext'
 import { useGetUserInfo } from '../../hooks/useGetUserInfo'
 import { useNavigate, Navigate } from 'react-router-dom'
 import LogoGoogle from '../../assets/images/google.svg'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import './_index.scss'
 
 const Login = ({ setSigninVisible }) => {
@@ -14,6 +15,7 @@ const Login = ({ setSigninVisible }) => {
 
   const navigate = useNavigate()
   const { isAuth } = useGetUserInfo()
+  const { showAlert } = useContext(AlertContext)
 
   const signInWithGoogle = async () => {
     const results = await signInWithPopup(auth, provider)
@@ -81,9 +83,38 @@ const Login = ({ setSigninVisible }) => {
       navigate("/home");
     } catch (error) {
       console.error("Błąd podczas logowania: ", error.message);
-      // Twoja obsługa błędów...
+      handleLoginError(error);
     }
-  };
+  }
+
+  // Funkcja do obsługi błędów logowania
+const handleLoginError = (error) => {
+  let errorMessage = 'Podane dane są nieprawidłowe.'; // Domyślny komunikat
+
+  switch (error.code) {
+    case 'auth/invalid-email':
+      errorMessage = 'Podany adres e-mail jest nieprawidłowy.';
+      break;
+    case 'auth/user-disabled':
+      errorMessage = 'Konto użytkownika zostało wyłączone.';
+      break;
+    case 'auth/user-not-found':
+      errorMessage = 'Nie znaleziono użytkownika z tym adresem e-mail.';
+      break;
+    case 'auth/wrong-password':
+      errorMessage = 'Podane hasło jest nieprawidłowe.';
+      break;
+    // Możesz dodać więcej przypadków w zależności od potrzeb
+    default:
+      // Domyślna obsługa innych błędów
+  }
+
+  // Tutaj możesz wyświetlić komunikat błędu, np. ustawić stan komponentu, który wyświetla błąd
+  console.error(errorMessage)
+  showAlert(errorMessage, 'error')
+  // Ustaw stan z błędem, który może być wyświetlony użytkownikowi
+  // this.setState({ loginError: errorMessage });
+};
 
   if (isAuth) {
     return <Navigate to="/home" />
@@ -114,11 +145,9 @@ const Login = ({ setSigninVisible }) => {
                 type='text'
                 value={loginInput}
                 onChange={(e) => setLoginInput(e.target.value)}
-                // className={error ? 'error' : ''}
                 required
                 placeholder='np. biuro@email.com'
               />
-              {/* {error && <div className="error-message">{error}</div>} */}
             </div>
 
             <div className='myInput'>
@@ -127,11 +156,9 @@ const Login = ({ setSigninVisible }) => {
                 type='password'
                 value={passInput}
                 onChange={(e) => setPassInput(e.target.value)}
-                // className={error ? 'error' : ''}
                 required
                 placeholder="**************"
               />
-              {/* {error && <div className="error-message">{error}</div>} */}
             </div>
             <button className="btn btn--empty" type='submit'>Zaloguj się</button>
           </form>

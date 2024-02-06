@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { getAuth, applyActionCode } from 'firebase/auth'
 
 const Verification = () => {
   const [verified, setVerified] = useState(false)
   const [error, setError] = useState('')
   const location = useLocation()
+  const nav = useNavigate()
   const auth = getAuth()
 
   useEffect(() => {
@@ -28,25 +29,27 @@ const Verification = () => {
     }
   }, [location])
 
-  if (error) {
-    return (
-      <div className='verification'>
-        <h2>Error</h2>
-      </div>
-    )
-  }
-
-  if (verified) {
-    return (
-      <div className='verification'>
-        <h2>Email został zweryfikowany</h2>
-      </div>
-    )
-  }
-
   return (
     <div className='verification'>
-      <h2>Email w trakcie weryfikacji...</h2>
+      <div className="verification__box">
+        <div className="verification__box__body">
+          <h2>
+            {verified
+              ? 'Email został zweryfikowany'
+              : error
+                ? 'Błąd weryfikacji'
+                : 'Weryfikowanie...'}
+          </h2>
+        </div>
+        <div className="verification__box__footer">
+          {verified || error
+            ? (
+              <button onClick={nav('/')} className='btn btn--blue'>
+                {verified ? 'Przejdź do logowania' : error ? 'Wróć do rejestracji' : ''}
+              </button>)
+            : ('')}
+        </div>
+      </div>
     </div>
   )
 }

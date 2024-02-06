@@ -23,12 +23,21 @@ form {
       border-color: transparent;
       border: 1px solid var(--text-color);
     }
+    &.error {
+      border-color: var(--error-color) !important;
+    }
   }
   label {
     font-size: 0.75rem;
     font-weight: 500;
     color: var(--text-color);
     padding-bottom: 4px;
+  }
+
+  .error-message {
+    font-size: 10px;
+    color: var(--error-color);
+    padding: 0.5em;
   }
 }
 
@@ -113,8 +122,8 @@ input[type="radio"]:checked::before {
 .myInputColor {
   .grid {
     display: grid;
-    grid-template-columns: repeat( auto-fit, minmax(30px, 1fr) );
-    grid-template-rows: 40px; 
+    grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+    grid-template-rows: 40px;
     gap: 3px;
     .rec {
       background-color: red;
@@ -124,5 +133,4 @@ input[type="radio"]:checked::before {
       border-radius: 10px;
     }
   }
-
 }

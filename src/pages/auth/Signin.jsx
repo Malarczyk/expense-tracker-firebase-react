@@ -1,20 +1,23 @@
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
 import initializeDefaultUserData from '../../utils/initializeDefaultUserData'
+import { AlertContext } from '../../context/Alert/AlertContext'
 import { auth } from '../../config/firebase-config'
-import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import './_index.scss'
 
 const Signin = ({ setSigninVisible }) => {
   const [loginInput, setLoginInput] = useState("")
   const [passInput, setPassInput] = useState("")
-  const [error, setError] = useState("")
+  const [errorPass, setErrorPass] = useState("")
   const [signIn, setSignIn] = useState(false)
-
-  const navigate = useNavigate()
+  const { showAlert } = useContext(AlertContext)
 
   const handleSignup = async (event) => {
-    event.preventDefault() // Zatrzymuje domyślne zachowanie formularza
+    event.preventDefault()
+    if (!validatePassword(passInput)) {
+      setErrorPass('Hasło musi mieć co najmniej 8 znaków, przynajmniej jedną dużą i jedną małą literę, co najmniej jedną cyfrę oraz co najmniej jeden znak specjalny (!@#$%^&*()).');
+      return;
+    }
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, loginInput, passInput)
       sendEmailVerification(userCredential.user)
@@ -22,14 +25,30 @@ const Signin = ({ setSigninVisible }) => {
           setSignIn(true)
         })
         .catch((error) => {
-          setError(error.message)
+          setSignIn(false)
+          showAlert(error.message, 'error')
         })
       initializeDefaultUserData(userCredential.user.uid)
     } catch (error) {
       console.error("Błąd podczas rejestracji: ", error.message)
-      setError(error.message)
+      showAlert(error.message, 'error')
     }
   }
+
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasDigit = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*()]/.test(password);
+
+    if (password.length < minLength || !hasUppercase || !hasLowercase || !hasDigit || !hasSpecialChar) {
+      return false;
+    }
+
+    return true;
+  };
+
 
   return (
     <>
@@ -49,7 +68,7 @@ const Signin = ({ setSigninVisible }) => {
         : (<>
           <div className='loginForm --register'>
             <div className="loginForm__start">
-              <h1>Podaj adres e-mail oraz ustal hasło<br></br> aby się zarejestrować</h1>
+              <h1>Podaj adres e-mail oraz ustal hasło, aby się zarejestrować</h1>
             </div>
 
             <div className="loginForm__content">
@@ -61,24 +80,22 @@ const Signin = ({ setSigninVisible }) => {
                     type='text'
                     value={loginInput}
                     onChange={(e) => setLoginInput(e.target.value)}
-                    className={error ? 'error' : ''}
                     required
                     placeholder='np. biuro@email.com'
                   />
-                  {error && <div className="error-message">{error}</div>}
                 </div>
 
                 <div className='myInput'>
                   <label>Hasło</label>
                   <input
-                    type='password' // Zmiana typu na 'password'
+                    type='password'
                     value={passInput}
                     onChange={(e) => setPassInput(e.target.value)}
-                    className={error ? 'error' : ''}
+                    className={errorPass ? 'error' : ''}
                     required
                     placeholder="**************"
                   />
-                  {error && <div className="error-message">{error}</div>}
+                  {errorPass && <div className="error-message">{errorPass}</div>}
                 </div>
 
                 <button className="btn btn--empty" type='submit'>Zarejestruj się</button>

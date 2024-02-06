@@ -13,8 +13,12 @@ export const AlertProvider = ({ children }) => {
     }, 5000);
   };
 
+  const hideAlert = () => {
+    setAlert({ message: '', type: '' });
+  };
+
   return (
-    <AlertContext.Provider value={{ alert, showAlert }}>
+    <AlertContext.Provider value={{ alert, showAlert, hideAlert }}>
       {children}
     </AlertContext.Provider>
   );

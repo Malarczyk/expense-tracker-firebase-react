@@ -1,13 +1,13 @@
 .alert {
   position: absolute;
-  top: 55px;
+  top: 35px;
   left: 0;
   right: 0;
-  padding: 0.5em 0.7em;
+  padding: 1em 0.7em;
   margin: 0 1em;
   display: flex;
   align-items: center;
-  z-index: 2;
+  z-index: 999;
   max-width: 400px;
   border: 1px solid;
   border-radius: 8px;
