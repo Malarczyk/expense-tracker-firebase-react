@@ -1,9 +1,11 @@
 import ModalEdit from '../../components/Modal/ModalEditTransaction'
+import ModalAddTransaction from '../../components/Modal/ModalAddTransaction'
 import { useTransactions } from '../../hooks/useTransactions'
 import { useCategories } from '../../hooks/useCategories'
 import TransactionDesktop from './TransactionDesktop'
 import TransactionMobile from './TransactionMobile'
 import { useWallets } from '../../hooks/useWallets'
+import ButtonAdd from '../../components/ButtonAdd'
 import TopBar from "../../components/TopBar"
 import { useState, useEffect } from "react"
 import ModalFilter from './ModalFilter'
@@ -13,12 +15,12 @@ const Transactions = () => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth)
   const [selectedTransaction, setSelectedTransaction] = useState(null)
   const [isModalEditOpen, setIsModalEditOpen] = useState(false)
+  const [isModalAddOpen, setIsModalAddOpen] = useState(false)
   const [isModalFilterOpen, setIsModalFilterOpen] = useState(false)
   const { transactions, updateTransaction, deleteTransaction } = useTransactions()
   const { categories } = useCategories();
   const { wallets } = useWallets();
 
-  // Add state for filtered transactions and filters
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [filters, setFilters] = useState({
     minAmount: '',
@@ -30,14 +32,16 @@ const Transactions = () => {
     selectedCategories: []
   });
 
-  // Function to handle filter changes
+  const handleCloseModal = () => {
+    setIsModalAddOpen(false)
+  }
+
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Filter changed: ${name} = ${value}`); // Dodaj logowanie, aby sprawdzić, czy filtr się zmienia
     setFilters({ ...filters, [name]: value });
   };
 
-// index.jsx (w komponencie Transactions)
+
 const applyFilters = () => {
   console.log('Applying filters with current filters:', filters);
 
@@ -163,10 +167,15 @@ const applyFilters = () => {
         onClearFilters={() => setFilters({})}
       />
 
+      <ModalAddTransaction isOpen={isModalAddOpen} onClose={handleCloseModal} />
+
       <div className="transactions">
 
         {screenWidth > 1099 ? (
-          <TransactionDesktop filterClick={() => setIsModalFilterOpen(true)} onItemClick={handleTransactionClick} transactions={filteredTransactions} />
+          <>
+          <TransactionDesktop filterClick={() => setIsModalFilterOpen(true)} addClick={() => setIsModalAddOpen(true)} onItemClick={handleTransactionClick} transactions={filteredTransactions} />
+          <ButtonAdd action={() => setIsModalAddOpen(true)} />
+          </>
         ) : (
           <>
             <TopBar title={'transakcje'} />

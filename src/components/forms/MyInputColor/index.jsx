@@ -1,10 +1,14 @@
-import '../_index.scss'
+import React, { useState } from 'react';
+import '../_index.scss';
 
 const MyInputColor = ({ setColor, setBgColor }) => {
-  const handleSet = (color, bgColor) => {
-    setColor(color)
-    setBgColor(bgColor)
-  }
+  const [activeOption, setActiveOption] = useState(null); // Stan przechowujący indeks aktywnej opcji
+
+  const handleSet = (color, bgColor, index) => {
+    setColor(color);
+    setBgColor(bgColor);
+    setActiveOption(index); // Ustawienie indeksu aktywnej opcji po kliknięciu
+  };
 
   const colorOptions = [
     { color: '--secondary-color', bgColor: '--secondary-bg-color' },
@@ -28,14 +32,14 @@ const MyInputColor = ({ setColor, setBgColor }) => {
         {colorOptions.map((option, index) => (
           <div
             key={index}
-            className={'rec'}
-            style={{backgroundColor:`var(${option.color})`}}
-            onClick={() => handleSet(option.color, option.bgColor)}
+            className={`rec ${activeOption === index ? 'active' : ''}`} // Dodanie klasy 'active' dla aktywnej opcji
+            style={{ backgroundColor: `var(${option.color})` }}
+            onClick={() => handleSet(option.color, option.bgColor, index)} // Przekazanie indeksu do funkcji handleSet
           ></div>
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default MyInputColor
+export default MyInputColor;

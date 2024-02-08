@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BarSummary } from './charts/BarSummary'
+import BarSummary from './charts/BarSummary'
 import Profile from '../../components/Profile'
 import Header from "../../components/Header"
 import PieChart from './charts/PieChart'
@@ -29,11 +29,6 @@ const Stats = ({ isProfileVisible }) => {
         {isProfileVisible &&
           <Profile isHamburger={true} />
         }
-
-        <div className="stats__section">
-          <BarSummary />
-        </div>
-
         <div className="stats__section">
           <PieChart chartType={'expense'} />
         </div>
@@ -42,6 +37,11 @@ const Stats = ({ isProfileVisible }) => {
         <div className="stats__section">
           <PieChart chartType={'income'} />
         </div>
+
+        <div className="stats__section">
+          <BarSummary />
+        </div>
+
 
       </div>
     </>

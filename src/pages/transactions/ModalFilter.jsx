@@ -16,7 +16,7 @@ const ModalFilter = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={'Filtry'}>
       <div className="modalFilter">
-        <div className="modalFilter__clear" onClick={onClearFilters}>
+        <div className="modalFilter__clear delete" onClick={onClearFilters}>
           <span>Wyczyść filtry</span>
         </div>
         <form onSubmit={(e) => { e.preventDefault(); onApplyFilters(); }}>
@@ -35,18 +35,6 @@ const ModalFilter = ({
             value={filters.maxAmount}
             onChange={onFilterChange}
           />
-
-          {/* <MyRadioInput
-            name="transactionType"
-            value1="expense"
-            label1="Wydatek"
-            checked1={transactionType === 'expense'}
-            onChange1={(e) => setTransactionType(e.target.value)}
-            value2="income"
-            label2="Przychód"
-            checked2={transactionType === 'income'}
-            onChange2={(e) => setTransactionType(e.target.value)}
-          /> */}
 
           <input type="date" placeholder="Data od" name="fromDate" value={filters.fromDate} onChange={onFilterChange} />
           <input type="date" placeholder="Data do" name="toDate" value={filters.toDate} onChange={onFilterChange} />

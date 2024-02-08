@@ -65,14 +65,12 @@ const ModalEditCategory = ({ isOpen, onClose, selectedCategory, onUpdateCategory
     onClose()
   }
   const handleDeleteCategory = () => {
-    // Zaktualizuj transakcje, ustawiając kategorię na "Brak kategorii"
     transactions.forEach((transaction) => {
       if (transaction.category === selectedCategory.name) {
         updateTransaction(transaction.id, { ...transaction, category: "Brak kategorii" })
       }
     })
 
-    // Usuń budżety, które zawierają tę kategorię
     budgets.forEach((budget) => {
       if (budget.categories.includes(selectedCategory.name)) {
         deleteBudget(budget.id)
@@ -88,7 +86,7 @@ const ModalEditCategory = ({ isOpen, onClose, selectedCategory, onUpdateCategory
   }
   const modalTitle = isIconListVisible
     ? "Wybierz ikonę"
-    : "Dodaj Kategorię"
+    : "Edytuj Kategorię"
   return (
     <>
       <Modal isOpen={isOpen} onClose={() => onClose(false)} title={modalTitle}>
@@ -118,7 +116,13 @@ const ModalEditCategory = ({ isOpen, onClose, selectedCategory, onUpdateCategory
               onChange2={(e) => setCategoryType(e.target.value)}
             />
 
-            <MyInputColor setColor={setColor} setBgColor={setBgColor} />
+
+
+            <MyInputColor
+              setColor={setColor}
+              setBgColor={setBgColor}
+            />
+
 
             <MyInput
               label="Ikona"
@@ -127,10 +131,11 @@ const ModalEditCategory = ({ isOpen, onClose, selectedCategory, onUpdateCategory
               value={icon}
               onChange={(e) => setIcon(e.target.value)}
               click={handleIconInputClick}
+              isIcon={true}
             />
             <div className="btnWrap">
-              <button className="btn btn--empty">Anuluj</button>
-              <button className="btn btn--blue" type="submit">Dodaj</button>
+              <div className="btn btn--empty" onClick={() => onClose(false)}>Anuluj</div>
+              <button className="btn btn--blue" type="submit">Aktualizuj</button>
             </div>
           </form>
 

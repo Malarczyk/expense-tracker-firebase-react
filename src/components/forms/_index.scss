@@ -39,6 +39,48 @@ form {
     color: var(--error-color);
     padding: 0.5em;
   }
+  &.isicon {
+    input {
+      display: none;
+    }
+    .inputIcon {
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background-color: var(--bg-color);
+      height: 40px;
+      padding-left: 0.75em;
+      display: flex;
+      align-items: center;
+      &:hover {
+        cursor: pointer;
+      }
+      span{
+        font-size: 14px;
+        color: var(--text-color-50)
+      }
+    }
+  }
+}
+
+.clickable {
+  position: relative;
+  input {
+    position: relative;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .iconWrap {
+    position: absolute;
+    top: calc(50% + 2px);
+    right: 8px;
+    .icon {
+      width: 18px;
+      height: 18px;
+      mask-size: 18px;
+      -webkit-mask-size: 18px;
+    }
+  }
 }
 
 .datePicker {
@@ -60,6 +102,9 @@ form {
       box-shadow: none;
       border-color: transparent;
       border: 1px solid var(--text-color);
+    }
+    &:hover {
+      cursor: pointer;
     }
   }
   label {
@@ -86,40 +131,50 @@ form {
 input[type="radio"] {
   -webkit-appearance: none;
   appearance: none;
-  background-color: var(--border-color); /* Tło dla niezaznaczonego */
+  background-color: var(--border-color);
   margin: 0;
   font: inherit;
   color: var(--secondary-color);
-  width: 16px; /* Nowy rozmiar */
-  height: 16px; /* Nowy rozmiar */
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  transform: translateY(-0.2em); /* Drobna korekta pozycji */
+  transform: translateY(-0.2em);
   display: grid;
   place-content: center;
+  &:hover {
+    cursor: pointer;
+    filter: brightness(0.95);
+  }
 }
 
 input[type="radio"]::before {
   content: "";
-  width: 6px; /* Średnica kółka */
-  height: 6px; /* Średnica kółka */
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   transform: scale(0);
   transition: 120ms transform ease-in-out;
-  background-color: var(
-    --pure-white-color
-  ); /* Kolor kółka dla niezaznaczonego */
+  background-color: var(--pure-white-color);
 }
 
 input[type="radio"]:checked {
-  background-color: var(--secondary-color); /* Tło dla zaznaczonego */
+  background-color: var(--secondary-color);
 }
 
 input[type="radio"]:checked::before {
   transform: scale(1);
-  background-color: var(--pure-white-color); /* Kolor kółka dla zaznaczonego */
+  background-color: var(--pure-white-color);
 }
 
 .myInputColor {
+  &__name {
+    span {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-color);
+      padding-bottom: 4px;
+    }
+  }
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
@@ -131,6 +186,25 @@ input[type="radio"]:checked::before {
       display: block;
       height: 40px;
       border-radius: 10px;
+      position: relative;
+      &.active {
+        &::after {
+          content: "";
+          background-image: url("../../assets/icons/check.svg");
+          background-repeat: no-repeat;
+          background-size: cover;
+          width: 20px;
+          height: 20px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+      &:hover {
+        cursor: pointer;
+        filter: brightness(1.1);
+      }
     }
   }
 }

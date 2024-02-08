@@ -58,8 +58,8 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
     }
   }, [selectedTransaction])
 
-  const onSubmit = (e) => {
-    e.preventDefault()
+  const onSubmit = async (e) => {
+    e.preventDefault();
     const updatedTransaction = {
       id: selectedTransaction.id,
       name,
@@ -69,41 +69,45 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
       transactionAmount,
       transactionType,
       transactionDate: new Date(transactionDate),
-    }
-    onUpdateTransaction(updatedTransaction)
-
-
-    // Aktualizacja budżetów
-    budgets.forEach((budget) => {
-      if (budget.categories.includes(category)) {
-        const currentAmount = parseFloat(budget.actualAmount || '0');
-        const transactionAmountNum = parseFloat(transactionAmount || '0');
-        const oldTransactionAmountNum = parseFloat(selectedTransaction.transactionAmount || '0');
-
-        const updatedAmount = transactionType === 'expense'
-          ? currentAmount - oldTransactionAmountNum + transactionAmountNum
-          : currentAmount + oldTransactionAmountNum - transactionAmountNum;
-
-        updateBudget(budget.id, { actualAmount: updatedAmount.toString() });
+    };
+  
+    // Przygotuj dane do aktualizacji budżetu
+    const oldCategory = selectedTransaction.category;
+    const newCategory = category;
+    const transactionAmountNum = parseFloat(transactionAmount || '0');
+    const oldTransactionAmountNum = parseFloat(selectedTransaction.transactionAmount || '0');
+  
+    // Aktualizuj transakcję
+    onUpdateTransaction(updatedTransaction);
+  
+    // Sprawdź, czy kategoria transakcji została zmieniona
+    if (oldCategory !== newCategory) {
+      // Znajdź budżet powiązany ze starą kategorią i zaktualizuj go
+      const oldBudget = budgets.find(budget => budget.categories.includes(oldCategory));
+      if (oldBudget) {
+        const adjustment = transactionType === 'expense' ? oldTransactionAmountNum : -oldTransactionAmountNum;
+        await updateBudget(oldBudget.id, { actualAmount: (parseFloat(oldBudget.actualAmount || '0') - adjustment).toString() });
       }
-    });
-
-
+  
+      // Znajdź budżet powiązany z nową kategorią i zaktualizuj go
+      const newBudget = budgets.find(budget => budget.categories.includes(newCategory));
+      if (newBudget) {
+        const adjustment = transactionType === 'expense' ? -transactionAmountNum : transactionAmountNum;
+        await updateBudget(newBudget.id, { actualAmount: (parseFloat(newBudget.actualAmount || '0') - adjustment).toString() });
+      }
+    }
+  
     // Aktualizacja portfela
     const selectedWallet = wallets.find(w => w.name === wallet);
     if (selectedWallet) {
-      const currentWalletAmount = parseFloat(selectedWallet.walletAmount || '0');
-      const transactionAmountNum = parseFloat(transactionAmount || '0');
-      const oldTransactionAmountNum = parseFloat(selectedTransaction.transactionAmount || '0');
-
       const updatedWalletAmount = transactionType === 'expense'
-        ? currentWalletAmount + oldTransactionAmountNum - transactionAmountNum
-        : currentWalletAmount - oldTransactionAmountNum + transactionAmountNum;
-
-      updateWallet(selectedWallet.id, { walletAmount: updatedWalletAmount.toString() });
+        ? (parseFloat(selectedWallet.walletAmount || '0') + oldTransactionAmountNum - transactionAmountNum)
+        : (parseFloat(selectedWallet.walletAmount || '0') - oldTransactionAmountNum + transactionAmountNum);
+      await updateWallet(selectedWallet.id, { walletAmount: updatedWalletAmount.toString() });
     }
-    onClose()
-  }
+  
+    onClose();
+  };
 
   const onDeleteConfirm = async () => {
     try {
@@ -250,8 +254,8 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
               />
 
               <div className="btnWrap">
-                <button className="btn btn--empty">Anuluj</button>
-                <button className="btn btn--blue" type="submit">Dodaj</button>
+                <div className="btn btn--empty" onClick={() => onClose(false)}>Anuluj</div>
+                <button className="btn btn--blue" type="submit">Aktualizuj</button>
               </div>
 
             </form>

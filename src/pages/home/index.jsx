@@ -17,6 +17,7 @@ const Home = () => {
   const [selectedTransaction, setSelectedTransaction] = useState(null)
 
   const { updateTransaction, deleteTransaction, isTransactionLoading } = useTransactions()
+  
   const handleCloseModal = () => {
     setIsModalOpen(false)
   }

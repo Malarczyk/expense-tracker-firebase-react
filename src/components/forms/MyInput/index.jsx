@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import '../_index.scss';
 
-const MyInput = ({name, label, value, type, onChange, error, required, focus, placeholder, click }) => {
+const MyInput = ({ name, label, value, type, onChange, error, required, focus, placeholder, click, isIcon }) => {
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -10,11 +10,13 @@ const MyInput = ({name, label, value, type, onChange, error, required, focus, pl
     }
   }, [focus]);
 
+  const readOnly = click ? true : false;
+
   return (
-    <div className='myInput' onClick={click}>
+    <div className={`myInput ${click ? 'clickable' : ''} ${isIcon ? 'isicon' : ''}`} onClick={click}>
       <label>{label}</label>
       <input
-      name={name}
+        name={name}
         type={type}
         value={value}
         onChange={onChange}
@@ -22,8 +24,12 @@ const MyInput = ({name, label, value, type, onChange, error, required, focus, pl
         ref={inputRef}
         required={required}
         placeholder={placeholder}
+        readOnly={readOnly}
       />
+      {isIcon && <div className='inputIcon'>{value ? <i className={`icon icon--${value}`}></i> : <span>Wybierz ikonę</span>}</div>}
+      {click && <div className='iconWrap'><i className='icon icon--arrow-right'></i></div>}
       {error && <div className="error-message">{error}</div>}
+
     </div>
   );
 };

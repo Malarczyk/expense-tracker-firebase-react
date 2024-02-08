@@ -7,7 +7,7 @@ import Modal from '../../../components/Modal'
 import { useState, useEffect } from 'react'
 
 const ModalAddBudget = ({ isOpen, onClose }) => {
-  const { addBudget, updateBudget } = useBudgets()
+  const { addBudget } = useBudgets()
   const { transactions } = useTransactions() // Pobierz transakcje
   const { categories } = useCategories()
   
@@ -115,7 +115,7 @@ const ModalAddBudget = ({ isOpen, onClose }) => {
               required
             />
             <div className="btnWrap">
-              <button className="btn btn--empty" onClick={() => onClose(false)}>Anuluj</button>
+              <div className="btn btn--empty" onClick={() => onClose(false)}>Anuluj</div>
               <button className="btn btn--blue" type="submit">Dodaj</button>
             </div>
           </form>

@@ -19,6 +19,14 @@
     mask-size: 24px;
     -webkit-mask-size: 24px;
   }
+
+  &.s32{
+    width: 32px;
+    height: 32px;
+    mask-size: 32px;
+    -webkit-mask-size: 32px;
+  }
+  
   &.s40{
     width: 40px;
     height: 40px;
@@ -122,16 +130,25 @@
 .icon--visibility{
   mask-image: url("../icons/visibility.svg");
   -webkit-mask-image: url("../icons/visibility.svg");
+  &:hover{
+    cursor: pointer;
+  }
 }
 
 .icon--visibility-off{
   mask-image: url("../icons/visibility-off.svg");
   -webkit-mask-image: url("../icons/visibility-off.svg");
+  &:hover{
+    cursor: pointer;
+  }
 }
 
 .icon--close{
   mask-image: url("../icons/close.svg");
   -webkit-mask-image: url("../icons/close.svg");
+  &:hover{
+    cursor: pointer;
+  }
 }
 
 

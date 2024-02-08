@@ -8,12 +8,14 @@ const Alert = () => {
   if (!alert.message) return null; // Nie wyświetlaj nic, jeśli nie ma wiadomości
 
   return (
-    <div className={`alert ${alert.type}`}>
-      <div className="alert__message">
-        {alert.message}
-      </div>
-      <div className="alert__close" onClick={hideAlert}>
-        <i className="icon icon--close"></i>
+    <div className="alertWrap">
+      <div className={`alert ${alert.type}`}>
+        <div className="alert__message">
+          {alert.message}
+        </div>
+        <div className="alert__close" onClick={hideAlert}>
+          <i className="icon icon--close"></i>
+        </div>
       </div>
     </div>
   );

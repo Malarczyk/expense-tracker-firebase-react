@@ -61,8 +61,8 @@ const ModalEditWallet = ({ isOpen, onClose, selectedWallet, onUpdateWallet, onDe
             />
 
             <div className="btnWrap">
-              <button className="btn btn--empty">Anuluj</button>
-              <button className="btn btn--blue" type="submit">Dodaj</button>
+              <div className="btn btn--empty" onClick={() => onClose(false)}>Anuluj</div>
+              <button className="btn btn--blue" type="submit">Aktualizuj</button>
             </div>
           </form>
 

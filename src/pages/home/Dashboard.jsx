@@ -1,19 +1,23 @@
 import { useTransactions } from "../../hooks/useTransactions"
+import { useMonthlyStats } from "../../hooks/useMonthlyStats"
+import React, { useState, useEffect, useRef } from 'react'
 import { useCategories } from "../../hooks/useCategories"
 import { useBudgets } from "../../hooks/useBudgets"
-import React, { useState, useEffect } from 'react'
 import Profile from "../../components/Profile"
+import { useNavigate } from "react-router-dom"
 import HistorySection from "./HistorySection"
 import Header from "../../components/Header"
-import { useNavigate } from "react-router-dom"
 import './_index.scss'
 
 const Dashboard = ({ isProfileVisible, onItemClick }) => {
-  const { transactions, transactionTotal } = useTransactions()
+  const { transactions, transactionTotal, isTransactionLoading } = useTransactions()
+  const { monthlyStats, addMonthlyStats, isMonthlyStatsLoading } = useMonthlyStats()
+  const [isDataInitialized, setIsDataInitialized] = useState(false)
   const { income, expenses, balance } = transactionTotal
 
+
   const { categories } = useCategories()
-  const { budgets } = useBudgets()
+  const { budgets, updateBudget } = useBudgets()
 
   const navigate = useNavigate()
 
@@ -22,6 +26,58 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
     const saved = localStorage.getItem('isBalanceVisible')
     return saved === 'true'
   })
+
+  useEffect(() => {
+    if (!isTransactionLoading && !isMonthlyStatsLoading) {
+      setIsDataInitialized(true);
+    }
+  }, [isTransactionLoading, isMonthlyStatsLoading]);
+
+  const checkAndAddMonthlyStatsExecuted = useRef(false);
+
+  useEffect(() => {
+    const checkAndAddMonthlyStats = async () => {
+      if (isDataInitialized && !checkAndAddMonthlyStatsExecuted.current) {
+        const currentDate = new Date();
+        const previousMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+        const previousMonthName = previousMonthDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+        const previousMonthStatsExists = monthlyStats.some(stat => {
+          return stat.name === previousMonthName;
+        });
+
+        if (!previousMonthStatsExists) {
+          const totalIncome = transactions
+            .filter(transaction => transaction.type === 'income' && new Date(transaction.date).getMonth() === previousMonthDate.getMonth())
+            .reduce((acc, transaction) => acc + transaction.amount, 0);
+
+          const totalExpense = transactions
+            .filter(transaction => transaction.type === 'expense' && new Date(transaction.date).getMonth() === previousMonthDate.getMonth())
+            .reduce((acc, transaction) => acc + transaction.amount, 0);
+
+          await addMonthlyStats({
+            name: previousMonthName,
+            totalIncome,
+            totalExpense,
+          });
+
+          await resetBudgetsForNewMonth();
+        }
+      } else {
+        console.log("Dane nie są jeszcze zainicjalizowane");
+      }
+    };
+
+    if (isDataInitialized) {
+      checkAndAddMonthlyStats();
+    }
+  }, [isDataInitialized]);
+
+  const resetBudgetsForNewMonth = async () => {
+    for (const budget of budgets) {
+      await updateBudget(budget.id, { actualAmount: 0 });
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,9 +91,33 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [])
+
   useEffect(() => {
-    localStorage.setItem('isBalanceVisible', isBalanceVisible);
-  }, [isBalanceVisible]);
+    localStorage.setItem('isBalanceVisible', isBalanceVisible)
+  }, [isBalanceVisible])
+
+
+  // const addSampleMonthlyStats = async () => {
+  //   const sampleData = [
+  //     { name: 'wrzesień 2023', totalIncome: '4890', totalExpense: '3000' },
+  //     { name: 'sierpień 2023', totalIncome: '5290', totalExpense: '3689' },
+  //     { name: 'lipiec 2023', totalIncome: '4000', totalExpense: '3044' },
+  //   ];
+
+  //   try {
+  //     for (const data of sampleData) {
+  //       await addMonthlyStats({
+  //         name: data.name,
+  //         totalIncome: data.totalIncome,
+  //         totalExpense: data.totalExpense,
+  //       });
+  //     }
+  //     console.log("Dodano")
+  //   } catch (error) {
+  //     console.error('Error adding sample monthlyStats:', error);
+  //   }
+  // };
+
   return (
     <>
       <Header title={'Pulpit'} isVisible={isHeaderVisible} />
@@ -65,7 +145,7 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
                   ? <h2>{Number(balance).toFixed(2) + ' zł'}</h2>
                   : <h2>******</h2>
                 }
-                
+
               </div>
             </div>
           </div>
@@ -95,6 +175,7 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
         </div>
 
         <div className="dashboard__section">
+          {/* <span onClick={addSampleMonthlyStats}>Dodaj zmyślone dane dla zeszłych miesięcy</span> */}
           <div className="section__title">
             <h1>Ostatnie transkacje</h1>
             <h3 onClick={() => navigate('/transactions')}>Pokaż wszystkie</h3>
@@ -112,7 +193,7 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
             {
               budgets.length > 0 ? (
                 budgets.map((budget) => {
-                  const { id, name, maxAmount, actualAmount } = budget;
+                  const { id, name, maxAmount, actualAmount } = budget
                   return (
                     <div className="universal__item" key={id}>
                       <div className="universal__item__body">
@@ -128,7 +209,7 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
                         <i className="icon icon--arrow-right"></i>
                       </div>
                     </div>
-                  );
+                  )
                 })
               ) : (
                 <p>Brak budżetów</p>

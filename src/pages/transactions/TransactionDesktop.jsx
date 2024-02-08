@@ -3,7 +3,7 @@ import { useState } from "react";
 
 const TransactionDesktop = ({ filterClick, onItemClick, transactions }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const transactionsPerPage = 50;
+  const transactionsPerPage = 25;
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -17,6 +17,7 @@ const TransactionDesktop = ({ filterClick, onItemClick, transactions }) => {
     // Jeśli data jest już obiektem Date lub stringiem
     return new Date(date).toLocaleDateString();
   };
+
 
   return (
     <>

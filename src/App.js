@@ -47,8 +47,6 @@ function App() {
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
-      console.log('beforeinstallprompt event was fired'); 
-      // Zapisz zdarzenie, aby mogło zostać wywołane później
       setInstallEvent(e)
     }
 

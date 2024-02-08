@@ -76,7 +76,7 @@ const HistorySection = ({
 
             const selectedCategory = categories.find((cat) => cat.name === transaction.category);
             const amountStyle = {
-              color: transaction.transactionType === 'income' ? 'var(--success-color)' : 'inherit',
+              color: transaction.transactionType === 'income' ? 'var(--success-color)' : 'var(--text-color)',
             };
             const formattedAmount = (transaction.transactionType === 'expense' ? '-' : '+') +
                                     Number(transaction.transactionAmount).toFixed(2) + ' zł';

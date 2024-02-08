@@ -1,104 +1,156 @@
-import React from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+import React, { useState, useEffect } from 'react';
+import { useMonthlyStats } from '../../../hooks/useMonthlyStats';
+import { useTransactions } from '../../../hooks/useTransactions';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-export const options = {
+const options = {
   responsive: true,
-  animation: {
-    duration: 0
-  },
   plugins: {
-    legend: {
-      display: false,
-    },
+    legend: { display: false },
   },
   scales: {
-    x: {
-      grid: {
-        display: false, // Ukrywanie linii pionowych
-      },
-      border: {
-        color: '#D4D4D4',
-      }
-    },
+    x: { grid: { display: false } },
     y: {
       beginAtZero: true,
-      ticks: {
-        callback: function (value, index, values) {
-          // Ustawianie koloru linii dla 0 na przezroczysty
-          return index === 0 ? '' : value;
-        }
-      },
-      grid: {
-        color: '#D4D4D4', // Kolor linii poziomych
-      },
-      border: {
-        display: false,
-      }
+      grid: { color: '#D4D4D4' },
+      ticks: { callback: function(value) { return value + ' zł'; } }
     },
   },
-  elements: {
-    bar: {
-      borderRadius: 3, // Border-radius słupków
-    },
-  },
+  elements: { bar: { borderRadius: 3 } },
 };
 
-const labels = ['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze'];
+const getCurrentMonthLabel = () => new Date().toLocaleDateString('default', { month: 'long', year: 'numeric' });
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Przychody',
-      data: ['3044', '4100', '3500', '5043', '1000', '4404'],
-      backgroundColor: '#54B471',
-    },
-    {
-      label: 'Wydatki',
-      data: ['4100', '3210', '2600', '2800', '3000', '3210'],
-      backgroundColor: '#E62C59',
-    },
-  ],
+const calculateCurrentMonthData = (transactions) => {
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).getTime();
+
+  const filteredTransactions = transactions.filter(transaction => transaction.transactionDate.toMillis() >= startOfMonth && transaction.transactionDate.toMillis() <= endOfMonth);
+
+  return {
+    totalIncome: filteredTransactions.filter(t => t.transactionType === 'income').reduce((acc, t) => acc + parseFloat(t.transactionAmount), 0),
+    totalExpense: filteredTransactions.filter(t => t.transactionType === 'expense').reduce((acc, t) => acc + parseFloat(t.transactionAmount), 0),
+  };
 };
 
-export function BarSummary() {
+const monthNameToDate = (monthName) => {
+  const [month, year] = monthName.split(' ');
+  const monthIndex = {
+    "styczeń": "Sty",
+    "luty": "Lut",
+    "marzec": "Mar",
+    "kwiecień": "Kwi",
+    "maj": "Maj",
+    "czerwiec": "Cze",
+    "lipiec": "Lip",
+    "sierpień": "Sie",
+    "wrzesień": "Wrz",
+    "październik": "Paź",
+    "listopad": "Lis",
+    "grudzień": "Gru"
+  }[month.toLowerCase()];
+  
+  const shortYear = year.slice(-2); // Pobranie ostatnich dwóch cyfr roku
+  
+  return `${monthIndex} '${shortYear}`;
+};
+
+const BarSummary = () => {
+  const { monthlyStats } = useMonthlyStats();
+  const { transactions } = useTransactions();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [chartData, setChartData] = useState({ labels: [], datasets: [] });
+
+  useEffect(() => {
+    const visibleCount = window.innerWidth < 1099 ? 4 : 6;
+    const currentMonthLabel = getCurrentMonthLabel();
+    const currentMonthData = calculateCurrentMonthData(transactions);
+  
+    let allData = monthlyStats.map(stat => ({
+      monthLabel: stat.name,
+      totalIncome: parseFloat(stat.totalIncome),
+      totalExpense: parseFloat(stat.totalExpense),
+    }));
+  
+    if (!allData.find(data => data.monthLabel === currentMonthLabel)) {
+      allData = [...allData, { monthLabel: currentMonthLabel, ...currentMonthData }];
+    }
+  
+    allData.sort((a, b) => {
+      const aDate = monthNameToDate(a.monthLabel);
+      const bDate = monthNameToDate(b.monthLabel);
+      return aDate - bDate; // Sortowanie rosnąco
+    });
+  
+    const dataToShow = allData.slice(currentIndex, currentIndex + visibleCount);
+    setChartData({
+      labels: dataToShow.map(data => {
+        const [month, year] = data.monthLabel.split(' ');
+        const monthIndex = {
+          "styczeń": "Sty",
+          "luty": "Lut",
+          "marzec": "Mar",
+          "kwiecień": "Kwi",
+          "maj": "Maj",
+          "czerwiec": "Cze",
+          "lipiec": "Lip",
+          "sierpień": "Sie",
+          "wrzesień": "Wrz",
+          "październik": "Paź",
+          "listopad": "Lis",
+          "grudzień": "Gru"
+        }[month.toLowerCase()];
+        const shortYear = year.slice(-2);
+        return `${monthIndex} '${shortYear}`;
+      }),
+      datasets: [
+        {
+          label: 'Przychody',
+          data: dataToShow.map(data => data.totalIncome),
+          backgroundColor: '#54B471',
+        },
+        {
+          label: 'Wydatki',
+          data: dataToShow.map(data => data.totalExpense),
+          backgroundColor: '#E62C59',
+        },
+      ],
+    });
+  }, [monthlyStats, transactions, currentIndex]);
+  
+
+  const shiftMonths = (direction) => {
+    const visibleCount = window.innerWidth < 1099 ? 4 : 6;
+    setCurrentIndex(prevIndex => {
+      if (direction === 'left') return Math.max(0, prevIndex - 1);
+      else if (direction === 'right') return Math.min(monthlyStats.length - visibleCount, prevIndex + 1);
+      return prevIndex;
+    });
+  };
+  
   return (
     <>
       <div className="section__title">
-        <h1>Podsumowanie</h1>
+        <h1>Podsumowanie finansowe</h1>
         <div>
-          <div className="imgWrap">
-            <i className="icon icon--arrow-left"></i>
+          <div className="imgWrap" onClick={() => shiftMonths('left')} disabled={currentIndex === 0}>
+            <i className="icon icon--arrow-left">{"<"}</i>
           </div>
-          <div className="imgWrap">
-            <i className="icon icon--arrow-right"></i>
+          <div className="imgWrap" onClick={() => shiftMonths('right')} disabled={currentIndex >= monthlyStats.length - (window.innerWidth < 1099 ? 4 : 6)}>
+            <i className="icon icon--arrow-right">{">"}</i>
           </div>
         </div>
       </div>
-
-      <div className="stats__chart stats__chart--bar">
-        <div>
-          <Bar options={options} data={data} />
-        </div>
+      <div className="stats__chart">
+        <Bar options={options} data={chartData} />
       </div>
     </>
-  )
-}
+  );
+};
+
+
+export default BarSummary;

@@ -7,12 +7,14 @@
 }
 
 .transactions {
+  height: calc(100 * var(--vh, 1vh));
   overflow: scroll;
   container-type: inline-size;
   container-name: transactionsCont;
   border-radius: 12px;
   &__mobile {
     padding: 1em;
+    padding-top: 0;
   }
   &__desktop {
     max-width: 1400px;
@@ -23,6 +25,14 @@
     padding: 0.2em 1em;
     @include hide-scrollbar;
     border-radius: 10px;
+  }
+  .iconWrap {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -45,12 +55,47 @@
     color: var(--secondary-color);
 
   }
+  @media (max-width: 1099px) {
+    padding: 1em;
+    padding-bottom: 0;
+  }
 }
 
 .pagination{
   max-width: 1400px;
   width: 100%;
+  &__wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding-top: 20px;
+  }
 
+  .page-item{
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &.active{
+      span{
+        color: var(--text-color);
+      }
+    }
+    &:hover{
+      span{
+        color: var(--text-color-67);
+      }
+      cursor: pointer;
+      background-color: var(--primary-color);
+    }
+  }
+  span{
+    color: var(--text-color-30);
+    font-size: 12px;
+  }
 }
 
 .table {

@@ -82,9 +82,10 @@ const ModalAddCategory = ({ isOpen, onClose }) => {
             value={icon}
             onChange={(e) => setIcon(e.target.value)}
             click={handleIconInputClick}
+            isIcon={true}
           />
           <div className="btnWrap">
-            <button className="btn btn--empty">Anuluj</button>
+            <div className="btn btn--empty" onClick={() => onClose(false)}>Anuluj</div>
             <button className="btn btn--blue" type="submit">Dodaj</button>
           </div>
         </form>

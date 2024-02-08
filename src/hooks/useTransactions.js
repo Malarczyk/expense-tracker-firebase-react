@@ -14,6 +14,7 @@ import {
   orderBy, 
   onSnapshot 
 } from "firebase/firestore"
+import { startOfMonth, endOfMonth, getYear, getMonth } from 'date-fns'
 
 export const useTransactions = () => {
   const [transactions, setTransactions] = useState([])
@@ -55,19 +56,18 @@ export const useTransactions = () => {
     }
   }
 
-    // Aktualizacja transakcji
-    const updateTransaction = async (transactionId, updatedData) => {
-      const transactionDocRef = doc(db, 'transactions', transactionId)
-  
-      try {
-        await updateDoc(transactionDocRef, updatedData)
-        showAlert('Transakcja edytowana pomyślnie!', 'success')
-      } catch (error) {
-        showAlert('Wystąpił błąd', 'error')
-        console.error('Error updating transaction:', error)
-      }
-    }
+  // Aktualizacja transakcji
+  const updateTransaction = async (transactionId, updatedData) => {
+    const transactionDocRef = doc(db, 'transactions', transactionId)
 
+    try {
+      await updateDoc(transactionDocRef, updatedData)
+      showAlert('Transakcja edytowana pomyślnie!', 'success')
+    } catch (error) {
+      showAlert('Wystąpił błąd', 'error')
+      console.error('Error updating transaction:', error)
+    }
+  }
 
   // Usuwanie kategorii
   const deleteTransaction = async (transactionId) => {
@@ -82,17 +82,25 @@ export const useTransactions = () => {
     }
   }
 
-  // Pobieranie transakcji
+  // Pobieranie transakcji tylko dla bieżącego miesiąca
   useEffect(() => {
     let unsubscribe
     setTransactionLoading(true)
 
     try {
+      const currentYear = getYear(new Date())
+      const currentMonth = getMonth(new Date())
+      const startOfCurrentMonth = startOfMonth(new Date(currentYear, currentMonth))
+      const endOfCurrentMonth = endOfMonth(new Date(currentYear, currentMonth))
+
       const queryTransactions = query(
         transactionsCollectionRef,
         where("userID", "==", userID),
-        orderBy("createdAt")
+        where("transactionDate", ">=", startOfCurrentMonth),
+        where("transactionDate", "<=", endOfCurrentMonth),
+        orderBy("transactionDate") // Zmienione pole sortowania na transactionDate
       )
+      
 
       unsubscribe = onSnapshot(queryTransactions, (snapshot) => {
         let docs = []

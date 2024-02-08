@@ -71,6 +71,25 @@
       color: var(--text-color);
     }
   }
+  &:hover{
+    cursor: pointer;
+  }
+  &.selected{
+    border-color: var(--success-color) !important;
+    .categories__item__action{
+      .icon{
+        background-color: var(--success-color) !important;
+      }
+    }
+    .categories__item__icon{
+      .iconWrap{
+        background-color: var(--success-bg-color) !important;
+        .icon{
+          background-color: var(--success-color) !important;
+        }
+      }
+    }
+  }
 }
 .modalAddTransaction--category {
   .categories__item {
@@ -91,6 +110,10 @@
     justify-content: center;
     min-width: 40px;
     min-height: 40px;
+    &:hover {
+      cursor: pointer;
+      filter: brightness(0.95);
+    }
   }
 }
 

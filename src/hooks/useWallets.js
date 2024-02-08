@@ -48,7 +48,7 @@ export const useWallets = () => {
 
     try {
       await updateDoc(walletDocRef, updatedData)
-      showAlert('Portfel edytowany pomyślnie!', 'success')
+      console.log('Portfel edytowany pomyślnie!')
     } catch (error) {
       showAlert('Wystąpił błąd', 'error')
       console.error('Error updating wallet:', error)

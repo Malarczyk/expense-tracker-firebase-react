@@ -16,7 +16,7 @@ const TransactionMobile = ({ filterClick, onItemClick, transactions, categories 
   return (
     <>
       <div className='transactions__filter'>
-        <span onClick={filterClick}>Filtruj</span>
+        <span className="btn btn--blue"  onClick={filterClick}>Filtruj</span>
       </div>
       <div className="transactions__mobile">
         <HistorySection

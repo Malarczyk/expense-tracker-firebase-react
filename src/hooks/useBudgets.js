@@ -52,7 +52,7 @@ export const useBudgets = () => {
 
     try {
       await updateDoc(budgetDocRef, updatedData)
-      showAlert('Budżet edytowany pomyślnie!', 'success')
+      console.log('Budżet edytowany pomyślnie!')
     } catch (error) {
       showAlert('Wystąpił błąd', 'error')
       console.error('Error updating budget:', error)
