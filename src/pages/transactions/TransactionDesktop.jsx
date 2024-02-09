@@ -3,7 +3,7 @@ import { useState } from "react";
 
 const TransactionDesktop = ({ filterClick, onItemClick, transactions }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const transactionsPerPage = 25;
+  const transactionsPerPage = 18;
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 

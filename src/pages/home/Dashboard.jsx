@@ -101,7 +101,10 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
   //   const sampleData = [
   //     { name: 'wrzesień 2023', totalIncome: '4890', totalExpense: '3000' },
   //     { name: 'sierpień 2023', totalIncome: '5290', totalExpense: '3689' },
-  //     { name: 'lipiec 2023', totalIncome: '4000', totalExpense: '3044' },
+  //     { name: 'lipiec 2023', totalIncome: '6192', totalExpense: '3044' },
+  //     { name: 'październik 2023', totalIncome: '8942', totalExpense: '3000' },
+  //     { name: 'listopad 2023', totalIncome: '6402', totalExpense: '3689' },
+  //     { name: 'grudzień 2023', totalIncome: '4555', totalExpense: '4054' },
   //   ];
 
   //   try {
