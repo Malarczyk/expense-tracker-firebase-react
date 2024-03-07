@@ -4,6 +4,7 @@ form {
   gap: 10px;
 }
 .myInput {
+  position: relative;
   display: flex;
   flex-direction: column;
   input {
@@ -59,6 +60,14 @@ form {
         color: var(--text-color-50)
       }
     }
+  }
+
+  .currency{
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(calc(-50% + 11px));
+    font-size: 14px;
   }
 }
 

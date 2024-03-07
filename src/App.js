@@ -104,7 +104,7 @@ function App() {
           </Routes>
       </div>
       {isMenuOpen && <Menu changeTheme={toggleTheme}/>}
-      {screenWidth > 1099 ? <MenuDesktop /> : undefined}
+      {screenWidth > 1099 ? <MenuDesktop changeTheme={toggleTheme}/> : undefined}
     </div>
     </Router>
   )

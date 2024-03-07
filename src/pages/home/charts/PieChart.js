@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Pie } from 'react-chartjs-2';
+import Image from "../../../assets/images/nodata-pie.svg"
 import { useTransactions } from '../../../hooks/useTransactions';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, PointElement, LineController, LinearScale, CategoryScale, Title } from 'chart.js';
 import PieChartSkeleton from '../../../components/skeleton/PieChartSkeleton'
@@ -116,36 +117,40 @@ const PieExpenses = ({ chartType }) => {
         </div>
       </div>
       {isTransactionLoading
-          ? <PieChartSkeleton />
-          : (<>
-            <div className="stats__chart">
-              <div className='stats__chart__title'>
-                <h2>{new Date(selectedYear, selectedMonth).toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
-              </div>
-
-              {getFilteredTransactions().length > 0 ? (
-                <>
-                  <div className='stats__chart__content'>
-                    <Pie data={groupTransactionsByCategory(getFilteredTransactions())} options={options} />
-                  </div>
-
-                  <div className='stats__chart__labels'>
-                    {groupTransactionsByCategory(getFilteredTransactions()).labels.map((label, index) => (
-                      // Sprawdź, czy wartość "Inne" nie wynosi 0, jeśli tak, pomiń renderowanie
-                      label !== 'Inne' || groupTransactionsByCategory(getFilteredTransactions()).datasets[0].data[index] !== 0 ? (
-                        <div className='labelItem' key={index}>
-                          <div className='box' style={{ backgroundColor: groupTransactionsByCategory(getFilteredTransactions()).datasets[0].backgroundColor[index] }}></div>
-                          <span>{label}</span>
-                          <span>{groupTransactionsByCategory(getFilteredTransactions()).datasets[0].data[index].toFixed(2)} zł</span>
-                        </div>
-                      ) : null
-                    ))}
-                  </div>
-                </>) : (
-                <div className="stats__chart--empty">Brak danych</div>
-              )}
+        ? <PieChartSkeleton />
+        : (<>
+          <div className="stats__chart">
+            <div className='stats__chart__title'>
+              <h2>{new Date(selectedYear, selectedMonth).toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
             </div>
-          </>)}
+
+            {getFilteredTransactions().length > 0 ? (
+              <>
+                <div className='stats__chart__content'>
+                  <Pie data={groupTransactionsByCategory(getFilteredTransactions())} options={options} />
+                </div>
+
+                <div className='stats__chart__labels'>
+                  {groupTransactionsByCategory(getFilteredTransactions()).labels.map((label, index) => (
+                    // Sprawdź, czy wartość "Inne" nie wynosi 0, jeśli tak, pomiń renderowanie
+                    label !== 'Inne' || groupTransactionsByCategory(getFilteredTransactions()).datasets[0].data[index] !== 0 ? (
+                      <div className='labelItem' key={index}>
+                        <div className='box' style={{ backgroundColor: groupTransactionsByCategory(getFilteredTransactions()).datasets[0].backgroundColor[index] }}></div>
+                        <span>{label}</span>
+                        <span>{groupTransactionsByCategory(getFilteredTransactions()).datasets[0].data[index].toFixed(2)} zł</span>
+                      </div>
+                    ) : null
+                  ))}
+                </div>
+              </>) : (
+              <div className="stats__chart--empty">
+                <div className="nodata__chart">
+                  <img src={Image} alt="" />
+                </div>
+              </div>
+            )}
+          </div>
+        </>)}
     </>)
 
 }

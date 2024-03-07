@@ -52,7 +52,7 @@ export const useBudgets = () => {
 
     try {
       await updateDoc(budgetDocRef, updatedData)
-      console.log('Budżet edytowany pomyślnie!')
+      showAlert('Budżet edytowany pomyślnie!', 'success')
     } catch (error) {
       showAlert('Wystąpił błąd', 'error')
       console.error('Error updating budget:', error)
@@ -78,6 +78,7 @@ export const useBudgets = () => {
     setBudgetsLoading(true)
 
     if (!userID) {
+      setBudgetsLoading(false)
       return;
     }
     try {
@@ -96,8 +97,9 @@ export const useBudgets = () => {
         })
 
         setBudgets(docs)
+        setBudgetsLoading(false)
       })
-      setBudgetsLoading(false)
+      
     } catch (err) {
       console.error(err)
       setBudgetsLoading(false)

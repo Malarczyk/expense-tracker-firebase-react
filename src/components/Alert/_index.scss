@@ -33,8 +33,19 @@
     }
   }
 
-  background-color: var(--secondary-color);
-  border-color: var(--secondary-color);
+  &.default {
+    background-color: #E5E5E5;
+    border-color: #434343;
+
+    .alert__message{
+      color: #434343;
+    }
+    .alert__close{
+      .icon{
+        background-color: #434343;
+      }
+    }
+  }
 
   &.success {
     background-color: var(--success-bg-color);

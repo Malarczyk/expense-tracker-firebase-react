@@ -18,6 +18,7 @@ import { startOfMonth, endOfMonth, getYear, getMonth } from 'date-fns'
 
 export const useTransactions = () => {
   const [transactions, setTransactions] = useState([])
+  const [transactionsThisMonth, setTransactionsThisMonth] = useState([])
   const [transactionTotal, setTransactionTotal] = useState({})
   const [isTransactionLoading, setTransactionLoading] = useState(true)
 
@@ -120,15 +121,15 @@ export const useTransactions = () => {
           }
         })
 
-        setTransactions(docs)
-
+        setTransactionsThisMonth(docs)
+        setTransactionLoading(false)
         let balance = totalIncome - totalExpenses
         setTransactionTotal({
           balance,
           expenses: totalExpenses,
           income: totalIncome,
         })
-        setTransactionLoading(false)
+        
       })
     } catch (err) {
       console.error(err)
@@ -138,5 +139,36 @@ export const useTransactions = () => {
     return () => unsubscribe && unsubscribe()
   }, [userID])
 
-  return { isTransactionLoading, transactions, transactionTotal, addTransaction, updateTransaction, deleteTransaction }
+    // Pobieranie portfeli
+    useEffect(() => {
+      let unsubscribe
+      setTransactionLoading(true)
+      try {
+        const queryTransactions = query(
+          transactionsCollectionRef,
+          where("userID", "==", userID),
+          orderBy("createdAt")
+        )
+  
+        unsubscribe = onSnapshot(queryTransactions, (snapshot) => {
+          let docs = []
+          snapshot.forEach((doc) => {
+            const data = doc.data()
+            const id = doc.id
+            docs.push({ ...data, id })
+          })
+  
+          setTransactions(docs)
+          setTransactionLoading(false)
+        })
+        
+      } catch (err) {
+        console.error(err)
+        setTransactionLoading(false)
+      }
+  
+      return () => unsubscribe && unsubscribe()
+    }, [userID])
+
+  return { isTransactionLoading, transactions, transactionsThisMonth, transactionTotal, addTransaction, updateTransaction, deleteTransaction }
 }

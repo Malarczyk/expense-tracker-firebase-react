@@ -69,7 +69,7 @@ const MenuDesktop = ({ changeTheme }) => {
           <div className="divider"></div>
           <div className="menuDesktop__nav__btn" onClick={changeTheme}>
             <i className="icon icon--settings"></i>
-            <span>Ustawienia</span>
+            <span>Zmień motyw</span>
           </div>
           <div className="menuDesktop__nav__btn" onClick={() => signUserOut()}>
             <i className="icon icon--logout"></i>

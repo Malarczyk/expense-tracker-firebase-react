@@ -3,6 +3,7 @@ import { Timestamp } from 'firebase/firestore';
 
 const HistorySection = ({
   transactions,
+  isTransactionsLoading,
   categories,
   onItemClick,
   limit = 6, // Limit transakcji do wyświetlenia, domyślnie 6 dla strony Home
@@ -59,7 +60,9 @@ const HistorySection = ({
         return null; // Przerwij proces renderowania, jeśli osiągnięto limit i tryb showAll jest wyłączony
       }
 
-      const transactionsForDate = group.transactions;
+      const transactionsForDate = group.transactions.sort((a, b) => {
+        return b.createdAt - a.createdAt;
+      });
 
       const isToday = isDateToday(transactionsForDate[0].transactionDate);
       const isYesterday = isDateYesterday(transactionsForDate[0].transactionDate);
@@ -79,7 +82,7 @@ const HistorySection = ({
               color: transaction.transactionType === 'income' ? 'var(--success-color)' : 'var(--text-color)',
             };
             const formattedAmount = (transaction.transactionType === 'expense' ? '-' : '+') +
-                                    Number(transaction.transactionAmount).toFixed(2) + ' zł';
+              Number(transaction.transactionAmount).toFixed(2) + ' zł';
             renderedItemsCount++;
 
             return (
@@ -108,8 +111,8 @@ const HistorySection = ({
     const today = new Date();
     const transactionDate = new Date(date);
     return today.getDate() === transactionDate.getDate() &&
-           today.getMonth() === transactionDate.getMonth() &&
-           today.getFullYear() === transactionDate.getFullYear();
+      today.getMonth() === transactionDate.getMonth() &&
+      today.getFullYear() === transactionDate.getFullYear();
   };
 
   const isDateYesterday = (date) => {
@@ -117,8 +120,8 @@ const HistorySection = ({
     yesterday.setDate(yesterday.getDate() - 1);
     const transactionDate = new Date(date);
     return yesterday.getDate() === transactionDate.getDate() &&
-           yesterday.getMonth() === transactionDate.getMonth() &&
-           yesterday.getFullYear() === transactionDate.getFullYear();
+      yesterday.getMonth() === transactionDate.getMonth() &&
+      yesterday.getFullYear() === transactionDate.getFullYear();
   };
 
   return (

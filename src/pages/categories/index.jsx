@@ -4,7 +4,7 @@ import ModalAddCategory from './modals/modalAddCategory'
 import ModalEditCategory from './modals/modalEditCategory'
 import CatExpenses from './catExpenses'
 import CatIncome from './catIncome'
-import { useCategories, deleteCategory } from '../../hooks/useCategories'
+import { useCategories } from '../../hooks/useCategories'
 import './_index.scss'
 import ButtonAdd from '../../components/ButtonAdd'
 
@@ -15,7 +15,7 @@ const Categories = () => {
   const [isModalEditOpen, setIsModalEditOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState(null)
 
-  const { updateCategory, deleteCategory } = useCategories() // Dodane pobieranie updateCategory z hooka
+  const { updateCategory, deleteCategory, isCategoriesLoading } = useCategories() // Dodane pobieranie updateCategory z hooka
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category)
@@ -57,8 +57,8 @@ const Categories = () => {
       <div className='categories'>
         {screenWidth > 1024 ? (
           <>
-            <CatExpenses onCategoryClick={handleCategoryClick} />
-            <CatIncome onCategoryClick={handleCategoryClick} />
+            <CatExpenses onCategoryClick={handleCategoryClick} isCategoriesLoading={isCategoriesLoading}/>
+            <CatIncome onCategoryClick={handleCategoryClick} isCategoriesLoading={isCategoriesLoading}/>
           </>
         ) : (
           <>
@@ -71,8 +71,8 @@ const Categories = () => {
                 onClick={() => setSelectedComponent('income')}
                 className={selectedComponent === 'income' ? 'active' : undefined}>Przychody</span>
             </div>
-            {selectedComponent === 'expenses' && <CatExpenses onCategoryClick={handleCategoryClick} />}
-            {selectedComponent === 'income' && <CatIncome onCategoryClick={handleCategoryClick} />}
+            {selectedComponent === 'expenses' && <CatExpenses onCategoryClick={handleCategoryClick} isCategoriesLoading={isCategoriesLoading}/>}
+            {selectedComponent === 'income' && <CatIncome onCategoryClick={handleCategoryClick} isCategoriesLoading={isCategoriesLoading}/>}
           </>
         )}
 

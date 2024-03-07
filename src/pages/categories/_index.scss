@@ -52,6 +52,8 @@
   justify-content: space-between;
   gap: 10px;
   background-color: var(--primary-color);
+  animation: fadeIn .3s ease forwards;
+  opacity: 0; 
   &__icon {
     .iconWrap {
       width: 40px;
@@ -129,5 +131,14 @@
         display: block;
       }
     }
+  }
+}
+// Timeout
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

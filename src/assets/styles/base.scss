@@ -90,6 +90,8 @@ h4 {
   border-radius: 12px;
   background-color: var(--primary-color);
   padding: 0 16px 0 10px;
+  animation: fadeIn .3s ease forwards;
+  opacity: 0; 
   &__body{
     display: flex;
     flex-direction: column;
@@ -101,5 +103,27 @@ h4 {
   }
   &:hover {
     cursor: pointer;
+  }
+
+  &.--limit{
+    background-color: var(--warning-bg-color);
+    border: 1px solid var(--warning-color);
+    h2, h4{
+      color: var(--warning-color);
+    }
+  }
+  &.--empty{
+    color: var(--text-color-50);  
+    font-size: 14px;
+  }
+}
+
+// Timeout
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

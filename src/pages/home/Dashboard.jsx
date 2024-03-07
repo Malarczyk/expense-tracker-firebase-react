@@ -1,83 +1,41 @@
 import { useTransactions } from "../../hooks/useTransactions"
-import { useMonthlyStats } from "../../hooks/useMonthlyStats"
 import React, { useState, useEffect, useRef } from 'react'
 import { useCategories } from "../../hooks/useCategories"
 import { useBudgets } from "../../hooks/useBudgets"
 import Profile from "../../components/Profile"
 import { useNavigate } from "react-router-dom"
 import HistorySection from "./HistorySection"
+import UniversalEmpty from "../../components/skeleton/UniversalEmpty"
 import Header from "../../components/Header"
 import './_index.scss'
+import UniversalSkeleton from "../../components/skeleton/UniversalSkeleton"
 
 const Dashboard = ({ isProfileVisible, onItemClick }) => {
   const { transactions, transactionTotal, isTransactionLoading } = useTransactions()
-  const { monthlyStats, addMonthlyStats, isMonthlyStatsLoading } = useMonthlyStats()
-  const [isDataInitialized, setIsDataInitialized] = useState(false)
   const { income, expenses, balance } = transactionTotal
 
 
   const { categories } = useCategories()
-  const { budgets, updateBudget } = useBudgets()
+  const { budgets, isBudgetsLoading } = useBudgets()
 
   const navigate = useNavigate()
 
   const [isHeaderVisible, setHeaderVisible] = useState(true)
+  const [showLimitAlert, setShowLimitAlert] = useState(false);
   const [isBalanceVisible, setBalanceVisible] = useState(() => {
     const saved = localStorage.getItem('isBalanceVisible')
     return saved === 'true'
   })
 
   useEffect(() => {
-    if (!isTransactionLoading && !isMonthlyStatsLoading) {
-      setIsDataInitialized(true);
-    }
-  }, [isTransactionLoading, isMonthlyStatsLoading]);
+    const timer = setTimeout(() => {
+      const isAnyBudgetCloseToLimit = budgets.some(budget => budget.actualAmount > 0.9 * budget.maxAmount);
+      setShowLimitAlert(isAnyBudgetCloseToLimit);
+    }, 1000); // Ustaw opóźnienie na 1 sekundę
 
-  const checkAndAddMonthlyStatsExecuted = useRef(false);
+    return () => clearTimeout(timer); // Wyczyść timeout przy odmontowywaniu komponentu
+  }, [budgets]); // Zależności efektu
 
-  useEffect(() => {
-    const checkAndAddMonthlyStats = async () => {
-      if (isDataInitialized && !checkAndAddMonthlyStatsExecuted.current) {
-        const currentDate = new Date();
-        const previousMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-        const previousMonthName = previousMonthDate.toLocaleString('default', { month: 'long', year: 'numeric' });
-
-        const previousMonthStatsExists = monthlyStats.some(stat => {
-          return stat.name === previousMonthName;
-        });
-
-        if (!previousMonthStatsExists) {
-          const totalIncome = transactions
-            .filter(transaction => transaction.type === 'income' && new Date(transaction.date).getMonth() === previousMonthDate.getMonth())
-            .reduce((acc, transaction) => acc + transaction.amount, 0);
-
-          const totalExpense = transactions
-            .filter(transaction => transaction.type === 'expense' && new Date(transaction.date).getMonth() === previousMonthDate.getMonth())
-            .reduce((acc, transaction) => acc + transaction.amount, 0);
-
-          await addMonthlyStats({
-            name: previousMonthName,
-            totalIncome,
-            totalExpense,
-          });
-
-          await resetBudgetsForNewMonth();
-        }
-      } else {
-        console.log("Dane nie są jeszcze zainicjalizowane");
-      }
-    };
-
-    if (isDataInitialized) {
-      checkAndAddMonthlyStats();
-    }
-  }, [isDataInitialized]);
-
-  const resetBudgetsForNewMonth = async () => {
-    for (const budget of budgets) {
-      await updateBudget(budget.id, { actualAmount: 0 });
-    }
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -144,10 +102,12 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
                 <div className="iconWrap">
                   <i className="icon icon--balance"></i>
                 </div>
-                {isBalanceVisible
-                  ? <h2>{Number(balance).toFixed(2) + ' zł'}</h2>
-                  : <h2>******</h2>
-                }
+                {isTransactionLoading
+                  ? (<h4>Ładowanie</h4>)
+                  : (isBalanceVisible
+                    ? <h2>{Number(balance).toFixed(2) + ' zł'}</h2>
+                    : <h2>******</h2>
+                  )}
 
               </div>
             </div>
@@ -158,10 +118,12 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
                 <i className="icon icon--expenses s24"></i>
               </div>
               <h1>Przychody</h1>
-              {isBalanceVisible
-                ? <h2 style={{ color: '#54B471' }}>{Number(income).toFixed(2) + ' zł'}</h2>
-                : <h2 style={{ color: '#54B471' }}>******</h2>
-              }
+              {isTransactionLoading
+                ? (<h4>Ładowanie</h4>)
+                : (isBalanceVisible
+                  ? <h2 style={{ color: '#54B471' }}>{Number(income).toFixed(2) + ' zł'}</h2>
+                  : <h2 style={{ color: '#54B471' }}>******</h2>
+                )}
 
             </div>
             <div className="incomeExpense">
@@ -169,13 +131,42 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
                 <i className="icon icon--incomes s24"></i>
               </div>
               <h1>Wydatki</h1>
-              {isBalanceVisible
-                ? <h2 style={{ color: '#E62C59' }}>{Number(expenses).toFixed(2) + ' zł'}</h2>
-                : <h2 style={{ color: '#E62C59' }}>******</h2>
-              }
+              {isTransactionLoading
+                ? (<h4>Ładowanie</h4>)
+                : (isBalanceVisible
+                    ? <h2 style={{ color: '#E62C59' }}>{Number(expenses).toFixed(2) + ' zł'}</h2>
+                    : <h2 style={{ color: '#E62C59' }}>******</h2>
+                )}
             </div>
           </div>
         </div>
+
+        {showLimitAlert && budgets?.map((budget) => {
+          const { id, name, maxAmount, actualAmount } = budget
+          return (
+            actualAmount > 0.9 * maxAmount
+              ? <div className="dashboard__section --timeout">
+                <div className="section__title">
+                  <h1>Hej! Zaraz przekroczysz ustalony limit</h1>
+                </div>
+                <div className="dashboard__budgets">
+                  <div className="universal__item --limit" key={id}>
+                    <div className="universal__item__body">
+                      <div className="top">
+                        <h2>{name}</h2>
+                      </div>
+                      <div className="bottom">
+                        <h4>{Number(actualAmount).toFixed(2) + ' zł'}</h4>
+                        <h4>{'z ' + Number(maxAmount).toFixed(2) + ' zł'}</h4>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              : <></>
+          )
+        })}
 
         <div className="dashboard__section">
           {/* <span onClick={addSampleMonthlyStats}>Dodaj zmyślone dane dla zeszłych miesięcy</span> */}
@@ -183,7 +174,13 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
             <h1>Ostatnie transkacje</h1>
             <h3 onClick={() => navigate('/transactions')}>Pokaż wszystkie</h3>
           </div>
-          <HistorySection transactions={transactions} categories={categories} onItemClick={onItemClick} />
+          {isTransactionLoading ? (
+            <UniversalSkeleton amount={7} extraPadding={true} />
+          ) : transactions.length > 0 ? (
+            <HistorySection transactions={transactions} categories={categories} onItemClick={onItemClick} />
+          ) : (
+            <UniversalEmpty />
+          )}
         </div>
 
         <div className="dashboard__section">
@@ -193,8 +190,9 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
           </div>
           <div className="dashboard__budgets">
 
-            {
-              budgets.length > 0 ? (
+            {isBudgetsLoading
+              ? (<UniversalSkeleton amount={3} extraPadding={false} />)
+              : (budgets.length > 0 ? (
                 budgets.map((budget) => {
                   const { id, name, maxAmount, actualAmount } = budget
                   return (
@@ -209,15 +207,14 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
                         </div>
                       </div>
                       <div className="universal__item__arr">
-                        <i className="icon icon--arrow-right"></i>
+
                       </div>
                     </div>
                   )
                 })
               ) : (
-                <p>Brak budżetów</p>
-              )
-            }
+                <UniversalEmpty />
+              ))}
 
 
           </div>

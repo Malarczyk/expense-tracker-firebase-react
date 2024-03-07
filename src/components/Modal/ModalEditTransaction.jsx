@@ -26,10 +26,6 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
   const [transactionAmount, setTransactionAmount] = useState("")
   const [transactionType, setTransactionType] = useState("expense")
 
-  
-
-
-
   const [isCategoryListVisible, setCategoryListVisible] = useState(false)
   const [isWalletListVisible, setWalletListVisible] = useState(false)
 
@@ -58,6 +54,12 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
     }
   }, [selectedTransaction])
 
+  // Pomocnicza funkcja do sprawdzania, czy data transakcji jest w aktualnym miesiącu
+  const isInCurrentMonth = (date) => {
+    const now = new Date();
+    return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     const updatedTransaction = {
@@ -70,42 +72,68 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
       transactionType,
       transactionDate: new Date(transactionDate),
     };
-  
-    // Przygotuj dane do aktualizacji budżetu
-    const oldCategory = selectedTransaction.category;
-    const newCategory = category;
+
+    const transactionDateObj = new Date(transactionDate);
+    const isCurrentMonthTransaction = isInCurrentMonth(transactionDateObj);
     const transactionAmountNum = parseFloat(transactionAmount || '0');
     const oldTransactionAmountNum = parseFloat(selectedTransaction.transactionAmount || '0');
-  
-    // Aktualizuj transakcję
+    const amountDifference = transactionAmountNum - oldTransactionAmountNum;
+
+    // Logika dla budżetu
+    if (selectedTransaction.transactionType === 'expense' && isCurrentMonthTransaction) {
+      let oldBudget, newBudget;
+      if (selectedTransaction.category !== category || amountDifference !== 0) {
+        oldBudget = budgets.find(budget => budget.categories.includes(selectedTransaction.category));
+        newBudget = budgets.find(budget => budget.categories.includes(category));
+
+        if (oldBudget) {
+          await updateBudget(oldBudget.id, { actualAmount: (parseFloat(oldBudget.actualAmount || '0') - oldTransactionAmountNum + (oldBudget === newBudget ? transactionAmountNum : 0)).toString() });
+        }
+        if (newBudget && newBudget !== oldBudget) {
+          await updateBudget(newBudget.id, { actualAmount: (parseFloat(newBudget.actualAmount || '0') + transactionAmountNum).toString() });
+        }
+      }
+    }
+
+    // Logika dla portfela
+    const oldWallet = wallets.find(w => w.name === selectedTransaction.wallet);
+    const newWallet = wallets.find(w => w.name === wallet);
+    // Rozpoczynamy od określenia, czy wystąpiła zmiana typu transakcji
+    const typeChanged = selectedTransaction.transactionType !== transactionType;
+
+    // Określenie, czy zmienił się portfel
+    const walletChanged = selectedTransaction.wallet !== wallet;
+
+    // Aktualizacja dla tego samego portfela bez zmiany portfela
+    if (!walletChanged) {
+      let adjustment = 0;
+
+      // Jeśli zmienił się typ transakcji z wydatku na przychód lub odwrotnie
+      if (typeChanged) {
+        adjustment = (transactionType === 'expense' ? -1 : 1) * (oldTransactionAmountNum + transactionAmountNum);
+      } else { // Jeśli typ się nie zmienił, ale kwota tak
+        adjustment = (transactionType === 'expense' ? -1 : 1) * amountDifference;
+      }
+
+      if (newWallet) { // Jeśli portfel nie zmienił się, ale kwota lub typ tak
+        await updateWallet(newWallet.id, { walletAmount: (parseFloat(newWallet.walletAmount || '0') + adjustment).toString() });
+      }
+    } else { // Logika dla zmiany portfela
+      // Aktualizacja starego portfela
+      if (oldWallet) {
+        let oldWalletAdjustment = typeChanged && selectedTransaction.transactionType === 'income' ? -oldTransactionAmountNum : oldTransactionAmountNum;
+        await updateWallet(oldWallet.id, { walletAmount: (parseFloat(oldWallet.walletAmount || '0') + oldWalletAdjustment).toString() });
+      }
+
+      // Aktualizacja nowego portfela
+      if (newWallet) {
+        let newWalletAdjustment = typeChanged && transactionType === 'income' ? transactionAmountNum : -transactionAmountNum;
+        await updateWallet(newWallet.id, { walletAmount: (parseFloat(newWallet.walletAmount || '0') + newWalletAdjustment).toString() });
+      }
+    }
+
     onUpdateTransaction(updatedTransaction);
-  
-    // Sprawdź, czy kategoria transakcji została zmieniona
-    if (oldCategory !== newCategory) {
-      // Znajdź budżet powiązany ze starą kategorią i zaktualizuj go
-      const oldBudget = budgets.find(budget => budget.categories.includes(oldCategory));
-      if (oldBudget) {
-        const adjustment = transactionType === 'expense' ? oldTransactionAmountNum : -oldTransactionAmountNum;
-        await updateBudget(oldBudget.id, { actualAmount: (parseFloat(oldBudget.actualAmount || '0') - adjustment).toString() });
-      }
-  
-      // Znajdź budżet powiązany z nową kategorią i zaktualizuj go
-      const newBudget = budgets.find(budget => budget.categories.includes(newCategory));
-      if (newBudget) {
-        const adjustment = transactionType === 'expense' ? -transactionAmountNum : transactionAmountNum;
-        await updateBudget(newBudget.id, { actualAmount: (parseFloat(newBudget.actualAmount || '0') - adjustment).toString() });
-      }
-    }
-  
-    // Aktualizacja portfela
-    const selectedWallet = wallets.find(w => w.name === wallet);
-    if (selectedWallet) {
-      const updatedWalletAmount = transactionType === 'expense'
-        ? (parseFloat(selectedWallet.walletAmount || '0') + oldTransactionAmountNum - transactionAmountNum)
-        : (parseFloat(selectedWallet.walletAmount || '0') - oldTransactionAmountNum + transactionAmountNum);
-      await updateWallet(selectedWallet.id, { walletAmount: updatedWalletAmount.toString() });
-    }
-  
+
     onClose();
   };
 
@@ -195,8 +223,6 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder={'Wpisz nazwę'}
-                required
-                focus
               />
 
               <DateInput

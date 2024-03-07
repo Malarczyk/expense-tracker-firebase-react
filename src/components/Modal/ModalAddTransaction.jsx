@@ -33,7 +33,7 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
     e.preventDefault()
     const transactionAmountNum = parseFloat(transactionAmount || '0')
     addTransaction({
-      name,
+      name: name || "Brak nazwy",
       wallet,
       category: category || "Brak kategorii",
       description,
@@ -71,7 +71,6 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
     setCategory('')
     setDescription('')
     setTransactionAmount('')
-    setTransactionDate('')
     onClose()
   }
 
@@ -114,9 +113,7 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={'Wpisz nazwę'}
-              required
-              focus
+              placeholder={'Wpisz nazwę'}            
             />
 
             <DateInput
@@ -154,6 +151,7 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               click={handleCategoryInputClick}
+              
             />
 
             <MyCashInput

@@ -62,7 +62,7 @@ const Menu = ({ changeTheme }) => {
             <div className="divider"><span></span></div>
             <div className="app__menu__nav__btn" onClick={changeTheme}>
               <i className="icon icon--settings"></i>
-              <span>Ustawienia</span>
+              <span>Zmień motyw</span>
             </div>
             <div className="divider"><span></span></div>
             <div className="app__menu__nav__btn" onClick={() => signUserOut()}>

@@ -236,6 +236,17 @@
       }
     }
   }
+  &__empty{
+    width: 100%;
+    height: 80vh;
+    background-color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    color: var(--text-color-50);
+    border-radius: 12px;
+  }
 }
 
 @media (min-width: 1099px) {

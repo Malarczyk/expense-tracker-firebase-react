@@ -55,7 +55,7 @@ const ModalEditWallet = ({ isOpen, onClose, selectedWallet, onUpdateWallet, onDe
             <MyCashInput
               label="Kwota"
               placeholder="Podaj kwotę"
-              value={walletAmount}
+              value={Number(walletAmount).toFixed(2)}
               onChange={(e) => setWalletAmount(e.target.value)}
               required
             />

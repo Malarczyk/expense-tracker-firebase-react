@@ -17,7 +17,7 @@ const Transactions = () => {
   const [isModalEditOpen, setIsModalEditOpen] = useState(false)
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
   const [isModalFilterOpen, setIsModalFilterOpen] = useState(false)
-  const { transactions, updateTransaction, deleteTransaction } = useTransactions()
+  const { transactions, updateTransaction, deleteTransaction, isTransactionLoading } = useTransactions()
   const { categories } = useCategories();
   const { wallets } = useWallets();
 
@@ -173,13 +173,13 @@ const applyFilters = () => {
 
         {screenWidth > 1099 ? (
           <>
-          <TransactionDesktop filterClick={() => setIsModalFilterOpen(true)} addClick={() => setIsModalAddOpen(true)} onItemClick={handleTransactionClick} transactions={filteredTransactions} />
+          <TransactionDesktop filterClick={() => setIsModalFilterOpen(true)} addClick={() => setIsModalAddOpen(true)} onItemClick={handleTransactionClick} transactions={filteredTransactions} isTransactionsLoading={isTransactionLoading} />
           <ButtonAdd action={() => setIsModalAddOpen(true)} />
           </>
         ) : (
           <>
             <TopBar title={'transakcje'} />
-            <TransactionMobile filterClick={() => setIsModalFilterOpen(true)} onItemClick={handleTransactionClick} transactions={filteredTransactions} categories={categories}/>
+            <TransactionMobile filterClick={() => setIsModalFilterOpen(true)} onItemClick={handleTransactionClick} transactions={filteredTransactions} isTransactionsLoading={isTransactionLoading} categories={categories}/>
           </>
         )}
       </div>

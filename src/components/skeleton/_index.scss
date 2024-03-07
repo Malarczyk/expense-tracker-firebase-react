@@ -20,3 +20,23 @@
     }
   }
 }
+
+.pad{
+  display: flex;
+  flex-direction: column;
+  gap: 10px
+}
+.stats__skeleton{
+  background-color: var(--primary-color);
+  border-radius: 12px;
+  width: 100%;
+  min-height: 300px;
+}
+.loaderImg{
+  width: 100%;
+  height: 300px;
+  img{
+    width: 100%;
+    height: 100%;
+  }
+}

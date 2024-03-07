@@ -11,6 +11,7 @@ const ModalEditBudget = ({ isOpen, onClose, selectedBudget, onUpdateBudget, onDe
 
   const [name, setName] = useState("")
   const [maxAmount, setMaxAmount] = useState("")
+  const [actualAmount, setActualAmount] = useState("")
   const [category, setCategory] = useState([])
 
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false)
@@ -21,6 +22,7 @@ const ModalEditBudget = ({ isOpen, onClose, selectedBudget, onUpdateBudget, onDe
     if (selectedBudget) {
       setName(selectedBudget.name || '')
       setMaxAmount(selectedBudget.maxAmount || '')
+      setActualAmount(selectedBudget.actualAmount || '')
       const categoriesArray = Array.isArray(selectedBudget.categories) ? selectedBudget.categories : []
       setSelectedCategories(categoriesArray)
       setCategory(categoriesArray.join(', '))
@@ -55,7 +57,7 @@ const ModalEditBudget = ({ isOpen, onClose, selectedBudget, onUpdateBudget, onDe
       name,
       categories: selectedCategories,
       maxAmount,
-      actualAmount: selectedBudget.actualAmount || '0',
+      actualAmount,
     }
     onUpdateBudget(updatedBudget)
     onClose()
@@ -91,10 +93,18 @@ const ModalEditBudget = ({ isOpen, onClose, selectedBudget, onUpdateBudget, onDe
                 focus
               />
               <MyCashInput
-                label="Kwota"
+                label="Limit"
                 placeholder="Podaj kwotę"
                 value={maxAmount}
                 onChange={(e) => setMaxAmount(e.target.value)}
+                required
+              />
+              <MyCashInput
+                label="Aktualny stan"
+                placeholder="Podaj kwotę"
+                value={actualAmount}
+                canZero={true}
+                onChange={(e) => setActualAmount(e.target.value)}
                 required
               />
               <MyInput

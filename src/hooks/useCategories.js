@@ -89,8 +89,9 @@ export const useCategories = () => {
         })
 
         setCategories(docs)
+        setCategoriesLoading(false)
       })
-      setCategoriesLoading(false)
+      
     } catch (err) {
       console.error(err)
       setCategoriesLoading(false)
