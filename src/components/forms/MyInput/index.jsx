@@ -13,25 +13,25 @@ const MyInput = ({ name, label, value, type, onChange, error, required, focus, p
   const readOnly = click ? true : false;
 
   return (
-    <div className={`myInput ${click ? 'clickable' : ''} ${isIcon ? 'isicon' : ''}`} onClick={click}>
-      <label>{label}</label>
-      <input
-        name={name}
-        type={type}
-        value={value}
-        onChange={onChange}
-        className={error ? 'error' : ''}
-        ref={inputRef}
-        required={required}
-        placeholder={placeholder}
-        readOnly={readOnly}
-      />
-      {isIcon && <div className='inputIcon'>{value ? <i className={`icon icon--${value}`}></i> : <span>Wybierz ikonę</span>}</div>}
-      {click && <div className='iconWrap'><i className='icon icon--arrow-right'></i></div>}
-      {error && <div className="error-message">{error}</div>}
-
-    </div>
-  );
+    <>
+      <div className={`myInput ${click ? 'clickable' : ''} ${isIcon ? 'isicon' : ''}`} onClick={click}>
+        <label>{label}</label>
+        <input
+          name={name}
+          type={type}
+          value={value}
+          onChange={onChange}
+          className={error ? 'error' : ''}
+          ref={inputRef}
+          required={required}
+          placeholder={placeholder}
+          readOnly={readOnly}
+        />
+        {isIcon && <div className={`inputIcon ${error ? 'error' : ''}`}>{value ? <i className={`icon icon--${value}`}></i> : <span>Wybierz ikonę</span>}</div>}
+        {click && <div className={`iconWrap ${error ? 'error' : ''}`}><i className='icon icon--arrow-right'></i></div>}
+        {error && <div className="error-message">{error}</div>}
+      </div>
+    </>);
 };
 
 export default MyInput;

@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 import { register } from './config/serviceWorkerRegistration'
 import MenuDesktop from './components/MenuDesktop/_index'
+import ProtectedRoute from './utils/ProtectedRoute'
 import Verification from './pages/auth/Verification'
 import { useMenu } from './context/Menu/MenuContext'
 import React, { useState, useEffect } from 'react'
+import { changeTheme } from "./utils/nativeApp"
 import Transactions from './pages/transactions'
 import Categories from './pages/categories'
 import { Auth } from './pages/auth/index'
@@ -26,13 +28,13 @@ function App() {
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
     setTheme(newTheme)
+    changeTheme(theme === 'light')
     localStorage.setItem('theme', newTheme)
   }
 
   const handleResize = () => {
     setScreenWidth(window.innerWidth)
   }
-
   useEffect(() => {
     register()
     document.body.setAttribute('theme', theme)
@@ -85,27 +87,27 @@ function App() {
 
   return (
     <Router>
-    <Alert />
-    <div className="app__container">
-      <div
-        className={`app__main${isMenuOpen ? ' --small' : ''}`}
-        onClick={() => isMenuOpen && toggleMenu()}
-        onTouchStart={onTouch}
-      >
-        
+      <Alert />
+      <div className="app__container">
+        <div
+          className={`app__main${isMenuOpen ? ' --small' : ''}`}
+          onClick={() => isMenuOpen && toggleMenu()}
+          onTouchStart={onTouch}
+        >
+
           <Routes>
-            <Route path="/" exact element={<Auth installEvent={installEvent} setInstallEvent={setInstallEvent}/>} />
+            <Route path="/" exact element={<Auth installEvent={installEvent} setInstallEvent={setInstallEvent} />} />
             <Route path="/verification" exact element={<Verification />} />
-            <Route path="/home/*" element={<Home />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/budgets" element={<Budgets />} />
-            <Route path="/wallets" element={<Wallets />} />
-            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/home/*" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
+            <Route path="/budgets" element={<ProtectedRoute><Budgets /></ProtectedRoute>} />
+            <Route path="/wallets" element={<ProtectedRoute><Wallets /></ProtectedRoute>} />
+            <Route path="/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
           </Routes>
+        </div>
+        {isMenuOpen && <Menu changeTheme={toggleTheme} />}
+        {screenWidth > 1099 ? <MenuDesktop changeTheme={toggleTheme} /> : undefined}
       </div>
-      {isMenuOpen && <Menu changeTheme={toggleTheme}/>}
-      {screenWidth > 1099 ? <MenuDesktop changeTheme={toggleTheme}/> : undefined}
-    </div>
     </Router>
   )
 }

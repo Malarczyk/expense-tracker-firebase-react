@@ -9,17 +9,28 @@ const ModalAddWallet = ({ isOpen, onClose}) => {
 
   const [name, setName] = useState("")
   const [walletAmount, setWalletAmount] = useState("")
+  const [errors, setErrors] = useState({ name: false, walletAmount: false });
+
+  const validateForm = () => {
+    const newErrors = {}
+    newErrors.name = !name
+    newErrors.walletAmount = !walletAmount
+    setErrors(newErrors)
+    return !newErrors.name && !newErrors.walletAmount
+  }
 
   const onSubmit = (e) => {
-    e.preventDefault()
-    addWallet({
-      name,
-      walletAmount
-    })
-    setName('')
-    setWalletAmount('')
-    onClose()
-  }
+    e.preventDefault();
+    if (validateForm()) {
+      addWallet({
+        name,
+        walletAmount
+      });
+      setName('');
+      setWalletAmount('');
+      onClose();
+    }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={() => onClose(false)} title="Dodaj Portfel">
@@ -34,8 +45,7 @@ const ModalAddWallet = ({ isOpen, onClose}) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={'Wpisz nazwę'}
-            required
-            focus
+            error={errors.name && "Pole nazwa nie może być puste"}
           />
 
           <MyCashInput
@@ -43,12 +53,13 @@ const ModalAddWallet = ({ isOpen, onClose}) => {
             placeholder="Podaj kwotę"
             value={walletAmount}
             onChange={(e) => setWalletAmount(e.target.value)}
-            required
+            error={errors.name && "Pole kwota nie może być puste"}
           />
 
           <div className="btnWrap">
             <div className="btn btn--empty" onClick={() => onClose(false)}>Anuluj</div>
             <button className="btn btn--blue" type="submit">Dodaj</button>
+
           </div>
         </form>
 

@@ -1,39 +1,46 @@
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
-import initializeDefaultUserData from '../../utils/initializeDefaultUserData'
-import { AlertContext } from '../../context/Alert/AlertContext'
-import { auth } from '../../config/firebase-config'
-import { useState, useContext } from 'react'
-import './_index.scss'
+import { useState, useContext } from 'react';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import useInitializeDefaultUserData from '../../utils/useInitializeDefaultUserData'; // Załóżmy, że custom hook został przeniesiony do folderu hooks
+import { AlertContext } from '../../context/Alert/AlertContext';
+import { auth } from '../../config/firebase-config';
+import './_index.scss';
 
 const Signin = ({ setSigninVisible }) => {
-  const [loginInput, setLoginInput] = useState("")
-  const [passInput, setPassInput] = useState("")
-  const [errorPass, setErrorPass] = useState("")
-  const [signIn, setSignIn] = useState(false)
-  const { showAlert } = useContext(AlertContext)
+  const [loginInput, setLoginInput] = useState("");
+  const [passInput, setPassInput] = useState("");
+  const [repeatPassInput, setRepeatPassInput] = useState("");
+  const [errorPass, setErrorPass] = useState("");
+  const [signIn, setSignIn] = useState(false);
+  const [userId, setUserId] = useState(null); 
+  const { showAlert } = useContext(AlertContext);
+
+  useInitializeDefaultUserData(userId);
 
   const handleSignup = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
+
+
+    if (passInput !== repeatPassInput) {
+      showAlert('Hasła muszą być identyczne.', 'error');
+      return; // Przerwij funkcję, jeśli hasła się różnią
+    }
+
     if (!validatePassword(passInput)) {
-      setErrorPass('Hasło musi mieć co najmniej 8 znaków, przynajmniej jedną dużą i jedną małą literę, co najmniej jedną cyfrę oraz co najmniej jeden znak specjalny (!@#$%^&*()).');
+      setErrorPass('Hasło musi zawierać co najmniej 8 znaków, w tym wielką literę, małą literę, cyfrę i znak specjalny.');
       return;
     }
+
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, loginInput, passInput)
-      sendEmailVerification(userCredential.user)
-        .then(() => {
-          setSignIn(true)
-        })
-        .catch((error) => {
-          setSignIn(false)
-          showAlert(error.message, 'error')
-        })
-      initializeDefaultUserData(userCredential.user.uid)
+      const userCredential = await createUserWithEmailAndPassword(auth, loginInput, passInput);
+      await sendEmailVerification(userCredential.user);
+      setUserId(userCredential.user.uid); // Ustawiamy userId po pomyślnej rejestracji, co uruchomi hook
+      setSignIn(true);
     } catch (error) {
-      console.error("Błąd podczas rejestracji: ", error.message)
-      showAlert(error.message, 'error')
+      console.error("Błąd podczas rejestracji: ", error.message);
+      showAlert(error.message, 'error');
+      setSignIn(false);
     }
-  }
+  };
 
   const validatePassword = (password) => {
     const minLength = 8;
@@ -42,13 +49,8 @@ const Signin = ({ setSigninVisible }) => {
     const hasDigit = /[0-9]/.test(password);
     const hasSpecialChar = /[!@#$%^&*()]/.test(password);
 
-    if (password.length < minLength || !hasUppercase || !hasLowercase || !hasDigit || !hasSpecialChar) {
-      return false;
-    }
-
-    return true;
+    return password.length >= minLength && hasUppercase && hasLowercase && hasDigit && hasSpecialChar;
   };
-
 
   return (
     <>
@@ -82,6 +84,7 @@ const Signin = ({ setSigninVisible }) => {
                     onChange={(e) => setLoginInput(e.target.value)}
                     required
                     placeholder='np. biuro@email.com'
+                    autoComplete='new-password'
                   />
                 </div>
 
@@ -94,8 +97,22 @@ const Signin = ({ setSigninVisible }) => {
                     className={errorPass ? 'error' : ''}
                     required
                     placeholder="**************"
+                    autoComplete='new-password'
                   />
                   {errorPass && <div className="error-message">{errorPass}</div>}
+                </div>
+
+                <div className='myInput'>
+                  <label>Powtórz hasło</label>
+                  <input
+                    type='password'
+                    value={repeatPassInput}
+                    onChange={(e) => setRepeatPassInput(e.target.value)}
+                    className={errorPass ? 'error' : ''}
+                    required
+                    placeholder="**************"
+                    autoComplete='new-password'
+                  />
                 </div>
 
                 <button className="btn btn--empty" type='submit'>Zarejestruj się</button>

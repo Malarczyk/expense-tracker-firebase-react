@@ -56,6 +56,8 @@
   &__body {
     padding: 1em;
     transition: 0.3s ease;
+    max-height: 90vh;
+    overflow: scroll;
   }
 
   &__largeBtn {

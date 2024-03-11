@@ -28,9 +28,20 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
 
   const [isCategoryListVisible, setCategoryListVisible] = useState(false)
   const [isWalletListVisible, setWalletListVisible] = useState(false)
+  const [errors, setErrors] = useState({ name: false, wallet: false, transactionAmount: false, category: false });
 
+  const validateForm = () => {
+    const newErrors = {}
+    newErrors.name = !name
+    newErrors.wallet = !wallet
+    newErrors.transactionAmount = !transactionAmount
+    newErrors.category = !category
+    setErrors(newErrors)
+    return !newErrors.name && !newErrors.wallet && !newErrors.transactionAmount && !newErrors.category
+  }
   const onSubmit = (e) => {
     e.preventDefault()
+    if (validateForm()) {
     const transactionAmountNum = parseFloat(transactionAmount || '0')
     addTransaction({
       name: name || "Brak nazwy",
@@ -71,12 +82,12 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
     setCategory('')
     setDescription('')
     setTransactionAmount('')
-    onClose()
+    onClose()}
   }
 
   const handleWalletInputClick = () => {
     setWalletListVisible(true)
-    setCategoryListVisible(false) // Ukryj listę kategorii
+    setCategoryListVisible(false)
   }
 
   const handleWalletSelection = (selectedWallet) => {
@@ -86,7 +97,7 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
 
   const handleCategoryInputClick = () => {
     setCategoryListVisible(true)
-    setWalletListVisible(false) // Ukryj listę portfeli
+    setWalletListVisible(false)
   }
 
   const handleCategorySelection = (selectedCategory) => {
@@ -113,7 +124,8 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={'Wpisz nazwę'}            
+              placeholder={'Wpisz nazwę'}  
+              error={errors.name && "Pole nazwa nie może być puste"}          
             />
 
             <DateInput
@@ -141,7 +153,7 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
               value={wallet}
               onChange={(e) => setWallet(e.target.value)}
               click={handleWalletInputClick}
-              required
+              error={errors.wallet && "Pole portfel nie może być puste"}
             />
 
             <MyInput
@@ -151,7 +163,7 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               click={handleCategoryInputClick}
-              
+              error={errors.category && "Pole kategoria nie może być puste"}
             />
 
             <MyCashInput
@@ -159,7 +171,7 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
               placeholder="Podaj kwotę"
               value={transactionAmount}
               onChange={(e) => setTransactionAmount(e.target.value)}
-              required
+              error={errors.transactionAmount && "Pole kwota nie może być puste"}
             />
 
             <MyInput

@@ -3,8 +3,10 @@ import Illustration from '../../assets/images/illustration.svg'
 import './_index.scss'
 import Signin from './Signin';
 import Login from './Login';
+import RemindPass from './RemindPass';
 export const Auth = ({ installEvent, setInstallEvent }) => {
   const [signinVisible, setSigninVisible] = useState(false)
+  const [remindVisible, setRemindVisible] = useState(false)
 
   const handleInstallClick = () => {
     if (installEvent) {
@@ -38,7 +40,12 @@ export const Auth = ({ installEvent, setInstallEvent }) => {
         </div>
       </div>
       <div className="login__right">
-        {signinVisible ? <Signin setSigninVisible={() => setSigninVisible(false)} /> : <Login setSigninVisible={() => setSigninVisible(true)} />}
+        {signinVisible
+          ? <Signin setSigninVisible={() => setSigninVisible(false)} />
+          : remindVisible
+            ? <RemindPass setRemindVisible={() => setRemindVisible(false)} />
+            : <Login setSigninVisible={() => setSigninVisible(true)} setRemindVisible={() => setRemindVisible(true)} />}
+
       </div>
     </div>
   );

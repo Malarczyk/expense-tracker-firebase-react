@@ -172,6 +172,7 @@ const ModalEditBudget = ({ isOpen, onClose, selectedBudget, onUpdateBudget, onDe
           setIsDeletePopupOpen(false)
         }}
         onClose={() => setIsDeletePopupOpen(false)}
+        text={'Klikając: "Tak", usuniesz ten budzet nieodwracalnie.'}
       />
     </>
   )

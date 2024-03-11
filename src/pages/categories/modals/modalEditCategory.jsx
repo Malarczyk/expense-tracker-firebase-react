@@ -159,7 +159,7 @@ const ModalEditCategory = ({ isOpen, onClose, selectedCategory, onUpdateCategory
         isOpen={isDeletePopupOpen}
         onDeleteConfirm={handleDeleteCategory}
         onClose={() => setIsDeletePopupOpen(false)}
-        message="Czy na pewno chcesz usunąć kategorię? Spowoduje to również usunięcie budżetu, który miał ją przypisaną. Możesz wejść w budżety i edytować je, a następnie usunąć tę kategorię."
+        text="Usunięcie kategorii, spowoduje również usunięcie budżetu, który miał ją przypisaną. Możesz wejść w budżety i edytować je, a następnie usunąć tę kategorię."
       />
 
 

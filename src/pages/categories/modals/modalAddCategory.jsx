@@ -12,10 +12,19 @@ const ModalAddCategory = ({ isOpen, onClose }) => {
 
   const [name, setName] = useState("")
   const [icon, setIcon] = useState("")
-  const [color, setColor] = useState("")
-  const [bgColor, setBgColor] = useState("")
+  const [color, setColor] = useState("--secondary-color")
+  const [bgColor, setBgColor] = useState("--secondary-bg-color")
   const [categoryType, setCategoryType] = useState("expense")
   const [isIconListVisible, setIconListVisible] = useState(false)
+  const [errors, setErrors] = useState({ name: false, icon: false });
+
+  const validateForm = () => {
+    const newErrors = {}
+    newErrors.name = !name
+    newErrors.icon = !icon
+    setErrors(newErrors)
+    return !newErrors.name && !newErrors.icon
+  }
 
   const handleIconInputClick = () => {
     setIconListVisible(true)
@@ -28,6 +37,7 @@ const ModalAddCategory = ({ isOpen, onClose }) => {
 
   const onSubmit = (e) => {
     e.preventDefault()
+    if (validateForm()) {
     addCategory({
       name,
       icon,
@@ -37,9 +47,7 @@ const ModalAddCategory = ({ isOpen, onClose }) => {
     })
     setName('')
     setIcon('')
-    setColor('')
-    setBgColor('')
-    onClose()
+    onClose()}
   }
 
   const modalTitle = isIconListVisible
@@ -58,8 +66,7 @@ const ModalAddCategory = ({ isOpen, onClose }) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={'Wpisz nazwę'}
-            required
-            focus
+            error={errors.name && "Pole nazwa nie może być puste"}
           />
           <MyRadioInput
             name="transactionType"
@@ -83,6 +90,7 @@ const ModalAddCategory = ({ isOpen, onClose }) => {
             onChange={(e) => setIcon(e.target.value)}
             click={handleIconInputClick}
             isIcon={true}
+            error={errors.icon && "Musisz wybrać ikonę"}
           />
           <div className="btnWrap">
             <div className="btn btn--empty" onClick={() => onClose(false)}>Anuluj</div>

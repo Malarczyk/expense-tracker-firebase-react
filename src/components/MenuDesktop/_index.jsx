@@ -32,11 +32,11 @@ const MenuDesktop = ({ changeTheme }) => {
 
         <div className="menuDesktop__logo">
           <div className="logo">
-            Logo
+            Wissmo
           </div>
           <div className="back">
             <div className="iconWrap">
-            <i className="icon icon--arrow-left"></i>
+            {/* <i className="icon icon--arrow-left"></i> */}
             </div>
           </div>
         </div>

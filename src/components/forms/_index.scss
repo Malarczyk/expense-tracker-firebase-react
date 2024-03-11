@@ -3,6 +3,11 @@ form {
   flex-direction: column;
   gap: 10px;
 }
+.error-message {
+  font-size: 10px;
+  color: var(--error-color);
+  padding: 0.5em;
+}
 .myInput {
   position: relative;
   display: flex;
@@ -34,12 +39,6 @@ form {
     color: var(--text-color);
     padding-bottom: 4px;
   }
-
-  .error-message {
-    font-size: 10px;
-    color: var(--error-color);
-    padding: 0.5em;
-  }
   &.isicon {
     input {
       display: none;
@@ -59,6 +58,9 @@ form {
         font-size: 14px;
         color: var(--text-color-50)
       }
+      &.error {
+        border-color: var(--error-color) !important;
+      }
     }
   }
 
@@ -68,6 +70,9 @@ form {
     right: 12px;
     transform: translateY(calc(-50% + 11px));
     font-size: 14px;
+    &.error{
+      transform: translateY(calc(-50%));
+    }
   }
 }
 
@@ -88,6 +93,9 @@ form {
       height: 18px;
       mask-size: 18px;
       -webkit-mask-size: 18px;
+    }
+    &.error{
+      top: calc(50% - 9px);
     }
   }
 }

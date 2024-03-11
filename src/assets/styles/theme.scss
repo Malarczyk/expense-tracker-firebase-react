@@ -10,6 +10,7 @@ body[theme="light"]{
   --text-color: #181818;
   --border-color: #d4d4d4;
   --secondary-color: #1a375a;
+  --secondary-btn-color: #1a375a;
   --secondary-bg-color: #e8ebee;
   --success-color: #54b471;
   --success-bg-color: #EEF7F1;
@@ -44,9 +45,10 @@ body[theme="dark"]{
   --text-color-35: rgba(255,255,255, 0.35);
   --text-color-50: rgba(255,255,255, 0.50);
   --text-color-67: rgba(255,255,255, 0.67);
-  --text-color: #fff;
-  --border-color: #d4d4d4;
-  --secondary-color: #1a375a;
+  --text-color: #d9d9d9;
+  --border-color: #1c2349;
+  --secondary-color: #0a162f;
+  --secondary-btn-color: #0b1d49;
   --secondary-bg-color: #1a375a20;
   --success-color: #54b471;
   --success-bg-color: #54b47120;
@@ -54,7 +56,7 @@ body[theme="dark"]{
   --warning-bg-color: #F2B34720;
   --error-color: #E62C59;
   --error-bg-color: #FCEAEE;
-  --pure-white-color: #fff;
+  --pure-white-color: #d9d9d9;
   
   // For Categories
   --pink-color: #cb3a8d;

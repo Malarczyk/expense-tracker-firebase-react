@@ -1,6 +1,6 @@
 import './_index.scss'
 
-const DeletePopup = ({ isOpen, onDeleteConfirm, onClose }) => {
+const DeletePopup = ({ isOpen, onDeleteConfirm, onClose, text }) => {
   if (!isOpen) return null;
 
   return (
@@ -8,6 +8,7 @@ const DeletePopup = ({ isOpen, onDeleteConfirm, onClose }) => {
       <div className="deletePopup__content">
         <div className="deletePopup__content__text">
           <h2>Czy napewno chcesz usunąć?</h2>
+          <p>{text}</p>
         </div>
         <div className="deletePopup__buttons">
           <div className="btnWrap">

@@ -26,6 +26,10 @@ export const useCategories = () => {
 
   // Dodawanie kategorii
   const addCategory = async ({ name, categoryType, icon, color, bgColor }) => {
+    if (!userID) {
+      showAlert('Błąd: brak ID użytkownika.', 'error');
+      return;
+    }
     try {
       await addDoc(categoriesCollectionRef, {
         userID,
@@ -71,6 +75,10 @@ export const useCategories = () => {
 
   // Pobieranie kategorii
   useEffect(() => {
+    if (!userID) {
+      console.error('Błąd: brak ID użytkownika.', 'error');
+      return;
+    }
     let unsubscribe
     setCategoriesLoading(true)
     try {

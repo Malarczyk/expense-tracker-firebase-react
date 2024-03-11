@@ -265,6 +265,7 @@
         }
         span {
           font-size: 14px;
+          color: var(--text-color);
         }
       }
     }
@@ -284,6 +285,13 @@
       flex-direction: column;
       align-items: center;
       gap: 20px;
+    }
+
+    &.--fake{
+      display: flex;
+      align-items: center;
+      
+
     }
   }
 }

@@ -31,7 +31,7 @@ const MyCashInput = ({ name, label, value, onChange, error, required, placeholde
         className={`input ${error ? 'error' : ''}`}
         required={required}
       />
-      <span className='currency'>zł</span>
+      <span className={`currency ${error ? 'error' : ''}`}>zł</span>
       {error && <div className="error-message">{error}</div>}
     </div>
   );

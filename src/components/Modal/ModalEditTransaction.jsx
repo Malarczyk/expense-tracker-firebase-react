@@ -343,6 +343,7 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
         isOpen={isDeletePopupOpen}
         onDeleteConfirm={onDeleteConfirm}
         onClose={() => setIsDeletePopupOpen(false)}
+        text={'Klikając: "Tak", usuniesz tę transakcje nieodwracalnie.'}
       />
     </>)
 }

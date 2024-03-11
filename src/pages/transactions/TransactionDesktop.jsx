@@ -10,13 +10,8 @@ const TransactionDesktop = ({ filterClick, onItemClick, transactions, isTransact
 
   // Funkcja do formatowania daty, bierze pod uwagę różne formaty danych
   const formatDate = (date) => {
-    if (!date) return "";
-    // Jeśli data jest instancją Timestamp
-    if (date.toDate) {
-      return date.toDate().toLocaleDateString();
-    }
-    // Jeśli data jest już obiektem Date lub stringiem
-    return new Date(date).toLocaleDateString();
+    if (!date?.seconds) return "";
+    return new Date(date.seconds * 1000).toLocaleDateString(); // 1.11.2024
   };
 
   // Sortuj transakcje na podstawie daty utworzenia od najnowszej do najstarszej
@@ -48,7 +43,7 @@ const TransactionDesktop = ({ filterClick, onItemClick, transactions, isTransact
                   <div><span>Portfel</span></div>
                   <div><span>Data transakcji</span></div>
                   <div><span>Data dodania</span></div>
-                  <div><span>Zdjęcie</span></div>
+                  {/* <div><span>Zdjęcie</span></div> */}
                   <div><span>Kategoria</span></div>
                   <div><span>Typ</span></div>
                   <div><span>Kwota</span></div>
@@ -64,7 +59,7 @@ const TransactionDesktop = ({ filterClick, onItemClick, transactions, isTransact
                         <div><span>{transaction.wallet}</span></div>
                         <div><span>{formatDate(transaction.transactionDate)}</span></div>
                         <div><span>{formatDate(transaction.createdAt)}</span></div>
-                        <div>
+                        {/* <div>
                           <div className="img">
                             {
                               transaction.photoUrl && transaction.photoUrl.trim().length > 0
@@ -72,7 +67,7 @@ const TransactionDesktop = ({ filterClick, onItemClick, transactions, isTransact
                                 : <i className="icon icon--img-empty"></i>
                             }
                           </div>
-                        </div>
+                        </div> */}
                         <div><span>{transaction.category}</span></div>
                         <div><span>{transaction.transactionType}</span></div>
                         <div><span>{transaction.transactionAmount}</span></div>

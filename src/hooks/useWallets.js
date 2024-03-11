@@ -28,6 +28,10 @@ export const useWallets = () => {
     name,
     walletAmount,
   }) => {
+    if (!userID) {
+      showAlert('Błąd: brak ID użytkownika.', 'error');
+      return;
+    }
     try {
       await addDoc(walletsCollectionRef, {
         userID,
@@ -71,6 +75,10 @@ export const useWallets = () => {
 
   // Pobieranie portfeli
   useEffect(() => {
+    if (!userID) {
+      console.error('Błąd: brak ID użytkownika.', 'error');
+      return;
+    }
     let unsubscribe
     setWalletsLoading(true)
     try {

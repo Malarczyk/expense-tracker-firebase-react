@@ -16,7 +16,16 @@ const ModalAddBudget = ({ isOpen, onClose }) => {
   const [category, setCategory] = useState("")
   const [selectedCategories, setSelectedCategories] = useState([])
   const [isCategoryListVisible, setCategoryListVisible] = useState(false)
+  const [errors, setErrors] = useState({ name: false, category: false, maxAmount: false });
 
+  const validateForm = () => {
+    const newErrors = {}
+    newErrors.name = !name
+    newErrors.category = !category
+    newErrors.maxAmount = !maxAmount
+    setErrors(newErrors)
+    return !newErrors.name && !newErrors.category && !newErrors.maxAmount
+  }
   const handleCategoryInputClick = () => {
     setCategoryListVisible(true)
   }
@@ -55,7 +64,7 @@ const ModalAddBudget = ({ isOpen, onClose }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault()
-    
+    if (validateForm()){
     // Oblicz actualAmount na podstawie istniejących transakcji
     const actualAmount = calculateActualAmount()
 
@@ -74,7 +83,7 @@ const ModalAddBudget = ({ isOpen, onClose }) => {
     setMaxAmount('')
     setSelectedCategories([])
     setCategory('')
-    onClose()
+    onClose()}
   }
 
   useEffect(() => {
@@ -94,15 +103,14 @@ const ModalAddBudget = ({ isOpen, onClose }) => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder={'Wpisz nazwę'}
-              required
-              focus
+              error={errors.name && "Pole nazwa nie może być puste"}
             />
             <MyCashInput
               label="Kwota"
               placeholder="Podaj kwotę"
               value={maxAmount}
               onChange={(e) => setMaxAmount(e.target.value)}
-              required
+              error={errors.maxAmount && "Pole kwota nie może być puste"}
             />
             <MyInput
               label="Kategoria"
@@ -112,7 +120,7 @@ const ModalAddBudget = ({ isOpen, onClose }) => {
               onChange={(e) => setCategory(e.target.value)}
               click={handleCategoryInputClick}
               readonly
-              required
+              error={errors.category && "Pole kategoria nie może być puste"}
             />
             <div className="btnWrap">
               <div className="btn btn--empty" onClick={() => onClose(false)}>Anuluj</div>

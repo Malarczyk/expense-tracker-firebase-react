@@ -1,4 +1,4 @@
-import initializeDefaultUserData from '../../utils/initializeDefaultUserData'
+// import initializeDefaultUserData from '../../utils/initializeDefaultUserData'
 import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth'
 import { collection, query, where, getDocs } from "firebase/firestore"
 import { auth, provider, db } from '../../config/firebase-config'
@@ -9,7 +9,7 @@ import LogoGoogle from '../../assets/images/google.svg'
 import { useState, useContext } from 'react'
 import './_index.scss'
 
-const Login = ({ setSigninVisible }) => {
+const Login = ({ setSigninVisible, setRemindVisible }) => {
   const [loginInput, setLoginInput] = useState("")
   const [passInput, setPassInput] = useState("")
 
@@ -31,7 +31,7 @@ const Login = ({ setSigninVisible }) => {
 
     if (querySnapshot.empty) {
       // Brak kategorii dla tego użytkownika, zainicjuj domyślne dane
-      initializeDefaultUserData(user.uid);
+      //initializeDefaultUserData(user.uid);
     } else {
       // Dane dla tego użytkownika już istnieją, nie inicjuj ponownie
       console.log('Użytkownik posiada już dane, pomijam inicjalizację.');
@@ -61,7 +61,7 @@ const Login = ({ setSigninVisible }) => {
   
       if (querySnapshot.empty) {
         // Brak kategorii dla tego użytkownika, zainicjuj domyślne dane
-        initializeDefaultUserData(user.uid);
+        //initializeDefaultUserData(user.uid);
       } else {
         // Dane dla tego użytkownika już istnieją, nie inicjuj ponownie
         console.log('Użytkownik posiada już dane, pomijam inicjalizację.');
@@ -164,7 +164,7 @@ const handleLoginError = (error) => {
           </form>
         </div>
         <div className="loginForm__forget">
-          <span className="link">Zapomniałeś hasła?</span>
+          <span className="link" onClick={setRemindVisible}>Zapomniałeś hasła?</span>
         </div>
         <div className="loginForm__footer">
           <span>Nie masz jeszcze konta?</span>

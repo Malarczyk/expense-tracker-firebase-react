@@ -1,22 +1,17 @@
-import ProtectedRoute from './ProtectedRoute'; // Zaimportuj ProtectedRoute
-import { isUserAuthenticated } from './auth'; // Zaimportuj funkcję sprawdzającą autentykację
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useGetUserInfo } from "../../hooks/useGetUserInfo"
 
-function App() {
-  // Uzyskaj stan autentykacji użytkownika (to może pochodzić z kontekstu, Reduxa, itp.)
-  const isAuth = isUserAuthenticated();
+const ProtectedRoute = ({ children }) => {
+  const { isAuth } = useGetUserInfo();
 
-  return (
-    <Router>
-      {/* ... */}
-      <Routes>
-        <Route path="/" exact element={<Auth installEvent={installEvent} setInstallEvent={setInstallEvent}/>} />
-        <ProtectedRoute path="/home/*" component={Home} isAuth={isAuth} />
-        <ProtectedRoute path="/categories" component={Categories} isAuth={isAuth} />
-        {/* ... inne ochronione trasy ... */}
-      </Routes>
-      {/* ... */}
-    </Router>
-  );
+  if (!isAuth) {
+    // Użytkownik niezalogowany, przekierowuje na stronę główną (logowanie)
+    return <Navigate to="/" replace />;
+  }
+
+  // Użytkownik zalogowany, renderuje żądany komponent
+  return children;
 }
 
-export default App;
+export default ProtectedRoute
