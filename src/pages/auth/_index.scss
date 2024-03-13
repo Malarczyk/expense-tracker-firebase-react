@@ -237,6 +237,10 @@
       align-items: center;
       justify-content: center;
       height: 15%;
+      .titleLogo{
+        font-size: 2rem;
+        font-family: "Pridi";
+      }
     }
     .loginForm {
       width: 100%;
@@ -264,6 +268,9 @@
         padding: 0 1em;
         padding-top: 2em;
         flex-grow: 1;
+      }
+      &__or{
+        opacity: 0;
       }
     }
     .btnGoogle {
@@ -308,6 +315,11 @@
     background-color: #dedede;
     color: var(--secondary-color);
     height: 60px;
+  }
+  .btn-blue{
+    height: 40px;
+    background-color: var(--secondary-color);
+    color: var(--pure-white-color);
   }
   @media (max-width: 767px) {
     &__box{

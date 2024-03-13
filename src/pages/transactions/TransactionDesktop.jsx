@@ -17,8 +17,8 @@ const TransactionDesktop = ({ filterClick, onItemClick, transactions, isTransact
   // Sortuj transakcje na podstawie daty utworzenia od najnowszej do najstarszej
   const sortedTransactions = transactions.sort((a, b) => {
     // Przekształć daty na obiekty Date, jeśli są instancjami Timestamp
-    const dateA = a.createdAt.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
-    const dateB = b.createdAt.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+    const dateA = a.transactionDate.toDate ? a.transactionDate.toDate() : new Date(a.transactionDate);
+    const dateB = b.transactionDate.toDate ? b.transactionDate.toDate() : new Date(b.transactionDate);
     return dateB - dateA; // Sortuj od najnowszych do najstarszych
   });
 

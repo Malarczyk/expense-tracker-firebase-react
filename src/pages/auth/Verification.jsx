@@ -70,8 +70,8 @@ const Verification = () => {
   return (
     <div className='verification'>
       {resetPassword ? (
-        <div className="reset-password-form">
-          <h2>Resetowanie hasła</h2>
+        <div className="verification__box">
+          <h1>Resetowanie hasła</h1>
           <form onSubmit={handleResetPassword}>
             <div className='myInput'>
               <label>Nowe hasło</label>
@@ -98,7 +98,7 @@ const Verification = () => {
               />
               {errorPass && <div className="error-message">{errorPass}</div>}
             </div>
-            <button type="submit" className="btn btn--blue">Zresetuj hasło</button>
+            <button type="submit" className="btn btn--blue btn-blue">Zresetuj hasło</button>
             {error && <div className="error-message">{error}</div>}
           </form>
         </div>

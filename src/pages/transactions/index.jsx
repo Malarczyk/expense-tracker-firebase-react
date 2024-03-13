@@ -135,7 +135,7 @@ const Transactions = () => {
           </>
         ) : (
           <>
-            <TopBar title={'transakcje'} />
+            <TopBar title={'Transakcje'} />
             <TransactionMobile filterClick={() => setIsModalFilterOpen(true)} onItemClick={handleTransactionClick} transactions={filteredTransactions} isTransactionsLoading={isTransactionLoading} categories={categories} />
           </>
         )}

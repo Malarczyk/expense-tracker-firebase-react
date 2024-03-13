@@ -34,7 +34,7 @@ const Menu = ({ changeTheme }) => {
         <aside className='app__menu'>
 
           <div className="app__menu__logo">
-            Logo Wismmo
+             Wismmo
           </div>
 
           <div className="app__menu__nav">

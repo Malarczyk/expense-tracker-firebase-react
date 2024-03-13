@@ -54,9 +54,8 @@ const Signin = ({ setSigninVisible }) => {
 
   return (
     <>
-      <div className="login__right__mobile --register">
-        <i className="icon icon--arrow-left" onClick={setSigninVisible}></i>
-        <h2>Zarejestruj się</h2>
+      <div className="login__right__mobile">
+        <h1 className='titleLogo'>Zarejestruj się</h1>
       </div>
 
       {signIn
