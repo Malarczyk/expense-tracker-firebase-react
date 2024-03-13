@@ -4,6 +4,7 @@ import MyInput from "../../components/forms/MyInput"
 import MyRadioInput from "../../components/forms/MyRadioInput"
 import DateFromToInput from "../../components/forms/DateFromToInput"
 import { useState } from 'react'
+import { displayPrice } from "../../utils/strings"
 
 const ModalFilter = ({
   isOpen,
@@ -186,24 +187,21 @@ const ModalFilter = ({
       {isWalletListVisible && (
         <div className="modalAddTransaction--wallets">
           <div className="back" onClick={() => setWalletListVisible(false)}><i className="icon icon--arrow-left s24"></i></div>
-          {wallets.map((wallet) => {
-            const { id, name, walletAmount } = wallet
+          {wallets.map(({ id, name, walletAmount }) => {
             return (
-              <>
                 <div className="universal__item" key={id} onClick={() => handleWalletSelection(name)}>
                   <div className="universal__item__body">
                     <div className="top">
                       <h2>{name}</h2>
                     </div>
                     <div className="bottom">
-                      <h4>{Number(walletAmount).toFixed(2) + ' zł'}</h4>
+                      <h4>{displayPrice(walletAmount)}</h4>
                     </div>
                   </div>
                   <div className="universal__item__arr">
                     <i className="icon icon--arrow-right"></i>
                   </div>
                 </div>
-              </>
             )
           })}
         </div>

@@ -14,7 +14,7 @@ const MyInput = ({ name, label, value, type, onChange, error, required, focus, p
 
   return (
     <>
-      <div className={`myInput ${click ? 'clickable' : ''} ${isIcon ? 'isicon' : ''}`} onClick={click}>
+      <div className={`myInput ${click ? 'clickable' : ''} ${isIcon ? 'isicon' : ''} ${error ? 'error' : ''}`} onClick={click}>
         <label>{label}</label>
         <input
           name={name}

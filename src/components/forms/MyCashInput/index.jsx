@@ -17,7 +17,7 @@ const MyCashInput = ({ name, label, value, onChange, error, required, placeholde
   };
 
   return (
-    <div className='myInput'>
+    <div className={`myInput ${error ? 'error' : ''}`}>
       <label>{label}</label>
       <NumericFormat
         name={name}

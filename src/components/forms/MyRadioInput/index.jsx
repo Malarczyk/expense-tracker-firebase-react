@@ -7,7 +7,7 @@ const MyRadioInput = ({ name, value1, label1, checked1, onChange1, value2, label
       id={value1}
       name={name}
       value={value1}
-      checked={checked1 ? checked1 : undefined}
+      checked={checked1}
       onChange={onChange1}
     />
     <label htmlFor={value1}>{label1}</label>
@@ -17,7 +17,7 @@ const MyRadioInput = ({ name, value1, label1, checked1, onChange1, value2, label
       id={value2}
       name={name}
       value={value2}
-      checked={checked2 ? checked2 : undefined}
+      checked={checked2}
       onChange={onChange2}
     />
     <label htmlFor={value2}>{label2}</label>

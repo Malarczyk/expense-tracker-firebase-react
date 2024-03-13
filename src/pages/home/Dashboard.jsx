@@ -134,8 +134,8 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
               {isTransactionLoading
                 ? (<h4>Ładowanie</h4>)
                 : (isBalanceVisible
-                    ? <h2 style={{ color: '#E62C59' }}>{Number(expenses).toFixed(2) + ' zł'}</h2>
-                    : <h2 style={{ color: '#E62C59' }}>******</h2>
+                  ? <h2 style={{ color: '#E62C59' }}>{Number(expenses).toFixed(2) + ' zł'}</h2>
+                  : <h2 style={{ color: '#E62C59' }}>******</h2>
                 )}
             </div>
           </div>
@@ -144,27 +144,47 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
         {showLimitAlert && budgets?.map((budget) => {
           const { id, name, maxAmount, actualAmount } = budget
           return (
-            actualAmount > 0.9 * maxAmount
-              ? <div className="dashboard__section --timeout">
-                <div className="section__title">
-                  <h1>Hej! Zaraz przekroczysz ustalony limit</h1>
-                </div>
-                <div className="dashboard__budgets">
-                  <div className="universal__item --limit" key={id}>
-                    <div className="universal__item__body">
-                      <div className="top">
-                        <h2>{name}</h2>
-                      </div>
-                      <div className="bottom">
-                        <h4>{Number(actualAmount).toFixed(2) + ' zł'}</h4>
-                        <h4>{'z ' + Number(maxAmount).toFixed(2) + ' zł'}</h4>
+            actualAmount > maxAmount
+              ? (
+                <div className="dashboard__section --timeout">
+                  <div className="section__title">
+                    <h1>Przekroczono ustalony limit</h1>
+                  </div>
+                  <div className="dashboard__budgets">
+                    <div className="universal__item --limit --limit-error" key={id}>
+                      <div className="universal__item__body">
+                        <div className="top">
+                          <h2>{name}</h2>
+                        </div>
+                        <div className="bottom">
+                          <h4>{Number(actualAmount).toFixed(2) + ' zł'}</h4>
+                          <h4>{'z ' + Number(maxAmount).toFixed(2) + ' zł'}</h4>
+                        </div>
                       </div>
                     </div>
                   </div>
-
+                </div>)
+              : actualAmount > 0.9 * maxAmount
+                ? (<div className="dashboard__section --timeout">
+                  <div className="section__title">
+                    <h1>Hej! Zaraz przekroczysz ustalony limit</h1>
+                  </div>
+                  <div className="dashboard__budgets">
+                    <div className="universal__item --limit" key={id}>
+                      <div className="universal__item__body">
+                        <div className="top">
+                          <h2>{name}</h2>
+                        </div>
+                        <div className="bottom">
+                          <h4>{Number(actualAmount).toFixed(2) + ' zł'}</h4>
+                          <h4>{'z ' + Number(maxAmount).toFixed(2) + ' zł'}</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              : <></>
+                )
+                : (<></>)
           )
         })}
 

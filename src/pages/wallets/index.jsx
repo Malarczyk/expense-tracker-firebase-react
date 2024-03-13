@@ -7,6 +7,7 @@ import ButtonAdd from "../../components/ButtonAdd"
 import TopBar from "../../components/TopBar"
 import { useState } from "react"
 import './_index.scss'
+import { displayPrice } from '../../utils/strings'
 
 const Wallets = () => {
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
@@ -58,7 +59,7 @@ const Wallets = () => {
                         <h2>{name}</h2>
                       </div>
                       <div className="bottom">
-                        <h4>{Number(walletAmount).toFixed(2) + ' zł'}</h4>
+                        <h4>{displayPrice(walletAmount)}</h4>
                       </div>
                     </div>
                     <div className="universal__item__arr">

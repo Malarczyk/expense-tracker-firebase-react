@@ -1,56 +1,55 @@
-import { useState, useContext } from 'react';
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import useInitializeDefaultUserData from '../../utils/useInitializeDefaultUserData'; // Załóżmy, że custom hook został przeniesiony do folderu hooks
-import { AlertContext } from '../../context/Alert/AlertContext';
-import { auth } from '../../config/firebase-config';
-import './_index.scss';
+
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
+import useInitializeDefaultUserData from '../../utils/useInitializeDefaultUserData' // Załóżmy, że custom hook został przeniesiony do folderu hooks
+import { AlertContext } from '../../context/Alert/AlertContext'
+import { auth } from '../../config/firebase-config'
+import { useState, useContext } from 'react'
+import './_index.scss'
 
 const Signin = ({ setSigninVisible }) => {
-  const [loginInput, setLoginInput] = useState("");
-  const [passInput, setPassInput] = useState("");
-  const [repeatPassInput, setRepeatPassInput] = useState("");
-  const [errorPass, setErrorPass] = useState("");
-  const [signIn, setSignIn] = useState(false);
-  const [userId, setUserId] = useState(null); 
-  const { showAlert } = useContext(AlertContext);
+  const [loginInput, setLoginInput] = useState("")
+  const [passInput, setPassInput] = useState("")
+  const [repeatPassInput, setRepeatPassInput] = useState("")
+  const [errorPass, setErrorPass] = useState("")
+  const [signIn, setSignIn] = useState(false)
+  const { showAlert } = useContext(AlertContext)
 
-  useInitializeDefaultUserData(userId);
+  const initializeDefaultUserData = useInitializeDefaultUserData()
 
   const handleSignup = async (event) => {
-    event.preventDefault();
-
+    event.preventDefault()
 
     if (passInput !== repeatPassInput) {
-      showAlert('Hasła muszą być identyczne.', 'error');
-      return; // Przerwij funkcję, jeśli hasła się różnią
+      showAlert('Hasła muszą być identyczne.', 'error')
+      return
     }
 
     if (!validatePassword(passInput)) {
-      setErrorPass('Hasło musi zawierać co najmniej 8 znaków, w tym wielką literę, małą literę, cyfrę i znak specjalny.');
-      return;
+      setErrorPass('Hasło musi zawierać co najmniej 8 znaków, w tym wielką literę, małą literę, cyfrę i znak specjalny.')
+      return
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, loginInput, passInput);
-      await sendEmailVerification(userCredential.user);
-      setUserId(userCredential.user.uid); // Ustawiamy userId po pomyślnej rejestracji, co uruchomi hook
-      setSignIn(true);
+      const userCredential = await createUserWithEmailAndPassword(auth, loginInput, passInput)
+      await sendEmailVerification(userCredential.user)
+      initializeDefaultUserData(userCredential.user.uid)
+      setSignIn(true)
     } catch (error) {
-      console.error("Błąd podczas rejestracji: ", error.message);
-      showAlert(error.message, 'error');
-      setSignIn(false);
+      console.error("Błąd podczas rejestracji: ", error.message)
+      showAlert(error.message, 'error')
+      setSignIn(false)
     }
-  };
+  }
 
   const validatePassword = (password) => {
-    const minLength = 8;
-    const hasUppercase = /[A-Z]/.test(password);
-    const hasLowercase = /[a-z]/.test(password);
-    const hasDigit = /[0-9]/.test(password);
-    const hasSpecialChar = /[!@#$%^&*()]/.test(password);
+    const minLength = 8
+    const hasUppercase = /[A-Z]/.test(password)
+    const hasLowercase = /[a-z]/.test(password)
+    const hasDigit = /[0-9]/.test(password)
+    const hasSpecialChar = /[!@#$%^&*()]/.test(password)
 
-    return password.length >= minLength && hasUppercase && hasLowercase && hasDigit && hasSpecialChar;
-  };
+    return password.length >= minLength && hasUppercase && hasLowercase && hasDigit && hasSpecialChar
+  }
 
   return (
     <>

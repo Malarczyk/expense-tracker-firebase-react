@@ -42,47 +42,48 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
   const onSubmit = (e) => {
     e.preventDefault()
     if (validateForm()) {
-    const transactionAmountNum = parseFloat(transactionAmount || '0')
-    addTransaction({
-      name: name || "Brak nazwy",
-      wallet,
-      category: category || "Brak kategorii",
-      description,
-      transactionAmount: transactionAmountNum.toString(),
-      transactionType,
-      transactionDate: new Date(transactionDate),
-    })
-    // Aktualizacja budżetów
-    budgets.forEach((budget) => {
-      if (budget.categories.includes(category)) {
-        const currentAmount = parseFloat(budget.actualAmount || '0')
-        const updatedAmount = transactionType === 'expense'
-          ? currentAmount + transactionAmountNum
-          : currentAmount - transactionAmountNum
+      const transactionAmountNum = parseFloat(transactionAmount || '0')
+      addTransaction({
+        name: name || "Brak nazwy",
+        wallet,
+        category: category || "Brak kategorii",
+        description,
+        transactionAmount: transactionAmountNum.toString(),
+        transactionType,
+        transactionDate: new Date(transactionDate),
+      })
+      // Aktualizacja budżetów
+      budgets.forEach((budget) => {
+        if (budget.categories.includes(category)) {
+          const currentAmount = parseFloat(budget.actualAmount || '0')
+          const updatedAmount = transactionType === 'expense'
+            ? currentAmount + transactionAmountNum
+            : currentAmount - transactionAmountNum
 
-        updateBudget(budget.id, { actualAmount: updatedAmount.toString() })
+          updateBudget(budget.id, { actualAmount: updatedAmount.toString() })
+        }
+      })
+
+
+      // Aktualizacja portfela
+      const selectedWallet = wallets.find(w => w.name === wallet)
+      if (selectedWallet) {
+        const currentWalletAmount = parseFloat(selectedWallet.walletAmount || '0')
+        const updatedWalletAmount = transactionType === 'expense'
+          ? currentWalletAmount - transactionAmountNum
+          : currentWalletAmount + transactionAmountNum
+
+        updateWallet(selectedWallet.id, { walletAmount: updatedWalletAmount.toString() })
       }
-    })
 
 
-    // Aktualizacja portfela
-    const selectedWallet = wallets.find(w => w.name === wallet)
-    if (selectedWallet) {
-      const currentWalletAmount = parseFloat(selectedWallet.walletAmount || '0')
-      const updatedWalletAmount = transactionType === 'expense'
-        ? currentWalletAmount - transactionAmountNum
-        : currentWalletAmount + transactionAmountNum
-
-      updateWallet(selectedWallet.id, { walletAmount: updatedWalletAmount.toString() })
+      setName('')
+      setWallet('')
+      setCategory('')
+      setDescription('')
+      setTransactionAmount('')
+      onClose()
     }
-
-
-    setName('')
-    setWallet('')
-    setCategory('')
-    setDescription('')
-    setTransactionAmount('')
-    onClose()}
   }
 
   const handleWalletInputClick = () => {
@@ -124,8 +125,8 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={'Wpisz nazwę'}  
-              error={errors.name && "Pole nazwa nie może być puste"}          
+              placeholder={'Wpisz nazwę'}
+              error={errors.name && "Pole nazwa nie może być puste"}
             />
 
             <DateInput
@@ -222,21 +223,19 @@ const ModalAddTransaction = ({ isOpen, onClose }) => {
           {wallets.map((wallet) => {
             const { id, name, walletAmount } = wallet
             return (
-              <>
-                <div className="universal__item" key={id} onClick={() => handleWalletSelection(name)}>
-                  <div className="universal__item__body">
-                    <div className="top">
-                      <h2>{name}</h2>
-                    </div>
-                    <div className="bottom">
-                      <h4>{Number(walletAmount).toFixed(2) + ' zł'}</h4>
-                    </div>
+              <div className="universal__item" key={id} onClick={() => handleWalletSelection(name)}>
+                <div className="universal__item__body">
+                  <div className="top">
+                    <h2>{name}</h2>
                   </div>
-                  <div className="universal__item__arr">
-                    <i className="icon icon--arrow-right"></i>
+                  <div className="bottom">
+                    <h4>{Number(walletAmount).toFixed(2) + ' zł'}</h4>
                   </div>
                 </div>
-              </>
+                <div className="universal__item__arr">
+                  <i className="icon icon--arrow-right"></i>
+                </div>
+              </div>
             )
           })}
         </div>

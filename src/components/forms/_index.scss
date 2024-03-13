@@ -31,6 +31,7 @@ form {
     }
     &.error {
       border-color: var(--error-color) !important;
+      background-color: rgba(230, 44, 89, 0.1);
     }
   }
   label {
@@ -75,7 +76,9 @@ form {
     }
   }
 }
-
+.myInput.error label {
+  color: var(--error-color);
+}
 .clickable {
   position: relative;
   input {

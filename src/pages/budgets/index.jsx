@@ -2,10 +2,11 @@ import UniversalSkeleton from '../../components/skeleton/UniversalSkeleton'
 import UniversalEmpty from '../../components/skeleton/UniversalEmpty'
 import ModalEditBudget from './modals/modalEditBudget'
 import ModalAddBudget from './modals/modalAddBudget'
-import { useBudgets } from "../../hooks/useBudgets"
-import ButtonAdd from "../../components/ButtonAdd"
-import TopBar from "../../components/TopBar"
-import { useState } from "react"
+import { useBudgets } from '../../hooks/useBudgets'
+import { displayPrice } from '../../utils/strings'
+import ButtonAdd from '../../components/ButtonAdd'
+import TopBar from '../../components/TopBar'
+import { useState } from 'react'
 import './_index.scss'
 
 
@@ -61,8 +62,8 @@ const Budgets = () => {
                         <h2>{name}</h2>
                       </div>
                       <div className="bottom">
-                        <h4>{Number(actualAmount).toFixed(2) + ' zł'}</h4>
-                        <h4>{'z ' + Number(maxAmount).toFixed(2) + ' zł'}</h4>
+                        <h4>{displayPrice(actualAmount)}</h4>
+                        <h4>{'z ' + displayPrice(maxAmount)}</h4>
                       </div>
                     </div>
                     <div className="universal__item__arr">

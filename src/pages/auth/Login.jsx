@@ -1,6 +1,6 @@
-// import initializeDefaultUserData from '../../utils/initializeDefaultUserData'
+import useInitializeDefaultUserData from '../../utils/useInitializeDefaultUserData'
+import { collection, query, where, getDocs, onSnapshot } from "firebase/firestore"
 import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth'
-import { collection, query, where, getDocs } from "firebase/firestore"
 import { auth, provider, db } from '../../config/firebase-config'
 import { AlertContext } from '../../context/Alert/AlertContext'
 import { useGetUserInfo } from '../../hooks/useGetUserInfo'
@@ -13,108 +13,110 @@ const Login = ({ setSigninVisible, setRemindVisible }) => {
   const [loginInput, setLoginInput] = useState("")
   const [passInput, setPassInput] = useState("")
 
+  const initializeDefaultUserData = useInitializeDefaultUserData()
+
   const navigate = useNavigate()
   const { isAuth } = useGetUserInfo()
   const { showAlert } = useContext(AlertContext)
+  const categoriesCollectionRef = collection(db, 'categories')
+
+  const checkCategories = async (userID, callback) => {
+    try {
+      const queryCategories = query(
+        categoriesCollectionRef,
+        where("userID", "==", userID)
+      )
+
+      onSnapshot(queryCategories, (snapshot) => {
+        const thereAreCategories = snapshot.empty//((doc) => !!doc.data())
+        if (thereAreCategories) {
+          initializeDefaultUserData(userID)
+        }
+        callback()
+      })
+
+    } catch (err) {
+      console.error(err)
+      callback()
+    }
+  }
 
   const signInWithGoogle = async () => {
-    const results = await signInWithPopup(auth, provider)
-    console.log(results.user);
-    // Tuż po zalogowaniu sprawdzamy, czy użytkownik ma już zainicjalizowane dane
-    const user = results.user;
+    provider.setCustomParameters({
+      prompt: 'select_account'
+    })
 
-    // Zdefiniuj referencję do kolekcji, gdzie przechowujesz dane użytkownika (na przykład kategorie)
-    const userCategoriesRef = collection(db, 'categories');
+    try {
+      const results = await signInWithPopup(auth, provider)
+      const user = results.user
 
-    // Stwórz zapytanie, które sprawdza, czy istnieją jakieś kategorie dla danego uid użytkownika
-    const querySnapshot = await getDocs(query(userCategoriesRef, where('userId', '==', user.uid)));
+      console.log("przed sprawdzeniem bazy -> " + user.uid)
 
-    if (querySnapshot.empty) {
-      // Brak kategorii dla tego użytkownika, zainicjuj domyślne dane
-      //initializeDefaultUserData(user.uid);
-    } else {
-      // Dane dla tego użytkownika już istnieją, nie inicjuj ponownie
-      console.log('Użytkownik posiada już dane, pomijam inicjalizację.');
+      const callback = () => {
+        const authInfo = {
+          userID: user.uid,
+          name: user.displayName,
+          profilePhoto: user.photoURL,
+          isAuth: true,
+        }
+        localStorage.setItem("auth", JSON.stringify(authInfo))
+        navigate("/home")
+      }
+
+      checkCategories(user.uid, callback)
+
+
+    } catch (error) {
+      console.error("Błąd podczas logowania: ", error.message)
     }
-
-    const authInfo = {
-      userID: results.user.uid,
-      name: results.user.displayName,
-      profilePhoto: results.user.photoURL,
-      isAuth: true,
-    }
-    localStorage.setItem("auth", JSON.stringify(authInfo))
-    navigate("/home")
   }
 
   const handleLogin = async (event) => {
-    event.preventDefault(); // Zatrzymuje domyślne zachowanie formularza
+    event.preventDefault()
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, loginInput, passInput);
-      const user = userCredential.user;
-  
-      // Zdefiniuj referencję do kolekcji, gdzie przechowujesz dane użytkownika (na przykład kategorie)
-      const userCategoriesRef = collection(db, 'categories');
-  
-      // Stwórz zapytanie, które sprawdza, czy istnieją jakieś kategorie dla danego uid użytkownika
-      const querySnapshot = await getDocs(query(userCategoriesRef, where('userId', '==', user.uid)));
-  
-      if (querySnapshot.empty) {
-        // Brak kategorii dla tego użytkownika, zainicjuj domyślne dane
-        //initializeDefaultUserData(user.uid);
-      } else {
-        // Dane dla tego użytkownika już istnieją, nie inicjuj ponownie
-        console.log('Użytkownik posiada już dane, pomijam inicjalizację.');
-      }
-  
-      // Przygotuj dane użytkownika do zapisania
+      const userCredential = await signInWithEmailAndPassword(auth, loginInput, passInput)
+      const user = userCredential.user
+
       const authInfo = {
         userID: user.uid,
-        name: user.displayName || "", // Użyj displayName lub pustego stringa, jeśli nie jest dostępny
-        email: user.email, // Adres e-mail użytkownika
-        profilePhoto: user.photoURL || "", // Użyj photoURL lub pustego stringa, jeśli nie jest dostępny
+        name: user.displayName || "",
+        email: user.email,
+        profilePhoto: user.photoURL || "",
         isAuth: true,
-      };
-  
-      // Zapisz dane w localStorage
-      localStorage.setItem("auth", JSON.stringify(authInfo));
-  
-      // Przekieruj użytkownika
-      navigate("/home");
+      }
+
+      localStorage.setItem("auth", JSON.stringify(authInfo))
+      navigate("/home")
     } catch (error) {
-      console.error("Błąd podczas logowania: ", error.message);
-      handleLoginError(error);
+      console.error("Błąd podczas logowania: ", error.message)
+      handleLoginError(error)
     }
   }
 
-  // Funkcja do obsługi błędów logowania
-const handleLoginError = (error) => {
-  let errorMessage = 'Podane dane są nieprawidłowe.'; // Domyślny komunikat
+  const handleLoginError = (error) => {
+    let errorMessage = 'Podane dane są nieprawidłowe.'
 
-  switch (error.code) {
-    case 'auth/invalid-email':
-      errorMessage = 'Podany adres e-mail jest nieprawidłowy.';
-      break;
-    case 'auth/user-disabled':
-      errorMessage = 'Konto użytkownika zostało wyłączone.';
-      break;
-    case 'auth/user-not-found':
-      errorMessage = 'Nie znaleziono użytkownika z tym adresem e-mail.';
-      break;
-    case 'auth/wrong-password':
-      errorMessage = 'Podane hasło jest nieprawidłowe.';
-      break;
-    // Możesz dodać więcej przypadków w zależności od potrzeb
-    default:
-      // Domyślna obsługa innych błędów
+    switch (error.code) {
+      case 'auth/invalid-email':
+        errorMessage = 'Podany adres e-mail jest nieprawidłowy.'
+        break
+      case 'auth/user-disabled':
+        errorMessage = 'Konto użytkownika zostało wyłączone.'
+        break
+      case 'auth/user-not-found':
+        errorMessage = 'Nie znaleziono użytkownika z tym adresem e-mail.'
+        break
+      case 'auth/wrong-password':
+        errorMessage = 'Podane hasło jest nieprawidłowe.'
+        break
+      case 'uth/popup-closed-by-user':
+        errorMessage = 'Zamknięto okno wyboru konta Google'
+        break
+      default:
+        break
+    }
+    showAlert(errorMessage, 'error')
   }
-
-  // Tutaj możesz wyświetlić komunikat błędu, np. ustawić stan komponentu, który wyświetla błąd
-  console.error(errorMessage)
-  showAlert(errorMessage, 'error')
-  // Ustaw stan z błędem, który może być wyświetlony użytkownikowi
-  // this.setState({ loginError: errorMessage });
-};
 
   if (isAuth) {
     return <Navigate to="/home" />
@@ -158,6 +160,7 @@ const handleLoginError = (error) => {
                 onChange={(e) => setPassInput(e.target.value)}
                 required
                 placeholder="**************"
+                autoComplete='new-password'
               />
             </div>
             <button className="btn btn--empty" type='submit'>Zaloguj się</button>
