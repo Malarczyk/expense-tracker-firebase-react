@@ -54,7 +54,6 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
     }
   }, [selectedTransaction])
 
-  // Pomocnicza funkcja do sprawdzania, czy data transakcji jest w aktualnym miesiącu
   const isInCurrentMonth = (date) => {
     const now = new Date();
     return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
@@ -79,7 +78,6 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
     const oldTransactionAmountNum = parseFloat(selectedTransaction.transactionAmount || '0');
     const amountDifference = transactionAmountNum - oldTransactionAmountNum;
 
-    // Logika dla budżetu
     if (selectedTransaction.transactionType === 'expense' && isCurrentMonthTransaction) {
       let oldBudget, newBudget;
       if (selectedTransaction.category !== category || amountDifference !== 0) {
@@ -95,37 +93,29 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
       }
     }
 
-    // Logika dla portfela
     const oldWallet = wallets.find(w => w.name === selectedTransaction.wallet);
     const newWallet = wallets.find(w => w.name === wallet);
-    // Rozpoczynamy od określenia, czy wystąpiła zmiana typu transakcji
     const typeChanged = selectedTransaction.transactionType !== transactionType;
-
-    // Określenie, czy zmienił się portfel
     const walletChanged = selectedTransaction.wallet !== wallet;
 
-    // Aktualizacja dla tego samego portfela bez zmiany portfela
     if (!walletChanged) {
       let adjustment = 0;
 
-      // Jeśli zmienił się typ transakcji z wydatku na przychód lub odwrotnie
       if (typeChanged) {
         adjustment = (transactionType === 'expense' ? -1 : 1) * (oldTransactionAmountNum + transactionAmountNum);
-      } else { // Jeśli typ się nie zmienił, ale kwota tak
+      } else {
         adjustment = (transactionType === 'expense' ? -1 : 1) * amountDifference;
       }
 
-      if (newWallet) { // Jeśli portfel nie zmienił się, ale kwota lub typ tak
+      if (newWallet) {
         await updateWallet(newWallet.id, { walletAmount: (parseFloat(newWallet.walletAmount || '0') + adjustment).toString() });
       }
-    } else { // Logika dla zmiany portfela
-      // Aktualizacja starego portfela
+    } else {
       if (oldWallet) {
         let oldWalletAdjustment = typeChanged && selectedTransaction.transactionType === 'income' ? -oldTransactionAmountNum : oldTransactionAmountNum;
         await updateWallet(oldWallet.id, { walletAmount: (parseFloat(oldWallet.walletAmount || '0') + oldWalletAdjustment).toString() });
       }
 
-      // Aktualizacja nowego portfela
       if (newWallet) {
         let newWalletAdjustment = typeChanged && transactionType === 'income' ? transactionAmountNum : -transactionAmountNum;
         await updateWallet(newWallet.id, { walletAmount: (parseFloat(newWallet.walletAmount || '0') + newWalletAdjustment).toString() });
@@ -142,7 +132,6 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
       if (selectedTransaction) {
         const transactionAmountNum = parseFloat(selectedTransaction.transactionAmount || '0');
 
-        // Aktualizacja portfela
         const selectedWallet = wallets.find(w => w.name === selectedTransaction.wallet);
         if (selectedWallet) {
           const currentWalletAmount = parseFloat(selectedWallet.walletAmount || '0');
@@ -153,7 +142,6 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
           await updateWallet(selectedWallet.id, { walletAmount: updatedWalletAmount.toString() });
         }
 
-        // Aktualizacja budżetów
         budgets.forEach(async (budget) => {
           if (budget.categories.includes(selectedTransaction.category)) {
             const currentAmount = parseFloat(budget.actualAmount || '0');
@@ -165,10 +153,9 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
           }
         });
 
-        // Usuwanie transakcji
         await deleteTransaction(selectedTransaction.id);
-        setIsDeletePopupOpen(false);  // Zamknięcie popupa po usunięciu
-        onClose(); // Zamknięcie modala edycji
+        setIsDeletePopupOpen(false); 
+        onClose(); 
       }
     } catch (error) {
       console.error('Error deleting transaction:', error);
@@ -177,7 +164,7 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
 
   const handleWalletInputClick = () => {
     setWalletListVisible(true)
-    setCategoryListVisible(false) // Ukryj listę kategorii
+    setCategoryListVisible(false)
   }
 
   const handleWalletSelection = (selectedWallet) => {
@@ -187,7 +174,7 @@ const ModalEditTransaction = ({ isOpen, onClose, selectedTransaction, onUpdateTr
 
   const handleCategoryInputClick = () => {
     setCategoryListVisible(true)
-    setWalletListVisible(false) // Ukryj listę portfeli
+    setWalletListVisible(false) 
   }
 
   const handleCategorySelection = (selectedCategory) => {

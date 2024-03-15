@@ -40,8 +40,8 @@
       }
     }
     @media not all and (min-resolution: 0.001dpcm) {
-      /* Szybki sposób na wykrycie Safari */
-      height: -webkit-fill-available; /* Wypełnij dostępną przestrzeń w Safari */
+      
+      height: -webkit-fill-available; 
     }
     display: flex;
     flex-direction: column;

@@ -15,7 +15,7 @@ const RemindPass = ({ setRemindVisible }) => {
 
     try {
       await sendPasswordResetEmail(auth, loginInput)
-      setIsSend(true) // Aktualizuj stan tylko jeśli wysyłka maila się powiedzie
+      setIsSend(true) 
     } catch (error) {
       console.error("Error sending password reset email:", error)
       showAlert(error.message, 'error')

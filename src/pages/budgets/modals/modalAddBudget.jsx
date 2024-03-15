@@ -65,10 +65,8 @@ const ModalAddBudget = ({ isOpen, onClose }) => {
   const onSubmit = async (e) => {
     e.preventDefault()
     if (validateForm()){
-    // Oblicz actualAmount na podstawie istniejących transakcji
     const actualAmount = calculateActualAmount()
 
-    // Dodaj budżet
     const newBudget = {
       name,
       categories: selectedCategories,
@@ -78,7 +76,6 @@ const ModalAddBudget = ({ isOpen, onClose }) => {
     
     await addBudget(newBudget)
 
-    // Reset stanu po dodaniu budżetu
     setName('')
     setMaxAmount('')
     setSelectedCategories([])

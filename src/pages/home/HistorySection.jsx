@@ -1,71 +1,72 @@
 import React from 'react'
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore'
+import { displayPrice } from '../../utils/strings'
 
 const HistorySection = ({
   transactions,
   isTransactionsLoading,
   categories,
   onItemClick,
-  limit = 6, // Limit transakcji do wyświetlenia, domyślnie 6 dla strony Home
-  showAll = false // Jeśli true, wyświetla wszystkie transakcje (dla strony Transactions)
+  limit = 6,
+  showAll = false
 }) => {
   const groupTransactionsByDate = () => {
-    const groupedTransactions = {};
+    const groupedTransactions = {}
 
     transactions.forEach((transaction) => {
       const transactionDate = transaction.transactionDate
         ? (transaction.transactionDate instanceof Timestamp
           ? transaction.transactionDate.toDate()
           : new Date(transaction.transactionDate))
-        : null;
+        : null
 
       if (transactionDate && !isNaN(transactionDate.getTime())) {
-        const formattedDate = formatDate(transactionDate);
+        const formattedDate = formatDate(transactionDate)
 
         if (!groupedTransactions[formattedDate]) {
           groupedTransactions[formattedDate] = {
             date: transactionDate,
             transactions: []
-          };
+          }
         }
 
-        groupedTransactions[formattedDate].transactions.push(transaction);
+        groupedTransactions[formattedDate].transactions.push(transaction)
       } else {
-        console.error('Invalid transactionDate:', transaction.transactionDate);
+        console.error('Invalid transactionDate:', transaction.transactionDate)
       }
-    });
+    })
 
-    return groupedTransactions;
-  };
+    return groupedTransactions
+  }
 
   const formatDate = (date) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('pl-PL', options);
-  };
+    const options = { year: 'numeric', month: 'long', day: 'numeric' }
+    return date.toLocaleDateString('pl-PL', options)
+  }
 
   const renderHistorySection = () => {
-    const groupedTransactions = groupTransactionsByDate();
+    const groupedTransactions = groupTransactionsByDate()
 
     const sortedDates = Object.values(groupedTransactions).sort((a, b) => {
-      const dateA = a.date;
-      const dateB = b.date;
-      return dateB.getTime() - dateA.getTime(); // Sortowanie od najnowszej do najstarszej
-    });
+      const dateA = a.date
+      const dateB = b.date
+      return dateB.getTime() - dateA.getTime()
+    })
 
-    let renderedItemsCount = 0;
+    let renderedItemsCount = 0
 
     return sortedDates.map((group) => {
-      const formattedDate = formatDate(group.date);
+      const formattedDate = formatDate(group.date)
       if (!showAll && renderedItemsCount >= limit) {
-        return null; // Przerwij proces renderowania, jeśli osiągnięto limit i tryb showAll jest wyłączony
+        return null
       }
 
       const transactionsForDate = group.transactions.sort((a, b) => {
-        return b.createdAt - a.createdAt;
-      });
+        return b.createdAt - a.createdAt
+      })
 
-      const isToday = isDateToday(transactionsForDate[0].transactionDate);
-      const isYesterday = isDateYesterday(transactionsForDate[0].transactionDate);
+      const isToday = isDateToday(transactionsForDate[0].transactionDate)
+      const isYesterday = isDateYesterday(transactionsForDate[0].transactionDate)
 
       const renderedDate = (
         <div key={formattedDate} className="history-section">
@@ -74,16 +75,16 @@ const HistorySection = ({
           </div>
           {transactionsForDate.map((transaction) => {
             if (!showAll && renderedItemsCount >= limit) {
-              return null; // Jeżeli osiągnięto limit i tryb showAll jest wyłączony, zwróć null
+              return null
             }
 
-            const selectedCategory = categories.find((cat) => cat.name === transaction.category);
+            const selectedCategory = categories.find((cat) => cat.name === transaction.category)
             const amountStyle = {
               color: transaction.transactionType === 'income' ? 'var(--success-color)' : 'var(--text-color)',
-            };
+            }
             const formattedAmount = (transaction.transactionType === 'expense' ? '-' : '+') +
-              Number(transaction.transactionAmount).toFixed(2) + ' zł';
-            renderedItemsCount++;
+            displayPrice(transaction.transactionAmount)
+            renderedItemsCount++
 
             return (
               <div key={transaction.id} className="dashboard__history__item" onClick={() => onItemClick(transaction)}>
@@ -98,37 +99,37 @@ const HistorySection = ({
                   <h2 className="amount" style={amountStyle}>{formattedAmount}</h2>
                 </div>
               </div>
-            );
+            )
           })}
         </div>
-      );
+      )
 
-      return renderedDate;
-    });
-  };
+      return renderedDate
+    })
+  }
 
   const isDateToday = (date) => {
-    const today = new Date();
-    const transactionDate = new Date(date);
+    const today = new Date()
+    const transactionDate = new Date(date)
     return today.getDate() === transactionDate.getDate() &&
       today.getMonth() === transactionDate.getMonth() &&
-      today.getFullYear() === transactionDate.getFullYear();
-  };
+      today.getFullYear() === transactionDate.getFullYear()
+  }
 
   const isDateYesterday = (date) => {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const transactionDate = new Date(date);
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    const transactionDate = new Date(date)
     return yesterday.getDate() === transactionDate.getDate() &&
       yesterday.getMonth() === transactionDate.getMonth() &&
-      yesterday.getFullYear() === transactionDate.getFullYear();
-  };
+      yesterday.getFullYear() === transactionDate.getFullYear()
+  }
 
   return (
     <div className="dashboard__history">
       {renderHistorySection()}
     </div>
-  );
-};
+  )
+}
 
-export default HistorySection;
+export default HistorySection

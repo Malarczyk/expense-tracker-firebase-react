@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import BarSummary from './charts/BarSummary'
 import Profile from '../../components/Profile'
 import Header from "../../components/Header"
+import BarSummary from './charts/BarSummary'
 import PieChart from './charts/PieChart'
 import './_index.scss'
 

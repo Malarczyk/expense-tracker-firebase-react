@@ -54,7 +54,6 @@ const ModalEditCategory = ({ isOpen, onClose, selectedCategory, onUpdateCategory
       categoryType,
     }
 
-    // Aktualizuj nazwę kategorii w transakcjach
     transactions.forEach((transaction) => {
       if (transaction.category === selectedCategory.name) {
         updateTransaction(transaction.id, { ...transaction, category: name })
@@ -82,7 +81,7 @@ const ModalEditCategory = ({ isOpen, onClose, selectedCategory, onUpdateCategory
   }
 
   const handleDeleteClick = () => {
-    setIsDeletePopupOpen(true) // Pokaż popup
+    setIsDeletePopupOpen(true) 
   }
   const modalTitle = isIconListVisible
     ? "Wybierz ikonę"
@@ -102,7 +101,6 @@ const ModalEditCategory = ({ isOpen, onClose, selectedCategory, onUpdateCategory
               onChange={(e) => setName(e.target.value)}
               placeholder={'Wpisz nazwę'}
               required
-              focus
             />
             <MyRadioInput
               name="transactionType"

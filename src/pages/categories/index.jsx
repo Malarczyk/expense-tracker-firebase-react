@@ -15,7 +15,7 @@ const Categories = () => {
   const [isModalEditOpen, setIsModalEditOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState(null)
 
-  const { updateCategory, deleteCategory, isCategoriesLoading } = useCategories() // Dodane pobieranie updateCategory z hooka
+  const { updateCategory, deleteCategory, isCategoriesLoading } = useCategories() 
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category)

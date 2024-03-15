@@ -21,7 +21,7 @@ const Profile = ({ isHamburger }) => {
       {profilePhoto ? (
           <img src={imageSrc} alt="Profile" />
         ) : (
-          <i className='icon icon--user' />  // Pokaż ten tekst, jeśli URL zdjęcia nie jest dostępny
+          <i className='icon icon--user' /> 
         )}
       </div>
       <div className="dashboard__profile__body">

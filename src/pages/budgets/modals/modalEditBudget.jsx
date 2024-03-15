@@ -41,7 +41,7 @@ const ModalEditBudget = ({ isOpen, onClose, selectedBudget, onUpdateBudget, onDe
       updatedSelectedCategories = [...selectedCategories, selectedCategory]
     }
     setSelectedCategories(updatedSelectedCategories)
-    setCategory(updatedSelectedCategories.join(', ')) // Aktualizuje wartość inputa category
+    setCategory(updatedSelectedCategories.join(', ')) 
   }
 
   const handleCategoriesConfirm = () => {

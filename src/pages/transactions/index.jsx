@@ -42,7 +42,7 @@ const Transactions = () => {
   const applyFilters = (filters) => {
     let newFilteredTransactions = transactions.filter(t => {
       const transactionAmount = parseFloat(t.transactionAmount)
-      const transactionDate = t.transactionDate?.seconds ? new Date(t.transactionDate?.seconds * 1000) : undefined // Zakładając, że transactionDate jest już konwertowane do formatu Date w danych transakcji
+      const transactionDate = t.transactionDate?.seconds ? new Date(t.transactionDate?.seconds * 1000) : undefined 
       let isValid = true
 
       if (!filters) return true

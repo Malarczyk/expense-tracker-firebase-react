@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import '../_index.scss';
 
 const MyInputColor = ({ setColor, setBgColor }) => {
-  const [activeOption, setActiveOption] = useState(null); // Stan przechowujący indeks aktywnej opcji
+  const [activeOption, setActiveOption] = useState(null);
 
   const handleSet = (color, bgColor, index) => {
     setColor(color);
     setBgColor(bgColor);
-    setActiveOption(index); // Ustawienie indeksu aktywnej opcji po kliknięciu
+    setActiveOption(index); 
   };
 
   const colorOptions = [
@@ -32,9 +32,9 @@ const MyInputColor = ({ setColor, setBgColor }) => {
         {colorOptions.map((option, index) => (
           <div
             key={index}
-            className={`rec ${activeOption === index ? 'active' : ''}`} // Dodanie klasy 'active' dla aktywnej opcji
+            className={`rec ${activeOption === index ? 'active' : ''}`} 
             style={{ backgroundColor: `var(${option.color})` }}
-            onClick={() => handleSet(option.color, option.bgColor, index)} // Przekazanie indeksu do funkcji handleSet
+            onClick={() => handleSet(option.color, option.bgColor, index)} 
           ></div>
         ))}
       </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const Pagination = ({ transactionsPerPage, totalTransactions, paginate }) => {
-  const [currentPage, setCurrentPage] = useState(1); // Stan przechowujący aktualnie wybraną stronę
+  const [currentPage, setCurrentPage] = useState(1); 
   const pageNumbers = [];
 
   for (let i = 1; i <= Math.ceil(totalTransactions / transactionsPerPage); i++) {
@@ -9,7 +9,7 @@ const Pagination = ({ transactionsPerPage, totalTransactions, paginate }) => {
   }
 
   if (pageNumbers.length === 1) {
-    return null; // Jeśli jest tylko jedna strona, nie renderuj nic
+    return null; 
   }
 
   return (
@@ -17,7 +17,7 @@ const Pagination = ({ transactionsPerPage, totalTransactions, paginate }) => {
       <div className='pagination__wrapper'>
         {pageNumbers.map(number => (
           <div key={number} className={`page-item ${currentPage === number ? 'active' : ''}`} onClick={() => {
-            setCurrentPage(number); // Ustawienie aktualnej strony po kliknięciu
+            setCurrentPage(number); 
             paginate(number);
           }}>
             <span className='page-link'>

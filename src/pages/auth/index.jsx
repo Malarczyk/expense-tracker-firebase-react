@@ -10,14 +10,14 @@ export const Auth = ({ installEvent, setInstallEvent }) => {
 
   const handleInstallClick = () => {
     if (installEvent) {
-      installEvent.prompt(); // Wywołanie okna instalacji
+      installEvent.prompt();
       installEvent.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === 'accepted') {
           console.log('Aplikacja została zainstalowana');
         } else {
           console.log('Instalacja aplikacji została odrzucona');
         }
-        setInstallEvent(null); // Resetuj zdarzenie instalacji
+        setInstallEvent(null);
       });
     }
   };

@@ -1,14 +1,16 @@
+import UniversalSkeleton from "../../components/skeleton/UniversalSkeleton"
+import UniversalEmpty from "../../components/skeleton/UniversalEmpty"
+import React, { useState, useEffect, useRef, Fragment } from 'react'
 import { useTransactions } from "../../hooks/useTransactions"
-import React, { useState, useEffect, useRef } from 'react'
 import { useCategories } from "../../hooks/useCategories"
 import { useBudgets } from "../../hooks/useBudgets"
+import { displayPrice } from "../../utils/strings"
 import Profile from "../../components/Profile"
 import { useNavigate } from "react-router-dom"
 import HistorySection from "./HistorySection"
-import UniversalEmpty from "../../components/skeleton/UniversalEmpty"
 import Header from "../../components/Header"
 import './_index.scss'
-import UniversalSkeleton from "../../components/skeleton/UniversalSkeleton"
+
 
 const Dashboard = ({ isProfileVisible, onItemClick }) => {
   const { transactions, transactionTotal, isTransactionLoading } = useTransactions()
@@ -21,21 +23,10 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
   const navigate = useNavigate()
 
   const [isHeaderVisible, setHeaderVisible] = useState(true)
-  const [showLimitAlert, setShowLimitAlert] = useState(false);
   const [isBalanceVisible, setBalanceVisible] = useState(() => {
     const saved = localStorage.getItem('isBalanceVisible')
     return saved === 'true'
   })
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const isAnyBudgetCloseToLimit = budgets.some(budget => budget.actualAmount > 0.9 * budget.maxAmount);
-      setShowLimitAlert(isAnyBudgetCloseToLimit);
-    }, 1000); // Ustaw opóźnienie na 1 sekundę
-
-    return () => clearTimeout(timer); // Wyczyść timeout przy odmontowywaniu komponentu
-  }, [budgets]); // Zależności efektu
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,31 +44,6 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
   useEffect(() => {
     localStorage.setItem('isBalanceVisible', isBalanceVisible)
   }, [isBalanceVisible])
-
-
-  // const addSampleMonthlyStats = async () => {
-  //   const sampleData = [
-  //     { name: 'wrzesień 2023', totalIncome: '4890', totalExpense: '3000' },
-  //     { name: 'sierpień 2023', totalIncome: '5290', totalExpense: '3689' },
-  //     { name: 'lipiec 2023', totalIncome: '6192', totalExpense: '3044' },
-  //     { name: 'październik 2023', totalIncome: '8942', totalExpense: '3000' },
-  //     { name: 'listopad 2023', totalIncome: '6402', totalExpense: '3689' },
-  //     { name: 'grudzień 2023', totalIncome: '4555', totalExpense: '4054' },
-  //   ];
-
-  //   try {
-  //     for (const data of sampleData) {
-  //       await addMonthlyStats({
-  //         name: data.name,
-  //         totalIncome: data.totalIncome,
-  //         totalExpense: data.totalExpense,
-  //       });
-  //     }
-  //     console.log("Dodano")
-  //   } catch (error) {
-  //     console.error('Error adding sample monthlyStats:', error);
-  //   }
-  // };
 
   return (
     <>
@@ -105,7 +71,7 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
                 {isTransactionLoading
                   ? (<h4>Ładowanie</h4>)
                   : (isBalanceVisible
-                    ? <h2>{Number(balance).toFixed(2) + ' zł'}</h2>
+                    ? <h2>{displayPrice(balance)}</h2>
                     : <h2>******</h2>
                   )}
 
@@ -121,7 +87,7 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
               {isTransactionLoading
                 ? (<h4>Ładowanie</h4>)
                 : (isBalanceVisible
-                  ? <h2 style={{ color: '#54B471' }}>{Number(income).toFixed(2) + ' zł'}</h2>
+                  ? <h2 style={{ color: '#54B471' }}>{displayPrice(income)}</h2>
                   : <h2 style={{ color: '#54B471' }}>******</h2>
                 )}
 
@@ -134,62 +100,65 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
               {isTransactionLoading
                 ? (<h4>Ładowanie</h4>)
                 : (isBalanceVisible
-                  ? <h2 style={{ color: '#E62C59' }}>{Number(expenses).toFixed(2) + ' zł'}</h2>
+                  ? <h2 style={{ color: '#E62C59' }}>{displayPrice(expenses)}</h2>
                   : <h2 style={{ color: '#E62C59' }}>******</h2>
                 )}
             </div>
           </div>
         </div>
 
-        {showLimitAlert && budgets?.map((budget) => {
-          const { id, name, maxAmount, actualAmount } = budget
-          return (
-            actualAmount > maxAmount
-              ? (
-                <div className="dashboard__section --timeout">
-                  <div className="section__title">
-                    <h1>Przekroczono ustalony limit</h1>
-                  </div>
-                  <div className="dashboard__budgets">
-                    <div className="universal__item --limit --limit-error" key={id}>
-                      <div className="universal__item__body">
-                        <div className="top">
-                          <h2>{name}</h2>
-                        </div>
-                        <div className="bottom">
-                          <h4>{Number(actualAmount).toFixed(2) + ' zł'}</h4>
-                          <h4>{'z ' + Number(maxAmount).toFixed(2) + ' zł'}</h4>
+        {budgets?.map((budget) => {
+            const { id, name, maxAmount, actualAmount } = budget
+            const isBudgetOver = Number(actualAmount) > Number(maxAmount)
+            const isBudgetCloseToLimit = Number(actualAmount) > 0.9 * Number(maxAmount) && !isBudgetOver
+            return (
+              <Fragment key={id}>
+                {isBudgetOver && (
+                  <div className="dashboard__section --timeout">
+                    <div className="section__title">
+                      <h1>Przekroczono ustalony limit</h1>
+                    </div>
+                    <div className="dashboard__budgets">
+                      <div className="universal__item --limit --limit-error">
+                        <div className="universal__item__body">
+                          <div className="top">
+                            <h2>{name}</h2>
+                          </div>
+                          <div className="bottom">
+                            <h4>{displayPrice(actualAmount)}</h4>
+                            <h4>{'z ' + displayPrice(maxAmount)}</h4>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>)
-              : actualAmount > 0.9 * maxAmount
-                ? (<div className="dashboard__section --timeout">
-                  <div className="section__title">
-                    <h1>Hej! Zaraz przekroczysz ustalony limit</h1>
-                  </div>
-                  <div className="dashboard__budgets">
-                    <div className="universal__item --limit" key={id}>
-                      <div className="universal__item__body">
-                        <div className="top">
-                          <h2>{name}</h2>
-                        </div>
-                        <div className="bottom">
-                          <h4>{Number(actualAmount).toFixed(2) + ' zł'}</h4>
-                          <h4>{'z ' + Number(maxAmount).toFixed(2) + ' zł'}</h4>
+                )}
+                {isBudgetCloseToLimit && (
+                  <div className="dashboard__section --timeout">
+                    <div className="section__title">
+                      <h1>Hej! Zaraz przekroczysz ustalony limit</h1>
+                    </div>
+                    <div className="dashboard__budgets">
+                      <div className="universal__item --limit">
+                        <div className="universal__item__body">
+                          <div className="top">
+                            <h2>{name}</h2>
+                          </div>
+                          <div className="bottom">
+                            <h4>{displayPrice(actualAmount)}</h4>
+                            <h4>{'z ' + displayPrice(maxAmount)}</h4>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                )
-                : (<></>)
-          )
-        })}
+                )}
+
+              </Fragment>)
+          })
+        }
 
         <div className="dashboard__section">
-          {/* <span onClick={addSampleMonthlyStats}>Dodaj zmyślone dane dla zeszłych miesięcy</span> */}
           <div className="section__title">
             <h1>Ostatnie transkacje</h1>
             <h3 onClick={() => navigate('/transactions')}>Pokaż wszystkie</h3>
@@ -222,8 +191,8 @@ const Dashboard = ({ isProfileVisible, onItemClick }) => {
                           <h2>{name}</h2>
                         </div>
                         <div className="bottom">
-                          <h4>{Number(actualAmount).toFixed(2) + ' zł'}</h4>
-                          <h4>{'z ' + Number(maxAmount).toFixed(2) + ' zł'}</h4>
+                          <h4>{displayPrice(actualAmount)}</h4>
+                          <h4>{'z ' + displayPrice(maxAmount)}</h4>
                         </div>
                       </div>
                       <div className="universal__item__arr">

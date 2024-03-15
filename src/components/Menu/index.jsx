@@ -25,7 +25,7 @@ const Menu = ({ changeTheme }) => {
 
   const handleNavigation = (path) => {
     navigate(path);
-    toggleMenu(); // Zamknij menu po kliknięciu w przycisk nawigacyjny
+    toggleMenu();
   };
 
   return (

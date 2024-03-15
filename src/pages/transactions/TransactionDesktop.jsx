@@ -8,18 +8,15 @@ const TransactionDesktop = ({ filterClick, onItemClick, transactions, isTransact
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Funkcja do formatowania daty, bierze pod uwagę różne formaty danych
   const formatDate = (date) => {
     if (!date?.seconds) return "";
-    return new Date(date.seconds * 1000).toLocaleDateString(); // 1.11.2024
+    return new Date(date.seconds * 1000).toLocaleDateString(); 
   };
 
-  // Sortuj transakcje na podstawie daty utworzenia od najnowszej do najstarszej
   const sortedTransactions = transactions.sort((a, b) => {
-    // Przekształć daty na obiekty Date, jeśli są instancjami Timestamp
     const dateA = a.transactionDate.toDate ? a.transactionDate.toDate() : new Date(a.transactionDate);
     const dateB = b.transactionDate.toDate ? b.transactionDate.toDate() : new Date(b.transactionDate);
-    return dateB - dateA; // Sortuj od najnowszych do najstarszych
+    return dateB - dateA; 
   });
 
 

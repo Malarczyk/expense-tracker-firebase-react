@@ -1,4 +1,5 @@
 import Image from '../../../assets/images/nodata-bar.svg'
+import ImageLoading from '../../../assets/images/loader-bar.svg'
 import { useState, useEffect } from 'react'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
@@ -57,13 +58,13 @@ const BarSummary = () => {
   const formatLabel = (label) => {
     const parts = label.split(' ')
     if (parts.length !== 2) return label
-    
+
     const month = parts[0].charAt(0).toUpperCase() + parts[0].slice(1)
     const year = "'" + parts[1].slice(2)
-    
+
     return `${month} ${year}`
   };
-  
+
   const transformedLabels = labels.map(label => formatLabel(label))
 
   const incomeData = last5Months.map(({ month, year }) => sumTransactionsByType('income', month, year))
@@ -79,13 +80,13 @@ const BarSummary = () => {
       },
       dark: {
         borderColor: '#1c2349',
-        fontColor: '#B4B8C2' 
+        fontColor: '#B4B8C2'
       }
     }
     return colors[storedTheme]
   }
 
-  const { borderColor, fontColor } = getThemeColors() 
+  const { borderColor, fontColor } = getThemeColors()
 
   const options = {
     responsive: true,
@@ -93,7 +94,7 @@ const BarSummary = () => {
       legend: { display: false },
     },
     scales: {
-      x: { 
+      x: {
         grid: { display: false },
         ticks: {
           color: fontColor,
@@ -103,7 +104,7 @@ const BarSummary = () => {
       y: {
         beginAtZero: true,
         grid: { color: borderColor },
-        ticks: { 
+        ticks: {
           callback: function (value) { return value + ' zł' },
           color: fontColor,
         },
@@ -128,13 +129,13 @@ const BarSummary = () => {
     ],
   }
 
-    const moveLeft = () => {
-      setOffset(offset + 1)
-    }
-  
-    const moveRight = () => {
-      setOffset(offset - 1)
-    }
+  const moveLeft = () => {
+    setOffset(offset + 1)
+  }
+
+  const moveRight = () => {
+    setOffset(offset - 1)
+  }
 
   return (
     <>
@@ -150,9 +151,12 @@ const BarSummary = () => {
         </div>
       </div>
       <div className="stats__chart --fake">
+        
         {isTransactionLoading
-          ? <img src={Image} alt="" />
-          : <Bar options={options} data={data} />}
+          ? <img src={ImageLoading} alt="" />
+          : transactions?.length > 0
+            ? <Bar options={options} data={data} /> 
+            : <img src={Image} alt="" />}
       </div>
     </>
   )

@@ -2,7 +2,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const DateInput = ({ transactionDate, setTransactionDate }) => {
-  const today = new Date(); // Utwórz obiekt daty dla dzisiejszej daty
+  const today = new Date();
 
   return (
     <div className='datePicker'>

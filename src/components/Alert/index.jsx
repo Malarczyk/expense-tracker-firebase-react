@@ -5,7 +5,7 @@ import './_index.scss';
 const Alert = () => {
   const { alert, hideAlert } = useContext(AlertContext);
 
-  if (!alert.message) return null; // Nie wyświetlaj nic, jeśli nie ma wiadomości
+  if (!alert.message) return null;
 
   return (
     <div className="alertWrap">

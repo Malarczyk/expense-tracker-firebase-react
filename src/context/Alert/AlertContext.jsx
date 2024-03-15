@@ -9,7 +9,7 @@ export const AlertProvider = ({ children }) => {
     setAlert({ message, type });
 
     setTimeout(() => {
-      setAlert({ message: '', type: '' }); // Automatycznie ukrywaj alert po 2 sekundach
+      setAlert({ message: '', type: '' });
     }, 5000);
   };
 

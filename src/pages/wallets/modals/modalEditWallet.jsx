@@ -74,7 +74,7 @@ const ModalEditWallet = ({ isOpen, onClose, selectedWallet, onUpdateWallet, onDe
         isOpen={isDeletePopupOpen}
         onDeleteConfirm={() => {
           onDeleteWallet(selectedWallet.id)
-          setIsDeletePopupOpen(false) // Zamknij popup po usunięciu
+          setIsDeletePopupOpen(false)
         }}
         onClose={() => setIsDeletePopupOpen(false)}
         text={'Klikając: "Tak", usuniesz ten portfel nieodwracalnie.'}
