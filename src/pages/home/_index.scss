@@ -290,8 +290,7 @@
     &.--fake{
       display: flex;
       align-items: center;
-      
-
+      min-height: unset;
     }
   }
 }
