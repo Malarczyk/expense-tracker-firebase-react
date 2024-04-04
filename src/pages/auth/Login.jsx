@@ -101,7 +101,7 @@ const Login = ({ setSigninVisible, setRemindVisible }) => {
         errorMessage = 'Podany adres e-mail jest nieprawidłowy.'
         break
       case 'auth/user-disabled':
-        errorMessage = 'Konto użytkownika zostało wyłączone.'
+        errorMessage = 'Konto użytkownika jest nieaktywne.'
         break
       case 'auth/user-not-found':
         errorMessage = 'Nie znaleziono użytkownika z tym adresem e-mail.'
